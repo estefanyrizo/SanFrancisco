@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+
+{%block title%}
+
+Home
+
+{% endblock%}
+
+{% block main%}
+<div class="content">
+  <div class="ganado-list">
+    <div class="ganado-box row d-flex">
+        <div class="col-3">
+          <div class="card">
+            <img class="img-top" src="https://storage.contextoganadero.com/s3fs-public/styles/noticias_one/public/ganaderia/field_image/2016-08/cebu_macho.jpg?itok=HvmiGh0I">
+            <h5 class="card-title">Palomo</h5>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">Codigo: 54548454</li>
+              <li class="list-group-item">Raza: Braham</li>
+              <li class="list-group-item">Color: Pinto</li>
+              <li class="list-group-item">Peso: 156 kg</li>
+              <li class="list-group-item">Tamaño: 152</li>
+              <li class="list-group-item">Fecha de nacimiento: 25/03/2022</li>
+
+            </ul>
+            <div class="row d-flex">
+              <div class="col-6 form-group" align="center">
+                <a class="btn btn-primary" href="/infonovillo/1/edit"><i class="nc-icon nc-refresh-69"></i></a>
+              </div>
+              <div class="col-6 form-group" align="center">
+                <a class="btn btn-danger" href="/eliminar/1"><i class="fa fa-trash"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
+{% endblock%}
