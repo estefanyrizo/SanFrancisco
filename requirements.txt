@@ -1,4 +1,11 @@
 gunicorn
+
 Flask
-python-dotenv
+Jinja2
 requests
+SQLAlchemy
+Werkzeug
+Flask-Babel
+
+Flask-Session
+python-dotenv
