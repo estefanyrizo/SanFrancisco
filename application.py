@@ -1,6 +1,4 @@
 import os
-from re import A
-import re
 
 import requests
 from dotenv import load_dotenv
@@ -9,9 +7,7 @@ from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from flask import Flask, flash, redirect, render_template, request, session
-from sqlalchemy.sql.elements import Null
 from tempfile import mkdtemp
-from sqlalchemy.sql.expression import select
 from werkzeug.security import check_password_hash, generate_password_hash
 from helpers import login_required, administrador
 from flask import jsonify
