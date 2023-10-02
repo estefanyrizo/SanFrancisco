@@ -1,0 +1,87 @@
+{% extends "layout.html" %}
+
+{%block title%}
+
+Alimentar ganado
+
+{% endblock%}
+
+{% block main%}
+<div class="content">
+    <div class="row ganado">
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="sign pt-2 pb-2 text-center">Alimentar ganado</h3>
+                </div>
+                <div class="form-group">
+                    <div class="inputs">
+                        <form action=""></form>
+                        <div class="row m-3">
+                            <div class="col-8 mb-3">
+                                <label for="alimento">Alimento</label>
+                                <select class="form-control" id="alimento" name="alimento" required>
+                                    <option disabled="" selected="" value="">Seleccione un elemento</option>
+                                    <option value="1">Sal</option>
+                                    <option value="2">Melasa</option>
+                                </select>
+                            </div>
+                            <div class="col-4 mb-3">
+                                <label for="cantidad">Cantidad</label>
+                                <input type="text" class="form-control" id="cantidad" name="cantidad" placeholder="Kg"
+                                    required>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label for="buscar">Buscar bovino</label>
+                                <input type="text" class="form-control" id="buscar" name="buscar"
+                                    placeholder="Codigo, nombre, raza" required>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label for="todo">Seleccionar todo </label>
+                                <input type="checkbox" id="todo" name="todo" value="1">
+
+                            </div>
+                            <div class="col-12">
+                                <table class="table">
+                                    <thead class=" text-primary">
+                                        <tr>
+                                            <th scope="col">Codigo</th>
+                                            <th scope="col"> Nombre</th>
+                                            <th scope="col">Raza</th>
+                                            <th scope="col">Seleccionar</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">1</th>
+                                            <td>Mark</td>
+                                            <td>Otto</td>
+                                            <td> <input type="checkbox" id="todo" name="todo" value="1"></td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">2</th>
+                                            <td>Jacob</td>
+                                            <td>Thornton</td>
+                                            <td> <input type="checkbox" id="todo" name="todo" value="1"></td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">3</th>
+                                            <td colspan="2">Larry the Bird</td>
+                                            <td> <input type="checkbox" id="todo" name="todo" value="1"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-12 form-group" align="center">
+                                <button class="btn btn-primary" type="submit">Guardar</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <form action=""></form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock%}

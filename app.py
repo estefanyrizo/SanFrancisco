@@ -63,9 +63,15 @@ def ganado():
 @app.route("/infonovillo/<id>/edit", methods=["GET", "POST"])
 def infonovillo(id):
     return render_template("novillo.html")
+@app.route("/entidadComercial", methods=["GET", "POST"])
+def entidadComercial():
+    return render_template("entidadComercial.html")
+@app.route("/alimentoGanado", methods=["GET", "POST"])
+def alimentoGanadol():
+    return render_template("alimentoGanado.html")
 
 @app.route("/logout")
 @login_required
 def logout():
     session.clear()
-    return redirect("/")
+    return redirect("/login")
