@@ -1,5 +1,4 @@
 import os
-
 import requests
 from dotenv import load_dotenv
 from flask import Flask, json, session
@@ -9,15 +8,15 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from flask import Flask, flash, redirect, render_template, request, session
 from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
-from helpers import login_required, administrador
+from helpers import login_required
 from flask import jsonify
+from sqlalchemy.sql import text
 
 app = Flask(__name__)
 
 # Check for environment variable
-#if not os.getenv("DATABASE_URL"):
-    #raise RuntimeError("DATABASE_URL is not set")
-
+if not os.getenv("DATABASE_URL"):
+    raise RuntimeError("DATABASE_URL is not set")
 
 # Configure session to use filesystem
 app.config["SESSION_FILE_DIR"] = mkdtemp()
@@ -27,19 +26,50 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # Set up database
-#engine = create_engine(os.getenv("DATABASE_URL"))
-#db = scoped_session(sessionmaker(bind=engine))
+engine = create_engine("postgresql://finca_w3np_user:c1W9vy5mfQt9hq22T33nJgeHVwVHZxjl@dpg-ckj6gggmccbs73e45m90-a.oregon-postgres.render.com/finca_w3np")
+db = scoped_session(sessionmaker(bind=engine))
+
 
 @app.route("/", methods=["GET", "POST"])
 #@login_required
 def index():
-    session["user_id"] = 1
-    session["admin"] = True
     return render_template("index.html")
+
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    return render_template("login.html")
+    session.clear()
+
+    if request.method == "POST":
+        cont = 0
+        hash = None
+        id = 0
+
+        if not request.form.get("username"):
+            flash("Debe ingresar un usuario", "error")
+            return render_template("login.html")
+
+        elif not request.form.get("password"):
+            flash("Debe ingresar una contraseña", "error")
+            return render_template("login.html")
+
+        for dato in db.execute(text("select count(usuario), id, usuario, hash from usuario WHERE usuario = :username group by id, usuario,hash"),
+                               {"username": request.form.get("username")}):
+            cont = dato[0]
+            id = dato[1]
+            hash = dato[3]
+
+        if cont != 1 or not check_password_hash(hash, request.form.get("password")):
+            flash("Nombre o contraseña incorrectos", "error")
+            return render_template("login.html")
+
+        session["user_id"] = id
+
+        return redirect("/")
+
+    else:
+        return render_template("login.html")
+    
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
