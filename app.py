@@ -60,6 +60,7 @@ def miCuenta():
 @app.route("/ganado", methods=["GET", "POST"])
 def ganado():
     return render_template("ganado.html")
+
 @app.route("/infonovillo/<id>/edit", methods=["GET", "POST"])
 def infonovillo(id):
     return render_template("novillo.html")
