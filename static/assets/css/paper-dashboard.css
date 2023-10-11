@@ -1402,7 +1402,7 @@ h2, .h2 {
 
 h3, .h3 {
   font-size: 2em;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   line-height: 1.4em; }
 
 h4, .h4 {
@@ -3027,7 +3027,7 @@ License - nucleoapp.com/license/
     overflow: auto;
     width: 260px;
     z-index: 4;
-    padding-bottom: 100px; }
+    }
     .sidebar .sidebar-wrapper .dropdown .dropdown-backdrop,
     .off-canvas-sidebar .sidebar-wrapper .dropdown .dropdown-backdrop {
       display: none !important; }
