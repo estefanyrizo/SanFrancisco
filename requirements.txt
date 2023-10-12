@@ -6,6 +6,6 @@ requests
 SQLAlchemy
 Werkzeug
 Flask-Babel
-
+psycopg2
 Flask-Session
 python-dotenv
