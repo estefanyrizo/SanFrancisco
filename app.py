@@ -22,16 +22,17 @@ if not os.getenv("DATABASE_URL"):
 app.config["SESSION_FILE_DIR"] = mkdtemp()
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
+app.config['SECRET_KEY'] = 'super secret key'
 
 Session(app)
 
 # Set up database
-engine = create_engine("postgresql://finca_w3np_user:c1W9vy5mfQt9hq22T33nJgeHVwVHZxjl@dpg-ckj6gggmccbs73e45m90-a.oregon-postgres.render.com/finca_w3np")
+engine = create_engine(os.getenv("DATABASE_URL"))
 db = scoped_session(sessionmaker(bind=engine))
 
 
 @app.route("/", methods=["GET", "POST"])
-#@login_required
+@login_required
 def index():
     return render_template("index.html")
 
@@ -44,6 +45,7 @@ def login():
         cont = 0
         hash = None
         id = 0
+        isAdmin = False
 
         if not request.form.get("username"):
             flash("Debe ingresar un usuario", "error")
@@ -53,17 +55,19 @@ def login():
             flash("Debe ingresar una contraseña", "error")
             return render_template("login.html")
 
-        for dato in db.execute(text("select count(usuario), id, usuario, hash from usuario WHERE usuario = :username group by id, usuario,hash"),
+        for dato in db.execute(text("select count(usuario), id, usuario, hash, isAdmin from usuario WHERE usuario = :username group by id, usuario, hash, isAdmin"),
                                {"username": request.form.get("username")}):
             cont = dato[0]
             id = dato[1]
             hash = dato[3]
+            isAdmin = dato[4]
 
         if cont != 1 or not check_password_hash(hash, request.form.get("password")):
             flash("Nombre o contraseña incorrectos", "error")
             return render_template("login.html")
 
         session["user_id"] = id
+        session["admin"] = isAdmin
 
         return redirect("/")
 

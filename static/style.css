@@ -3,6 +3,38 @@
        column-count: 2;
 }
 
+.botones {
+  border-radius: 5px;
+  font-family: "Sans-serif-family";
+  padding: 5px !important;
+  text-transform: none !important;
+  width: 10rem;
+  height: 2.5rem;
+  font-size: large !important;
+}
+
+.form_inputs {
+  border-radius: 5px;
+  padding: 5px;
+  text-align: center;
+  font-family: "Sans-serif-family";
+  width: 20rem;
+  height: 2.5rem;
+}
+
+#login_titulo {
+  font-size: 1.5em;
+}
+
+#login_form {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .mi-cuenta, .ganado, .bloque {
   display: flex;
   justify-content: center;
