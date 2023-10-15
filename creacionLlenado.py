@@ -27,6 +27,11 @@ origenes = ["Cria", "Comprado"]
 for ori in origenes:
     db.execute(text(f"insert into origenganado(origen) values('{ori}')"))
 
+
+estadoGanado = ["Disponible", "Vendido", "Muerto"]
+for est in estadoGanado:
+  db.execute(text(f"insert into estadoganado(estado) values('{est}')"))
+
 '''
 
 db.commit()

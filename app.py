@@ -9,12 +9,10 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from flask import Flask, flash, redirect, render_template, request, session
 from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
-from helpers import login_required
+from helpers import login_required, subirImagen, validarDouble, validarString
 from flask import jsonify
 from sqlalchemy.sql import text
-from base64 import b64encode
-from imagekitio import ImageKit
-from imagekitio.models.UploadFileRequestOptions import UploadFileRequestOptions
+import helpers
 
 app = Flask(__name__)
 
@@ -33,12 +31,6 @@ Session(app)
 # Set up database
 engine = create_engine(os.getenv("DATABASE_URL"))
 db = scoped_session(sessionmaker(bind=engine))
-
-IK_PUBLIC = os.environ.get("IK_PUBLIC")
-IK_PRIVATE = os.environ.get("IK_PRIVATE")
-IK_URL = os.environ.get("IK_URL")
-
-ik = ImageKit(private_key = IK_PRIVATE, public_key = IK_PUBLIC, url_endpoint = IK_URL)
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -109,7 +101,7 @@ def ingresarGanado():
         tamaño = request.form.get("tamaño") #real
         peso = request.form.get("peso") #real
         procedencia = request.form.get("procedencia") # int
-        foto = request.form.get("foto") # file para subir y obtener el url como string
+        foto = request.files["foto"] # file para subir y obtener el url como string
         comentario = request.form.get("comentario") #string nullable
         
         print(request.form.to_dict())
@@ -129,8 +121,8 @@ def ingresarGanado():
         #fecha = fechaNacimiento.split("-") # año(0)-mes(1)-dia(2)
         #print(date(int(fecha[0]), int(fecha[1]), int(fecha[2])))
 
-        if not codigo or codigo.isspace():
-            flash("Debe ingresar un codigo valido", "error")
+        if not codigo or codigo.isspace() or db.execute(text("select * from ganado where codigochapa = 1")).fetchone():
+            flash("Ha ingresado un codigo invalido o existente", "error")
             return render_template("ingresarNovillo.html")
         
         if not validarString(color):
@@ -154,27 +146,26 @@ def ingresarGanado():
             return render_template("ingresarNovillo.html")
 
         flash("Informacion registrada con exito", "exito")
-        return render_template("ingresarNovillo.html")
         
         raza = int(raza)
         fechaNacimiento = str(fechaNacimiento)
+        tamaño = float(tamaño)
+        peso = float(peso)
+        procedencia = int(procedencia)
+        foto = subirImagen(request.files["foto"])
+
+        query = text("""INSERT INTO ganado(nombre, fechaNacimiento, peso, tamanio, color, codigoChapa, foto, comentario, estadoGanadoId, razaId, origenGanadoId)
+                     VALUES(:nombre, :fechaNacimiento, :peso, :tamaño, :color, :codigoChapa, :foto, :comentario, :estadoGanadoId, :razaId, :origenGanadoId)
+                     """)
+        db.execute(query, {"nombre":nombre, "fechaNacimiento":fechaNacimiento, "peso":peso, "tamaño":tamaño, "color":color, "codigoChapa":codigo, "foto":foto, "comentario":comentario, "estadoGanadoId":1, "razaId":raza, "origenGanadoId":procedencia})
+        db.commit()
+        return render_template("ingresarNovillo.html", razas=razas, origen=origen)
 
         
 
     else:
-        return render_template("ingresarNovillo.html")
+        return render_template("ingresarNovillo.html", razas=razas, origen=origen)
     
-def validarString(dato):
-    if not dato or not dato.isalpha() or dato.isspace():
-        return False
-    
-    return True
-
-def validarDouble(dato):
-    if not dato or not dato.replace(".","").isdigit() or float(dato) < 1:
-        return False
-    
-    return True
 
 @app.route("/imagen", methods=["POST"])
 def imagen():

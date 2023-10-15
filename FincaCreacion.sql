@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS ganado
     nombre varchar(255) NOT NULL,
     fechaNacimiento date NOT NULL,
     peso real NOT NULL,
-    tamaño real NOT NULL,
+    tamanio real NOT NULL,
     color varchar(255) NOT NULL,
     codigoChapa varchar NOT NULL,
     foto varchar(255) NOT NULL,

@@ -17,7 +17,7 @@ Ingresar ganado
                 <div class="card-body">
                     <div class="form-group">
                         <div class="inputs">
-                            <form action="/ingresarnovillo" method="post">
+                            <form action="/ingresarnovillo" method="post" enctype="multipart/form-data">
                                 <div class="row m-3">
                                     <div class="col-6 mb-3">
                                         <label for="nombre">Nombre</label>
@@ -28,8 +28,9 @@ Ingresar ganado
                                         <label for="raza">Raza</label>
                                         <select class="form-control" id="raza" name="raza" required>
                                             <option disabled="" selected="" value="">Seleccione un elemento</option>
-
-                                            <option value="1">Braham</option>
+                                            {% for item in razas %}
+                                            <option value="{{item[0]}}">{{item[1]}}</option>
+                                            {% endfor %}
                                         </select>
                                     </div>
                                     <div class="col-6 mb-3">
@@ -54,20 +55,24 @@ Ingresar ganado
                                     </div>
                                     <div class="col-3 mb-3">
                                         <label for="peso">Peso</label>
-                                        <input type="text" class="form-control" id="peso" name="peso" placeholder="Peso en kilos"
-                                            required>
+                                        <input type="text" class="form-control" id="peso" name="peso"
+                                            placeholder="Peso en kilos" required>
                                     </div>
                                     <div class="col-3 mb-3">
                                         <label for="procedencia">Procedencia</label>
-                                        <input type="text" class="form-control" id="procedencia" name="procedencia" placeholder="Procedencia"
-                                            required>
+                                        <select class="form-control" id="procedencia" name="procedencia" required>
+                                            <option disabled="" selected="" value="">Seleccione un elemento</option>
+                                            {% for item in origen %}
+                                            <option value="{{item[0]}}">{{item[1]}}</option>
+                                            {% endfor %}
+                                        </select>
                                     </div>
                                     <div class="col-12 mb-3">
                                         <div class="card">
                                             <img id="img-preview">
                                             <label for="file">Selecionar foto: <i class="fa fa-upload"></i></label>
-                                            <input class="form-control mb-4" type="file" name="foto"
-                                                id="img-uploader" accept="image/*">
+                                            <input class="form-control mb-4" type="file" name="foto" id="img-uploader"
+                                                accept="image/*">
                                             <progress id="img-upload-bar" value="0" max="100"
                                                 style="width: 100%"></progress>
                                         </div>
