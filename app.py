@@ -1,3 +1,4 @@
+from datetime import date, datetime
 import os
 import requests
 from dotenv import load_dotenv
@@ -11,6 +12,9 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from helpers import login_required
 from flask import jsonify
 from sqlalchemy.sql import text
+from base64 import b64encode
+from imagekitio import ImageKit
+from imagekitio.models.UploadFileRequestOptions import UploadFileRequestOptions
 
 app = Flask(__name__)
 
@@ -29,6 +33,12 @@ Session(app)
 # Set up database
 engine = create_engine(os.getenv("DATABASE_URL"))
 db = scoped_session(sessionmaker(bind=engine))
+
+IK_PUBLIC = os.environ.get("IK_PUBLIC")
+IK_PRIVATE = os.environ.get("IK_PRIVATE")
+IK_URL = os.environ.get("IK_URL")
+
+ik = ImageKit(private_key = IK_PRIVATE, public_key = IK_PUBLIC, url_endpoint = IK_URL)
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -85,7 +95,94 @@ def tablero():
 
 @app.route("/ingresarnovillo", methods=["GET", "POST"])
 def ingresarGanado():
-    return render_template("ingresarNovillo.html")
+
+    razas = db.execute(text("select * from raza"))
+    origen = db.execute(text("select * from origenganado"))
+
+    if request.method == "POST":
+        
+        nombre = request.form.get("nombre") #string
+        raza = request.form.get("raza") #int
+        fechaNacimiento = request.form.get("fechaNacimiento") #date
+        codigo = request.form.get("codigo") #string
+        color = request.form.get("color") #string
+        tamaño = request.form.get("tamaño") #real
+        peso = request.form.get("peso") #real
+        procedencia = request.form.get("procedencia") # int
+        foto = request.form.get("foto") # file para subir y obtener el url como string
+        comentario = request.form.get("comentario") #string nullable
+        
+        print(request.form.to_dict())
+
+        if not validarString(nombre):
+            flash("Debe ingresar un nombre valido", "error")
+            return render_template("ingresarNovillo.html")
+        
+        if not raza.isdigit() or not raza or int(raza) < 1 or int(raza) > 10:
+            flash("Debe ingresar una raza valida", "error")
+            return render_template("ingresarNovillo.html")
+        
+        if not fechaNacimiento or int(fechaNacimiento.split("-")[0]) != datetime.now().year:
+            flash("Debe ingresar una fecha valida", "error")
+            return render_template("ingresarNovillo.html")
+        
+        #fecha = fechaNacimiento.split("-") # año(0)-mes(1)-dia(2)
+        #print(date(int(fecha[0]), int(fecha[1]), int(fecha[2])))
+
+        if not codigo or codigo.isspace():
+            flash("Debe ingresar un codigo valido", "error")
+            return render_template("ingresarNovillo.html")
+        
+        if not validarString(color):
+            flash("Debe ingresar el color del animal", "error")
+            return render_template("ingresarNovillo.html")
+        
+        if not validarDouble(tamaño):
+            flash("Debe ingresar un tamaño valido", "error")
+            return render_template("ingresarNovillo.html")
+
+        if not validarDouble(peso):
+            flash("Debe ingresar un peso valido", "error")
+            return render_template("ingresarNovillo.html")
+        
+        if not procedencia or int(procedencia) < 1 or int(procedencia) > 2:
+            flash("Debe ingresar un origen valido", "error")
+            return render_template("ingresarNovillo.html")
+        
+        if not foto:
+            flash("Debe ingresar una foto del animal", "error")
+            return render_template("ingresarNovillo.html")
+
+        flash("Informacion registrada con exito", "exito")
+        return render_template("ingresarNovillo.html")
+        
+        raza = int(raza)
+        fechaNacimiento = str(fechaNacimiento)
+
+        
+
+    else:
+        return render_template("ingresarNovillo.html")
+    
+def validarString(dato):
+    if not dato or not dato.isalpha() or dato.isspace():
+        return False
+    
+    return True
+
+def validarDouble(dato):
+    if not dato or not dato.replace(".","").isdigit() or float(dato) < 1:
+        return False
+    
+    return True
+
+@app.route("/imagen", methods=["POST"])
+def imagen():
+    
+    if request.files["file"]:
+        return {"status":"200"}
+    else:
+        return {"status":"415"}
 
 @app.route("/micuenta", methods=["GET", "POST"])
 def miCuenta():

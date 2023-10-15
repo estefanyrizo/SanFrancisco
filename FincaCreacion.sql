@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS raza
 CREATE TABLE IF NOT EXISTS ganado
 (
     id serial NOT NULL,
-    nombre varchar(255),
+    nombre varchar(255) NOT NULL,
     fechaNacimiento date NOT NULL,
     peso real NOT NULL,
     tamaño real NOT NULL,
@@ -174,6 +174,7 @@ CREATE TABLE IF NOT EXISTS usuario
     usuario varchar(30) NOT NULL,
     hash varchar(255) NOT NULL,
     isAdmin boolean NOT NULL DEFAULT false,
+    activo boolean NOT NULL DEFAULT false,
     PRIMARY KEY (id)
 );
 

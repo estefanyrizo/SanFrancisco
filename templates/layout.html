@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
@@ -25,7 +25,7 @@
 </head>
 
 <body>
-    
+
     <div class="wrapper">
         <div class="sidebar" data-color="white" data-active-color="danger">
             <div class="logo">
@@ -184,8 +184,19 @@
                 </div>
             </nav>
             <br>
+
+
+
             <main class="container-fluid pt-5 mt-4">
-                
+                {% if get_flashed_messages() %}
+                <header>
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% for category, message in messages %}
+                            <div class="{{ category }} alert alert-primary text-center p-3" role="alert">{{ message }}</div>
+                        {% endfor %}
+                    {% endwith %}
+                </header>
+                {% endif %}
                 {% block main %}{% endblock %}
             </main>
         </div>

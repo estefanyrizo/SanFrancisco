@@ -9,3 +9,5 @@ Flask-Babel
 psycopg2
 Flask-Session
 python-dotenv
+base64
+imagekitio

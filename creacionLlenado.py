@@ -7,7 +7,7 @@ engine = create_engine("postgresql://finca_w3np_user:c1W9vy5mfQt9hq22T33nJgeHVwV
 db = scoped_session(sessionmaker(bind=engine))
 
 
-with open("FincaCreacion.sql", 'r') as query:
+'''with open("FincaCreacion.sql", 'r') as query:
   data = query.read()
   db.execute(data)
 
@@ -15,10 +15,23 @@ nombre = "Javier"
 apellido = "Rizo"
 usuario = (nombre[0]+apellido).lower()
 
-db.execute(text(f"insert into usuario(nombre, apellido, usuario, hash, isAdmin) values('{nombre}', '{apellido}', '{usuario}', '{generate_password_hash(usuario)}', 'true')"))
-db.commit()
+db.execute(text(f"insert into usuario(nombre, apellido, usuario, hash, isAdmin, activo) values('{nombre}', '{apellido}', '{usuario}', '{generate_password_hash(usuario)}', 'true', 'true')"))
 
+
+razas = ["Brahman", "Simmental", "Charolais", "Limousin", "Hereford", "Angus", "Senepol", "Cebú", "Nelore", "Gyr"]
+for raza in razas:
+  db.execute(text(f"insert into raza(nombreRaza) values('{raza}')"))
+
+
+origenes = ["Cria", "Comprado"]
+for ori in origenes:
+    db.execute(text(f"insert into origenganado(origen) values('{ori}')"))
+
+'''
+
+db.commit()
 print("Exito")
+
 
 
 """xd = db.execute(text("select * from usuario"))
