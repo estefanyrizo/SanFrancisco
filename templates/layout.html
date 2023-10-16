@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
@@ -25,7 +25,7 @@
 </head>
 
 <body>
-    {% if session.user_id %}
+
     <div class="wrapper">
         <div class="sidebar" data-color="white" data-active-color="danger">
             <div class="logo">
@@ -46,6 +46,8 @@
                             <p>Tablero</p>
                         </a>
                     </li>
+
+                    {% if session.user_id %}
                     <li>
                         <a href="/entidadesComerciales">
                             <i class="nc-icon nc-satisfied"></i>
@@ -58,6 +60,8 @@
                             <p>Empleados</p>
                         </a>
                     </li>
+                    {% endif %}
+
                     <li>
                         <a href="/ganado">
                             <i class="fa fa-cow"></i>
@@ -76,6 +80,8 @@
                             <p>Alimentaci&oacute;n</p>
                         </a>
                     </li>
+
+                    {% if session.user_id %}
                     <li>
                         <a href="./mostrar_venta">
                             <i class="nc-icon nc-money-coins"></i>
@@ -88,6 +94,8 @@
                             <p>Compras</p>
                         </a>
                     </li>
+                    {% endif %}
+
                 </ul>
             </div>
         </div>
@@ -170,7 +178,18 @@
                 </div>
             </nav>
             <br>
+
+
+
             <main class="container-fluid pt-5 mt-4">
+                {% if get_flashed_messages() %}
+                <header>
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% for category, message in messages %}
+                            <div class="{{ category }} alert alert-primary text-center p-3" role="alert">{{ message }}</div>
+                        {% endfor %}
+                    {% endwith %}
+                </header>
                 {% endif %}
                 {% block main %}{% endblock %}
             </main>

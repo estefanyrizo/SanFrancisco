@@ -1,9 +1,57 @@
-$mainFont: 'Open Sans', sans-serif;
+$mainFont: 'Sans-serif-family';
 $mainColor: #333333;
+$text_color : white;
 
 .datos_ganado
 {
 	column-count: 2;
+}
+
+.botones{
+	border-radius: 5px;
+	font-family: $mainFont;
+	padding: 5px!important;
+    text-transform: none!important;
+
+	width: 10rem;
+    height: 2.5rem;
+    font-size: large!important;
+}
+
+.form_inputs{
+	border-radius: 5px;
+    padding: 5px;
+    text-align: center;
+	font-family: $mainFont;
+	width: 20rem;
+    height: 2.5rem;
+}
+
+.error
+{
+    background-color: rgb(228, 90, 90)!important;
+    color: $text_color;
+    border-style: none;
+    font-weight: bold;
+}
+
+.exito
+{
+    @extend .error;
+    background-color: rgb(30, 165, 91)!important;
+}
+
+#login_titulo{
+	font-size: 1.5em;
+}
+
+#login_form{
+	display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .mi-cuenta, .ganado, .bloque{
