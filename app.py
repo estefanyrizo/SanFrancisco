@@ -66,8 +66,11 @@ def infonovillo(id):
 @app.route("/entidadComercial", methods=["GET", "POST"])
 def entidadComercial():
     return render_template("entidadComercial.html")
+@app.route("/alimento", methods=["GET", "POST"])
+def alimento():
+    return render_template("alimento.html")
 @app.route("/alimentoGanado", methods=["GET", "POST"])
-def alimentoGanadol():
+def alimentoGanado():
     return render_template("alimentoGanado.html")
 
 @app.route("/logout")

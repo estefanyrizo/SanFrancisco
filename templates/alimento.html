@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+
+{%block title%}
+
+Alimento
+
+{% endblock%}
+
+{% block main%}
+<div class="content">
+  <div class="alimento-list">
+    <div class="alimento-box row d-flex">
+      <div class="col-md-4">
+          <div class="card">
+            <h5 class="card-title" align="center">Melaza</h5>
+            <ul class="list-group datos_ganado">
+              <li class="list-group-item">Cantidad en existencia: 54 Kg</li>
+              <li class="list-group-item">Raza: Braham</li>
+            </ul>
+            <div class="row d-flex">
+              <div class="col-6 form-group" align="center">
+                <a class="btn btn-primary" href="#"><i class="nc-icon nc-simple-add"></i></a>
+              </div>
+              <div class="col-6 form-group" align="center">
+                <a class="btn btn-danger" href="#"><i class="fa fa-trash"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+    </div>
+  </div>
+</div>
+{% endblock%}
