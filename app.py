@@ -121,7 +121,7 @@ def ingresarGanado():
         #fecha = fechaNacimiento.split("-") # año(0)-mes(1)-dia(2)
         #print(date(int(fecha[0]), int(fecha[1]), int(fecha[2])))
 
-        if not codigo or codigo.isspace() or db.execute(text("select * from ganado where codigochapa = 1")).fetchone():
+        if not codigo or codigo.isspace() or db.execute(text(f"select * from ganado where codigochapa = '{codigo}'")).fetchone():
             flash("Ha ingresado un codigo invalido o existente", "error")
             return render_template("ingresarNovillo.html")
         
@@ -157,11 +157,14 @@ def ingresarGanado():
         query = text("""INSERT INTO ganado(nombre, fechaNacimiento, peso, tamanio, color, codigoChapa, foto, comentario, estadoGanadoId, razaId, origenGanadoId)
                      VALUES(:nombre, :fechaNacimiento, :peso, :tamaño, :color, :codigoChapa, :foto, :comentario, :estadoGanadoId, :razaId, :origenGanadoId)
                      """)
-        db.execute(query, {"nombre":nombre, "fechaNacimiento":fechaNacimiento, "peso":peso, "tamaño":tamaño, "color":color, "codigoChapa":codigo, "foto":foto, "comentario":comentario, "estadoGanadoId":1, "razaId":raza, "origenGanadoId":procedencia})
-        db.commit()
-        return render_template("ingresarNovillo.html", razas=razas, origen=origen)
-
+        try:
+            db.execute(query, {"nombre":nombre, "fechaNacimiento":fechaNacimiento, "peso":peso, "tamaño":tamaño, "color":color, "codigoChapa":codigo, "foto":foto, "comentario":comentario, "estadoGanadoId":1, "razaId":raza, "origenGanadoId":procedencia})
+            db.commit()
+        except:
+            flash("Ha ocurrido un error", "error")
+            return render_template("ingresarNovillo.html", razas=razas, origen=origen)
         
+        return render_template("ingresarNovillo.html", razas=razas, origen=origen)
 
     else:
         return render_template("ingresarNovillo.html", razas=razas, origen=origen)
