@@ -7,33 +7,53 @@ Home
 {% endblock%}
 
 {% block main%}
+<form>
+  <div class="container-fluid input-group col-sm-6  d-flex justify-items-center">
+    <input type="text" value="" class="form-control" placeholder="Buscar..." id="buscarganadoinput">
+    <div class="input-group-append">
+      <div class="input-group-text">
+        <i class="nc-icon nc-zoom-split"></i>
+      </div>
+    </div>
+  </div>
+</form>
+
 <div class="content">
   <div class="ganado-list">
-    <div class="ganado-box row d-flex">
-      <div class="col-md-4">
-          <div class="card">
-            <img class="img-top" src="https://storage.contextoganadero.com/s3fs-public/styles/noticias_one/public/ganaderia/field_image/2016-08/cebu_macho.jpg?itok=HvmiGh0I">
-            <h5 class="card-title">Palomo</h5>
-            <ul class="list-group datos_ganado">
-              <li class="list-group-item">Codigo: 54548454</li>
-              <li class="list-group-item">Raza: Braham</li>
-              <li class="list-group-item">Color: Pinto</li>
-              <li class="list-group-item">Peso: 156 kg</li>
-              <li class="list-group-item">Tamaño: 152</li>
-              <li class="list-group-item">Fecha de nacimiento: 25/03/2022</li>
-            </ul>
-            <div class="row d-flex">
-              <div class="col-6 form-group" align="center">
-                <a class="btn btn-primary" href="/infonovillo/1/edit"><i class="nc-icon nc-refresh-69"></i></a>
-              </div>
-              <div class="col-6 form-group" align="center">
-                <a class="btn btn-danger" href="/eliminar/1"><i class="fa fa-trash"></i></a>
-              </div>
+    <div class="ganado-box row d-flex" id="ganado-items">
+      {% for cabeza in ganado %}
+      <div class="col-md-4 ganado-card">
+        <div class="card">
+          <img class="img-top" src="{{cabeza.foto}}">
+          <h5 class="card-title">{{cabeza.nombre}}</h5>
+          <ul class="list-group datos_ganado">
+            <li class="list-group-item">Codigo: {{cabeza.codigochapa}}</li>
+            <li class="list-group-item">Raza: {{cabeza.nombreraza}}</li>
+            <li class="list-group-item">Color: {{cabeza.color}}</li>
+            <li class="list-group-item">Peso: {{cabeza.peso}} kg.</li>
+            <li class="list-group-item">Tamaño: {{cabeza.tamanio}} mts.</li>
+            <li class="list-group-item">Fecha de nacimiento: {{cabeza.fechanacimiento}}</li>
+          </ul>
+          <div class="row d-flex">
+            <div class="col-12 form-group" align="center">
+              <a class="btn btn-primary" href="/infonovillo/{{cabeza.id}}/edit"><i
+                  class="nc-icon nc-refresh-69"></i></a>
             </div>
           </div>
         </div>
-        
+      </div>
+      {% endfor %}
+      <div class="container-fluid d-flex justify-content-center">
+        <!---  {{ pagination.info }} --->
+        {{ pagination.links }}
+      </div>
     </div>
   </div>
+
+  <!-- <div class="container-fluid d-flex justify-content-center">
+      {{ pagination.info }} 
+      {{ pagination.links }}
+  </div> -->
+
 </div>
 {% endblock%}

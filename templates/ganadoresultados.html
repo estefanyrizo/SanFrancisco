@@ -1,0 +1,24 @@
+
+{% for cabeza in ganado %}
+<div class="col-md-4">
+    <div class="card">
+        <img class="img-top" src="{{cabeza.foto}}">
+        <h5 class="card-title">{{cabeza.nombre}}</h5>
+        <ul class="list-group datos_ganado">
+            <li class="list-group-item">Codigo: {{cabeza.codigochapa}}</li>
+            <li class="list-group-item">Raza: {{cabeza.nombreraza}}</li>
+            <li class="list-group-item">Color: {{cabeza.color}}</li>
+            <li class="list-group-item">Peso: {{cabeza.peso}} kg.</li>
+            <li class="list-group-item">Tamaño: {{cabeza.tamanio}} mts.</li>
+            <li class="list-group-item">Fecha de nacimiento: {{cabeza.fechanacimiento}}</li>
+        </ul>
+        <div class="row d-flex">
+            <div class="col-12 form-group" align="center">
+                <a class="btn btn-primary" href="/infonovillo/{{cabeza.id}}/edit"><i
+                        class="nc-icon nc-refresh-69"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+

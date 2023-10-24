@@ -3,6 +3,23 @@
        column-count: 2;
 }
 
+.pagination-page-info {
+  padding: 0.6em;
+  padding-left: 0;
+  width: 40em;
+  margin: 0.5em;
+  margin-left: 0;
+  font-size: 12px;
+}
+
+.pagination-page-info b {
+  color: black;
+  background: #6aa6ed;
+  padding-left: 2px;
+  padding: 0.1em 0.25em;
+  font-size: 150%;
+}
+
 .botones {
   border-radius: 5px;
   font-family: "Sans-serif-family";
