@@ -14,6 +14,7 @@ from flask import jsonify
 from sqlalchemy.sql import text
 import helpers
 from flask_paginate import Pagination, get_page_parameter
+import locale
 
 app = Flask(__name__)
 
@@ -32,6 +33,8 @@ Session(app)
 # Set up database
 engine = create_engine(os.getenv("DATABASE_URL"),pool_pre_ping=True)
 db = scoped_session(sessionmaker(bind=engine))
+
+locale.setlocale(locale.LC_TIME, 'es_ES')
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -212,12 +215,21 @@ def ganado():
     return render_template("ganado.html", ganado = ganado, pagination = pagination)
 
 
+@app.template_filter("datetimeformat")
+def datetimeformat(value, format='B'):
+    return value.strftime(format)
+
+
 @app.route("/buscarganado", methods=["GET"])
 def buscarganado():
     busqueda = request.args.get("q")
 
     if busqueda:
-        ganado = db.execute(text(f"SELECT * FROM ganado INNER JOIN raza ON ganado.razaid = raza.id WHERE estadoganadoid = 1 AND LOWER(nombre) LIKE '%{busqueda.lower()}%'"))
+        ganado = db.execute(text(f"""SELECT * FROM ganado INNER JOIN raza ON ganado.razaid = raza.id
+                                 WHERE estadoganadoid = 1 AND LOWER(nombre) LIKE '%{busqueda.lower()}%'
+                                 OR LOWER(nombreraza) LIKE '%{busqueda.lower()}%'
+                                 OR LOWER(codigochapa) LIKE '%{busqueda.lower()}%'
+                                 """))
         
         if ganado.rowcount > 0:
             return render_template('ganadoresultados.html', ganado = ganado)
