@@ -13,6 +13,8 @@ from helpers import login_required, subirImagen, validarDouble, validarString
 from flask import jsonify
 from sqlalchemy.sql import text
 import helpers
+from flask_paginate import Pagination, get_page_parameter
+import locale
 
 app = Flask(__name__)
 
@@ -29,8 +31,10 @@ app.config['SECRET_KEY'] = 'super secret key'
 Session(app)
 
 # Set up database
-engine = create_engine(os.getenv("DATABASE_URL"))
+engine = create_engine(os.getenv("DATABASE_URL"),pool_pre_ping=True)
 db = scoped_session(sessionmaker(bind=engine))
+
+locale.setlocale(locale.LC_TIME, 'es_ES')
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -153,16 +157,29 @@ def ingresarGanado():
         peso = float(peso)
         procedencia = int(procedencia)
         foto = subirImagen(request.files["foto"])
-
-        query = text("""INSERT INTO ganado(nombre, fechaNacimiento, peso, tamanio, color, codigoChapa, foto, comentario, estadoGanadoId, razaId, origenGanadoId)
-                     VALUES(:nombre, :fechaNacimiento, :peso, :tamaño, :color, :codigoChapa, :foto, :comentario, :estadoGanadoId, :razaId, :origenGanadoId)
-                     """)
-        try:
-            db.execute(query, {"nombre":nombre, "fechaNacimiento":fechaNacimiento, "peso":peso, "tamaño":tamaño, "color":color, "codigoChapa":codigo, "foto":foto, "comentario":comentario, "estadoGanadoId":1, "razaId":raza, "origenGanadoId":procedencia})
-            db.commit()
-        except:
-            flash("Ha ocurrido un error", "error")
-            return render_template("ingresarNovillo.html", razas=razas, origen=origen)
+        if comentario :        
+            query = text("""INSERT INTO ganado(nombre, fechaNacimiento, peso, tamanio, color, codigoChapa, foto, comentario, estadoGanadoId, razaId, origenGanadoId)
+                        VALUES(:nombre, :fechaNacimiento, :peso, :tamaño, :color, :codigoChapa, :foto, :comentario, :estadoGanadoId, :razaId, :origenGanadoId)
+                        """)
+            
+            try:
+                db.execute(query, {"nombre":nombre, "fechaNacimiento":fechaNacimiento, "peso":peso, "tamaño":tamaño, "color":color, "codigoChapa":codigo, "foto":foto, "comentario":comentario, "estadoGanadoId":1, "razaId":raza, "origenGanadoId":procedencia})
+                db.commit()
+            except:
+                flash("Ha ocurrido un error", "error")
+                return render_template("ingresarNovillo.html", razas=razas, origen=origen)
+            
+        if not comentario :        
+            query = text("""INSERT INTO ganado(nombre, fechaNacimiento, peso, tamanio, color, codigoChapa, foto, estadoGanadoId, razaId, origenGanadoId)
+                        VALUES(:nombre, :fechaNacimiento, :peso, :tamaño, :color, :codigoChapa, :foto, :estadoGanadoId, :razaId, :origenGanadoId)
+                        """)
+            
+            try:
+                db.execute(query, {"nombre":nombre, "fechaNacimiento":fechaNacimiento, "peso":peso, "tamaño":tamaño, "color":color, "codigoChapa":codigo, "foto":foto, "estadoGanadoId":1, "razaId":raza, "origenGanadoId":procedencia})
+                db.commit()
+            except:
+                flash("Ha ocurrido un error", "error")
+                return render_template("ingresarNovillo.html", razas=razas, origen=origen)
         
         return render_template("ingresarNovillo.html", razas=razas, origen=origen)
 
@@ -182,9 +199,56 @@ def imagen():
 def miCuenta():
     return render_template("miCuenta.html")
 
-@app.route("/ganado", methods=["GET", "POST"])
+@app.route("/ganado", methods=["GET"])
 def ganado():
-    return render_template("ganado.html")
+    
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    limit=10
+    offset = page*limit - limit
+    total = db.execute(text(f"SELECT * FROM ganado INNER JOIN raza ON ganado.razaid = raza.id WHERE estadoganadoid = 1")).rowcount
+    ganado = db.execute(text(f"SELECT * FROM ganado INNER JOIN raza ON ganado.razaid = raza.id WHERE estadoganadoid = 1 LIMIT {limit} OFFSET {offset}"))
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    print(ganado.rowcount)
+    
+    pagination = Pagination(page=page, per_page=limit, total=total, search=False, record_name='ganado')
+
+    return render_template("ganado.html", ganado = ganado, pagination = pagination)
+
+
+@app.template_filter("datetimeformat")
+def datetimeformat(value, format='B'):
+    return value.strftime(format)
+
+
+@app.route("/buscarganado", methods=["GET"])
+def buscarganado():
+    busqueda = request.args.get("q")
+
+    if busqueda:
+        ganado = db.execute(text(f"""SELECT * FROM ganado INNER JOIN raza ON ganado.razaid = raza.id
+                                 WHERE estadoganadoid = 1 AND LOWER(nombre) LIKE '%{busqueda.lower()}%'
+                                 OR LOWER(nombreraza) LIKE '%{busqueda.lower()}%'
+                                 OR LOWER(codigochapa) LIKE '%{busqueda.lower()}%'
+                                 """))
+        
+        if ganado.rowcount > 0:
+            return render_template('ganadoresultados.html', ganado = ganado)
+        else:
+            return '''<div class="container-fluid text-center">
+                        <h3>Ningun resultado para los parametros de busqueda</h3>
+                    </div>'''
+    
+    else:
+        ganado = db.execute(text(f"SELECT * FROM ganado INNER JOIN raza ON ganado.razaid = raza.id WHERE estadoganadoid = 1"))
+        
+        if ganado.rowcount > 0:
+            return render_template('ganadoresultados.html', ganado = ganado)
+        else:
+            return '''<div class="container-fluid text-center">
+                        <h3>Ningun resultado para los parametros de busqueda</h3>
+                    </div>'''
+
+
 
 @app.route("/infonovillo/<id>/edit", methods=["GET", "POST"])
 def infonovillo(id):
