@@ -79,17 +79,15 @@ def login():
 
     else:
         return render_template("login.html")
-    
 
-@app.route("/register", methods=["GET", "POST"])
-def register():
-    return render_template("register.html")
 
 @app.route("/tablero", methods=["GET", "POST"])
+@login_required
 def tablero():
     return render_template("tablero.html")
 
 @app.route("/ingresarnovillo", methods=["GET", "POST"])
+@login_required
 def ingresarGanado():
 
     razas = db.execute(text("select * from raza"))
@@ -188,6 +186,7 @@ def ingresarGanado():
     
 
 @app.route("/imagen", methods=["POST"])
+@login_required
 def imagen():
     
     if request.files["file"]:
@@ -196,10 +195,17 @@ def imagen():
         return {"status":"415"}
 
 @app.route("/micuenta", methods=["GET", "POST"])
+@login_required
 def miCuenta():
-    return render_template("miCuenta.html")
+    if request.method == "GET":
+        usuario = db.execute(f"SELECT * FROM usuario WHERE id = {session['user_id']}")
+        return render_template("miCuenta.html", usuario = usuario)
+    if request.method == "POST":
+        flash("Los cambios se guardaran", "consultar")
+        return redirect("/micuenta")
 
 @app.route("/ganado", methods=["GET"])
+@login_required
 def ganado():
     
     page = request.args.get(get_page_parameter(), type=int, default=1)
@@ -221,6 +227,7 @@ def datetimeformat(value, format='B'):
 
 
 @app.route("/buscarganado", methods=["GET"])
+@login_required
 def buscarganado():
     busqueda = request.args.get("q")
 
@@ -251,15 +258,25 @@ def buscarganado():
 
 
 @app.route("/infonovillo/<id>/edit", methods=["GET", "POST"])
+@login_required
 def infonovillo(id):
-    return render_template("novillo.html")
+    if request.method == "GET":
+        novillo = db.execute(f"SELECT * FROM ganado INNER JOIN raza ON ganado.razaid = raza.id WHERE ganado.id = {id}")
+        razas = db.execute(text("SELECT * FROM raza"))
+        return render_template("novillo.html", novillo = novillo, razas = razas)
+    if request.method == "POST":
+        flash("Los cambios se guardaran", "consultar")
+        return redirect(f"/infonovillo/{id}/edit")
 @app.route("/entidadComercial", methods=["GET", "POST"])
+@login_required
 def entidadComercial():
     return render_template("entidadComercial.html")
 @app.route("/alimento", methods=["GET", "POST"])
+@login_required
 def alimento():
     return render_template("alimento.html")
 @app.route("/alimentoGanado", methods=["GET", "POST"])
+@login_required
 def alimentoGanado():
     return render_template("alimentoGanado.html")
 

@@ -2,32 +2,65 @@
 
 {%block title%}
 
-Alimento
+Alimentar ganado
 
 {% endblock%}
 
 {% block main%}
 <div class="content">
-  <div class="alimento-list">
-    <div class="alimento-box row d-flex">
-      <div class="col-md-4">
-          <div class="card">
-            <h5 class="card-title" align="center">Melaza</h5>
-            <ul class="list-group datos_ganado">
-              <li class="list-group-item">Cantidad en existencia: 54 Kg</li>
-              <li class="list-group-item">Raza: Braham</li>
-            </ul>
-            <div class="row d-flex">
-              <div class="col-6 form-group" align="center">
+  <div class="row ganado">
+    <div class="col-md-10">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="sign pt-2 pb-2 text-center">Alimento del ganado</h3>
+        </div>
+        <div class="form-group">
+          <div class="inputs">
+            <form action=""></form>
+            <div class="row m-3">
+              <div class="col-12 mb-3">
                 <a class="btn btn-primary" href="#"><i class="nc-icon nc-simple-add"></i></a>
               </div>
-              <div class="col-6 form-group" align="center">
-                <a class="btn btn-danger" href="#"><i class="fa fa-trash"></i></a>
+              <div class="col-12">
+                <table class="table">
+                  <thead class=" text-primary">
+                    <tr>
+                      <th scope="col">Nombre</th>
+                      <th scope="col"> Cantidad</th>
+                      <th scope="col"> Fecha</th>
+                      <th scope="col"> Costo</th>
+                      <th scope="col">Editar</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Mark</td>
+                      <td>2 Kg</td>
+                      <td>16/2/2023</td>
+                      <td>C$5000</td>
+                      <td> <a class="btn btn-primary" href="#"><i class="fa-regular fa-pen-to-square"></i></a></td>
+                    </tr>
+                    <tr>
+                      <td>Jacob</td>
+                      <td>3 L</td>
+                      <td>16/2/2023</td>
+                      <td>C$5000</td>
+                      <td><a class="btn btn-primary" href="#"><i class="fa-regular fa-pen-to-square"></i></a></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2">Larry the Bird</td>
+                      <td>16/2/2023</td>
+                      <td>C$5000</td>
+                      <td><a class="btn btn-primary" href="#"><i class="fa-regular fa-pen-to-square"></i></a></td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
         </div>
-        
+        <form action=""></form>
+      </div>
     </div>
   </div>
 </div>
