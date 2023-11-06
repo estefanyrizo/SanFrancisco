@@ -1,0 +1,141 @@
+{% extends "layout.html" %}
+
+{%block title%}
+
+Medicina
+
+{% endblock%}
+
+{% block main%}
+<div class="content">
+    <div class="row ganado">
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="sign pt-2 pb-2 text-center">Medicina del ganado</h3>
+                </div>
+                <div class="form-group">
+                    <div class="inputs">
+                        <form action=""></form>
+                        <div class="row m-3">
+                            <div class="col-12 mb-3">
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                    data-bs-target="#medicinaModal">
+                                    <i class="nc-icon nc-simple-add"></i>
+                                </button>
+                            </div>
+                            <div class="col-12">
+                                <table class="table">
+                                    <thead class=" text-primary">
+                                        <tr>
+                                            <th scope="col">Nombre</th>
+                                            <th scope="col"> Presentaci&oacute;n</th>
+                                            <th scope="col"> Tipo</th>
+                                            <th scope="col"> Cantidad</th>
+                                            <th scope="col"> Fecha</th>
+                                            <th scope="col"> Costo</th>
+                                            <th scope="col">Editar</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Mark</td>
+                                            <td>Inyectable</td>
+                                            <td>Vacunación</td>
+                                            <td>2 Kg</td>
+                                            <td>16/2/2023</td>
+                                            <td>C$5000</td>
+                                            <td> <a class="btn btn-primary" href="#"><i
+                                                        class="fa-regular fa-pen-to-square"></i></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Jacob</td>
+                                            <td>Desparasitante</td>
+                                            <td>Topicos</td>
+                                            <td>3 L</td>
+                                            <td>16/2/2023</td>
+                                            <td>C$5000</td>
+                                            <td><a class="btn btn-primary" href="#"><i
+                                                        class="fa-regular fa-pen-to-square"></i></a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Larry the Bird</td>
+                                            <td>Oral</td>
+                                            <td>Antibióticos y medicamentos</td>
+                                            <td>3 L</td>
+                                            <td>16/2/2023</td>
+                                            <td>C$5000</td>
+                                            <td><a class="btn btn-primary" href="#"><i
+                                                        class="fa-regular fa-pen-to-square"></i></a></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <form action=""></form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="medicinaModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Agregar medicina</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action=""></form>
+                <div class="row">
+                    <div class="col-6 mb-3">
+                        <label for="nombre">Nombre</label>
+                        <input type="text" class="form-control" id="nombre" name="nombre" placeholder="..." required>
+                    </div>
+
+                    <div class="col-6 mb-3">
+                        <label for="presentación">Presentación</label>
+                        <select class="form-control" id="presentación" name="presentación" required>
+                            <option disabled="" selected="" value="">Seleccione un elemento</option>
+                            <option value="1">Inyectable</option>
+                            <option value="1">Oral</option>
+                            <option value="1">Tópicos</option>
+                            <option value="2">Implantes subcutáneos</option>
+                            <option value="3">Aerosol nasal</option>
+                        </select>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <label for="tipo">Tipo</label>
+                        <select class="form-control" id="tipo" name="tipo" required>
+                            <option disabled="" selected="" value="">Seleccione un elemento</option>
+                            <option value="1">Vacunación</option>
+                            <option value="2">Desparasitantes</option>
+                            <option value="3">Suplementos nutricionales</option>
+                            <option value="3">Antibióticos y medicamentos</option>         
+                        </select>
+                    </div>
+
+                    <div class="col-3 mb-3">
+                        <label for="cantidad">Cantidad</label>
+                        <input type="text" class="form-control" id="cantidad" name="cantidad" placeholder="Kg, L, Lb"
+                            required>
+                    </div>
+
+                    <div class="col-3 mb-3">
+                        <label for="total">Total</label>
+                        <input type="text" class="form-control" id="total" name="total" placeholder="1000 C$" required>
+                    </div>
+                </div>
+                </form>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% endblock%}

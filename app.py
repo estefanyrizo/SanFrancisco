@@ -275,6 +275,10 @@ def entidadComercial():
 @login_required
 def alimento():
     return render_template("alimento.html")
+@app.route("/medicina", methods=["GET", "POST"])
+@login_required
+def medicina():
+    return render_template("medicina.html")
 @app.route("/alimentoGanado", methods=["GET", "POST"])
 @login_required
 def alimentoGanado():

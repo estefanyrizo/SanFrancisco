@@ -19,7 +19,9 @@ Alimentar ganado
             <form action=""></form>
             <div class="row m-3">
               <div class="col-12 mb-3">
-                <a class="btn btn-primary" href="#"><i class="nc-icon nc-simple-add"></i></a>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                  <i class="nc-icon nc-simple-add"></i>
+                </button>
               </div>
               <div class="col-12">
                 <table class="table">
@@ -64,4 +66,45 @@ Alimentar ganado
     </div>
   </div>
 </div>
-{% endblock%}
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Agregar alimento</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action=""></form>
+        <div class="row">
+          <div class="col-6 mb-3">
+            <label for="alimento">Alimento</label>
+            <select class="form-control" id="alimento" name="alimento" required>
+              <option disabled="" selected="" value="">Seleccione un elemento</option>
+              <option value="1">Sal</option>
+              <option value="2">Melaza</option>
+              <option value="3">Pasto</option>
+            </select>
+          </div>
+
+          <div class="col-6 mb-3">
+            <label for="cantidad">Cantidad</label>
+            <input type="text" class="form-control" id="cantidad" name="cantidad" placeholder="Kg, L, Lb" required>
+          </div>
+
+          <div class="col-6 mb-3">
+            <label for="total">Total</label>
+            <input type="text" class="form-control" id="total" name="total" placeholder="1000 C$" required>
+          </div>
+        </div>
+      </form>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-primary">Guardar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% endblock%}
