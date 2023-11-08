@@ -86,6 +86,7 @@ def login():
 def tablero():
     return render_template("tablero.html")
 
+
 @app.route("/ingresarnovillo", methods=["GET", "POST"])
 @login_required
 def ingresarGanado():
@@ -194,6 +195,7 @@ def imagen():
     else:
         return {"status":"415"}
 
+
 @app.route("/micuenta", methods=["GET", "POST"])
 @login_required
 def miCuenta():
@@ -203,6 +205,7 @@ def miCuenta():
     if request.method == "POST":
         flash("Los cambios se guardaran", "consultar")
         return redirect("/micuenta")
+
 
 @app.route("/ganado", methods=["GET"])
 @login_required
@@ -256,7 +259,6 @@ def buscarganado():
                     </div>'''
 
 
-
 @app.route("/infonovillo/<id>/edit", methods=["GET", "POST"])
 @login_required
 def infonovillo(id):
@@ -267,22 +269,33 @@ def infonovillo(id):
     if request.method == "POST":
         flash("Los cambios se guardaran", "consultar")
         return redirect(f"/infonovillo/{id}/edit")
+    
+
+
+
 @app.route("/entidadComercial", methods=["GET", "POST"])
 @login_required
 def entidadComercial():
     return render_template("entidadComercial.html")
+
+
 @app.route("/alimento", methods=["GET", "POST"])
 @login_required
 def alimento():
     return render_template("alimento.html")
+
+
 @app.route("/medicina", methods=["GET", "POST"])
 @login_required
 def medicina():
     return render_template("medicina.html")
+
+
 @app.route("/alimentoGanado", methods=["GET", "POST"])
 @login_required
 def alimentoGanado():
     return render_template("alimentoGanado.html")
+
 
 @app.route("/logout")
 @login_required
