@@ -2,7 +2,7 @@
 
 {%block title%}
 
-Actualizar ganado
+San Francisco - Actualizar ganado
 
 {% endblock%}
 
@@ -14,9 +14,9 @@ Actualizar ganado
                 <div class="card-header pb-5">
                     <h3 class="sign pt-2 pb-2 text-center">Editar datos del animal</h3>
                 </div>
-                
-                    {%for novillo in novillo%}
-                    <form action="/infonovillo/{{novillo[0]}}/edit" method="post">
+
+                {%for novillo in novillo%}
+                <form action="/infonovillo/{{novillo[0]}}/edit" method="post">
                     <div class="form-group">
                         <div class="inputs">
                             <div class="author">
@@ -31,7 +31,8 @@ Actualizar ganado
                                 <div class="row m-3">
                                     <div class="col-6 mb-3">
                                         <label for="nombre">Nombre</label>
-                                        <input type="text" class="form-control" id="nombre" name="nombre" value="{{novillo.nombre}}" required>
+                                        <input type="text" class="form-control" id="nombre" name="nombre"
+                                            value="{{novillo.nombre}}" required>
                                     </div>
                                     <div class="col-6 mb-3">
                                         <label for="raza">Raza</label>
@@ -44,37 +45,45 @@ Actualizar ganado
                                     </div>
                                     <div class="col-6 mb-3">
                                         <label for="fechaNacimiento">Fecha de Nacimiento</label>
-                                        <input type="date" class="form-control" id="fechaNacimiento" name="fechaNacimiento" value="{{novillo.fechanacimiento}}" required>
+                                        <input type="date" class="form-control" id="fechaNacimiento"
+                                            name="fechaNacimiento" value="{{novillo.fechanacimiento}}" required>
                                     </div>
                                     <div class="col-6 mb-3">
                                         <label for="codigo">Codigo de chapa</label>
-                                        <input type="text" class="form-control" id="codigo" name="codigo" value="{{novillo.codigochapa}}" required>
+                                        <input type="text" class="form-control" id="codigo" name="codigo"
+                                            value="{{novillo.codigochapa}}" required>
                                     </div>
                                     <div class="col-4 mb-3">
                                         <label for="color">Color</label>
-                                        <input type="text" class="form-control" id="color" name="color" value="{{novillo.color}}" required>
+                                        <input type="text" class="form-control" id="color" name="color"
+                                            value="{{novillo.color}}" required>
                                     </div>
                                     <div class="col-4 mb-3">
-                                        <label for="tamaño">Tamaño</label>
-                                        <input type="text" class="form-control" id="tamaño" name="tamaño" value="{{novillo.tamanio}}" required>
+                                        <label for="tamaño">Tamaño(mts)</label>
+                                        <input type="text" class="form-control" id="tamaño" name="tamaño"
+                                            value="{{novillo.tamanio}}" required>
                                     </div>
                                     <div class="col-4 mb-3">
-                                        <label for="peso">Peso</label>
-                                        <input type="text" class="form-control" id="peso" name="peso" value="{{novillo.peso}}" required>
+                                        <label for="peso">Peso(kg)</label>
+                                        <input type="text" class="form-control" id="peso" name="peso"
+                                            value="{{novillo.peso}}" required>
                                     </div>
                                     <div class="col-12 mb-1">
                                         <label for="comentario">Comentario</label>
-                                        <input class="form-control mb-3" type="text" name="comentario" id="comentario" value="{{novillo.comentario}}">
+                                        <input class="form-control mb-3" type="text" name="comentario" id="comentario"
+                                            placeholder="Comentario" {% if novillo.comentario %}
+                                            value="{{novillo.comentario}}" {% endif %}>
                                     </div>
+
                                     <div class="col-12 form-group" align="center">
                                         <button class="btn btn-primary" type="submit">Guardar cambios</button>
                                     </div>
 
                                 </div>
-                            </form>
-                            {% endfor %}
-                            </div>
-                        </div>
-                    </div>
+                </form>
+                {% endfor %}
             </div>
-            {% endblock%}
+        </div>
+    </div>
+</div>
+{% endblock%}

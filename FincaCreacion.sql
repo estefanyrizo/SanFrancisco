@@ -69,6 +69,7 @@ CREATE TABLE IF NOT EXISTS ganado
     estadoGanadoId integer NOT NULL,
     razaId integer NOT NULL,
     origenGanadoId integer NOT NULL,
+    isasignado boolean NOT NULL DEFAULT true,
     PRIMARY KEY (id)
 );
 
@@ -174,7 +175,7 @@ CREATE TABLE IF NOT EXISTS usuario
     usuario varchar(30) NOT NULL,
     hash varchar(255) NOT NULL,
     isAdmin boolean NOT NULL DEFAULT false,
-    activo boolean NOT NULL DEFAULT false,
+    activo boolean NOT NULL DEFAULT true,
     PRIMARY KEY (id)
 );
 

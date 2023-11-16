@@ -40,7 +40,7 @@ locale.setlocale(locale.LC_TIME, 'es_ES')
 @app.route("/", methods=["GET", "POST"])
 @login_required
 def index():
-    return render_template("index.html")
+    return render_template("tablero.html")
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -81,10 +81,10 @@ def login():
         return render_template("login.html")
 
 
-@app.route("/tablero", methods=["GET", "POST"])
+""" @app.route("/tablero", methods=["GET", "POST"])
 @login_required
 def tablero():
-    return render_template("tablero.html")
+    return render_template("tablero.html") """
 
 
 @app.route("/ingresarnovillo", methods=["GET", "POST"])
@@ -156,25 +156,30 @@ def ingresarGanado():
         peso = float(peso)
         procedencia = int(procedencia)
         foto = subirImagen(request.files["foto"])
+        isasignado = True
+
+        if procedencia == 2:
+            isasignado = False
+
         if comentario :        
-            query = text("""INSERT INTO ganado(nombre, fechaNacimiento, peso, tamanio, color, codigoChapa, foto, comentario, estadoGanadoId, razaId, origenGanadoId)
-                        VALUES(:nombre, :fechaNacimiento, :peso, :tamaño, :color, :codigoChapa, :foto, :comentario, :estadoGanadoId, :razaId, :origenGanadoId)
+            query = text("""INSERT INTO ganado(nombre, fechaNacimiento, peso, tamanio, color, codigoChapa, foto, comentario, estadoGanadoId, razaId, origenGanadoId, isasignado)
+                        VALUES(:nombre, :fechaNacimiento, :peso, :tamaño, :color, :codigoChapa, :foto, :comentario, :estadoGanadoId, :razaId, :origenGanadoId, :isasignado)
                         """)
             
             try:
-                db.execute(query, {"nombre":nombre, "fechaNacimiento":fechaNacimiento, "peso":peso, "tamaño":tamaño, "color":color, "codigoChapa":codigo, "foto":foto, "comentario":comentario, "estadoGanadoId":1, "razaId":raza, "origenGanadoId":procedencia})
+                db.execute(query, {"nombre":nombre, "fechaNacimiento":fechaNacimiento, "peso":peso, "tamaño":tamaño, "color":color, "codigoChapa":codigo, "foto":foto, "comentario":comentario, "estadoGanadoId":1, "razaId":raza, "origenGanadoId":procedencia, "isasignado":isasignado})
                 db.commit()
             except:
                 flash("Ha ocurrido un error", "error")
                 return render_template("ingresarNovillo.html", razas=razas, origen=origen)
             
         if not comentario :        
-            query = text("""INSERT INTO ganado(nombre, fechaNacimiento, peso, tamanio, color, codigoChapa, foto, estadoGanadoId, razaId, origenGanadoId)
-                        VALUES(:nombre, :fechaNacimiento, :peso, :tamaño, :color, :codigoChapa, :foto, :estadoGanadoId, :razaId, :origenGanadoId)
+            query = text("""INSERT INTO ganado(nombre, fechaNacimiento, peso, tamanio, color, codigoChapa, foto, estadoGanadoId, razaId, origenGanadoId, isasignado)
+                        VALUES(:nombre, :fechaNacimiento, :peso, :tamaño, :color, :codigoChapa, :foto, :estadoGanadoId, :razaId, :origenGanadoId, :isasignado)
                         """)
             
             try:
-                db.execute(query, {"nombre":nombre, "fechaNacimiento":fechaNacimiento, "peso":peso, "tamaño":tamaño, "color":color, "codigoChapa":codigo, "foto":foto, "estadoGanadoId":1, "razaId":raza, "origenGanadoId":procedencia})
+                db.execute(query, {"nombre":nombre, "fechaNacimiento":fechaNacimiento, "peso":peso, "tamaño":tamaño, "color":color, "codigoChapa":codigo, "foto":foto, "estadoGanadoId":1, "razaId":raza, "origenGanadoId":procedencia, "isasignado":isasignado})
                 db.commit()
             except:
                 flash("Ha ocurrido un error", "error")
@@ -271,12 +276,16 @@ def infonovillo(id):
         return redirect(f"/infonovillo/{id}/edit")
     
 
-
-
-@app.route("/entidadComercial", methods=["GET", "POST"])
+@app.route("/entidadesComerciales", methods=["GET", "POST"])
 @login_required
 def entidadComercial():
     return render_template("entidadComercial.html")
+
+
+@app.route("/empleados", methods=["GET", "POST"])
+@login_required
+def empleados():
+    return render_template("empleados.html")
 
 
 @app.route("/alimento", methods=["GET", "POST"])

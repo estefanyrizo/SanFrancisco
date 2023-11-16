@@ -7,6 +7,7 @@ const imgUploader = document.getElementById('img-uploader');
 const imageUploadbar = document.getElementById('img-upload-bar');
 
 if (imgUploader) {
+	
 	imgUploader.addEventListener('change', async (event) => {
 		const file = event.target.files[0];
 		const formData = new FormData()
@@ -37,7 +38,14 @@ const buscadorganado = document.getElementById('buscarganadoinput');
 
 /*Hace una copia temporal de los datos antes de realizar la busqueda, para no tener que volver a consultar si la 
 busqueda no es necesaria o se cancela la introduccion del parametro a buscar*/
+
 const datosiniciales = document.getElementsByClassName("ganado-list")[0].firstElementChild.outerHTML;
+
+buscadorganado.addEventListener("keypress", function(event){
+	if (event.key === "Enter"){
+		event.preventDefault();
+	}
+});
 
 buscadorganado.addEventListener("input", function () {
 
