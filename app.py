@@ -9,7 +9,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from flask import Flask, flash, redirect, render_template, request, session
 from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
-from helpers import login_required, subirImagen, validarDouble, validarString
+from helpers import admin_required, login_required, subirImagen, validarDouble, validarString
 from flask import jsonify
 from sqlalchemy.sql import text
 import helpers
@@ -81,17 +81,11 @@ def login():
         return render_template("login.html")
 
 
-""" @app.route("/tablero", methods=["GET", "POST"])
-@login_required
-def tablero():
-    return render_template("tablero.html") """
-
-
 @app.route("/ingresarnovillo", methods=["GET", "POST"])
 @login_required
 def ingresarGanado():
 
-    razas = db.execute(text("select * from raza"))
+    razas = db.execute(text("select * from raza ORDER BY nombreraza"))
     origen = db.execute(text("select * from origenganado"))
 
     if request.method == "POST":
@@ -269,7 +263,7 @@ def buscarganado():
 def infonovillo(id):
     if request.method == "GET":
         novillo = db.execute(f"SELECT * FROM ganado INNER JOIN raza ON ganado.razaid = raza.id WHERE ganado.id = {id}")
-        razas = db.execute(text("SELECT * FROM raza"))
+        razas = db.execute(text("SELECT * FROM raza ORDER BY nombreraza"))
         return render_template("novillo.html", novillo = novillo, razas = razas)
     if request.method == "POST":
         flash("Los cambios se guardaran", "consultar")
@@ -284,9 +278,43 @@ def entidadComercial():
 
 @app.route("/empleados", methods=["GET", "POST"])
 @login_required
+@admin_required
 def empleados():
-    return render_template("empleados.html")
 
+    if request.method == "GET":
+        emps = db.execute(text("SELECT * FROM usuario WHERE id > 1 ORDER BY nombre"))
+        conteo = db.execute(text("SELECT COUNT(id) AS cant from usuario")).fetchone()
+        return render_template("empleados.html", empleados = emps, conteo = conteo)
+    
+    else:
+        nombre = request.form.get("nombre")
+        apellido = request.form.get("apellido")
+        password = request.form.get("password")
+
+        if not nombre or nombre.isspace():
+            flash("Nombre invalido", "error")
+            return redirect("/empleados")
+        
+        if not apellido or apellido.isspace():
+            flash("Nombre invalido", "error")
+            return redirect("/empleados")
+
+        if not password or password.isspace():
+            flash("Nombre invalido", "error")
+            return redirect("/empleados")
+        
+        user = (nombre[0]+apellido).lower()
+
+        if db.execute(text(f"SELECT * FROM usuario WHERE usuario = '{user}'")).fetchone():
+            flash("Este empleado ya esta registrado", "error")
+            return redirect("/empleados")
+
+        db.execute(text(f"INSERT INTO usuario(nombre, apellido, usuario, hash) values ('{nombre}', '{apellido}', '{user}', '{generate_password_hash(password)}')"))
+        db.commit()
+
+        flash("Empleado registrado exitosamente", "exito")
+        return redirect("/empleados")
+    
 
 @app.route("/alimento", methods=["GET", "POST"])
 @login_required

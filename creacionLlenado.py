@@ -18,7 +18,7 @@ usuario = (nombre[0]+apellido).lower()
 db.execute(text(f"insert into usuario(nombre, apellido, usuario, hash, isAdmin, activo) values('{nombre}', '{apellido}', '{usuario}', '{generate_password_hash(usuario)}', 'true', 'true')"))
 
 
-razas = ["Brahman", "Simmental", "Charolais", "Limousin", "Hereford", "Angus", "Senepol", "Cebú", "Nelore", "Gyr"]
+razas = ["Suindicos", "Brahman", "Simmental", "Charolais", "Limousin", "Hereford", "Angus", "Senepol", "Cebú", "Nelore", "Gyr"]
 for raza in razas:
   db.execute(text(f"insert into raza(nombreRaza) values('{raza}')"))
 
