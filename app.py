@@ -316,6 +316,47 @@ def empleados():
         return redirect("/empleados")
     
 
+@app.route('/usuario/cambiar+estado/<id>')
+def desactivarempleado(id):
+
+    if db.execute(text(f"select activo from usuario WHERE id = {id}")).fetchone().activo:
+        db.execute(text(f"UPDATE usuario SET activo = false WHERE id = {id}"))
+        db.commit()
+
+    else:
+        db.execute(text(f"UPDATE usuario SET activo = true WHERE id = {id}"))
+        db.commit()
+
+    flash("Se actualizó con exito el estado del empleado", "exito")
+    return redirect("/empleados")
+
+
+@app.route('/usuario/recuperar+contraseña/<id>', methods=["POST"])
+def repass(id):
+
+    id_user = request.form.get("id")
+    passw = request.form.get("password")
+    repassw = request.form.get("repassword")
+
+    if not passw or passw.isspace() or not repassw or repassw.isspace():
+        flash("Debes llenar todos los campos", "error")
+        return redirect("/empleados")
+    
+    if not passw == repassw:
+        flash("Las contraseñas no coinciden", "error")
+        return redirect("/empleados")
+
+    try:
+        db.execute(text(f"UPDATE usuario SET hash = '{generate_password_hash(passw)}' WHERE id = {id}"))
+        db.commit()
+    except:
+        flash("Ha ocurrido un error inesperado", "error")
+        return redirect("/empleados")
+    
+    flash("La contraseña se actualizó exitosamente", "exito")
+    return redirect("/empleados")
+
+
 @app.route("/alimento", methods=["GET", "POST"])
 @login_required
 def alimento():

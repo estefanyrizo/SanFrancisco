@@ -17,7 +17,7 @@ San Francisco - Empleados
                 <div class="row m-3">
                     <div class="col-12 mb-3">
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                            data-bs-target="#medicinaModal">
+                            data-bs-target="#empleadosModal">
                             <i class="nc-icon nc-simple-add"></i>
                         </button>
                     </div>
@@ -29,6 +29,7 @@ San Francisco - Empleados
                                     <th scope="col">Apellido</th>
                                     <th scope="col">Usuario</th>
                                     <th scope="col">Estado</th>
+                                    <th scope="col">Contraseña</th>
                                 </tr>
                             </thead>
 
@@ -42,10 +43,54 @@ San Francisco - Empleados
 
                                     {% if empleado.activo %}
                                     <td> <a class="btn btn-primary"
-                                            href="/usuario/desactivar/{{empleado.id}}">Activo</a></td>
+                                            href="/usuario/cambiar+estado/{{empleado.id}}">Activo</a></td>
                                     {% else %}
-                                    <td> <a class="btn btn-danger" href="#">Inactivo</a></td>
+                                    <td> <a class="btn btn-danger" href="/usuario/cambiar+estado/{{empleado.id}}">Inactivo</a></td>
                                     {% endif %}
+
+                                    <td> <a class="btn btn-info"
+                                        href="/usuario/recuperar+contraseña/{{empleado.id}}" data-bs-toggle="modal"
+                                        data-bs-target="#passModal">Cambiar</a></td>
+
+                                        <div class="modal fade" id="passModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Cambiar contraseña</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form action="/usuario/recuperar+contraseña/{{empleado.id}}" method="post" class="form-group">
+                                                            <div class="row">
+                                                                <div class="container d-flex justify-content-center mb-4 flex-wrap">
+
+                                                                    <div class="container">
+                                                                        <p>{{empleado.nombre}} {{empleado.apellido}}</p>
+                                                                        <input type="text" value="{{empleado.id}}" class="form-control" id="id" name="id"
+                                                                            placeholder="Id de usuario" required hidden>
+                                                                    </div>
+
+                                                                    <div class="container mb-3">
+                                                                        <label for="nombre">Contraseña nueva</label>
+                                                                        <input type="text" class="form-control" id="password" name="password"
+                                                                            placeholder="Contraseña" required>
+                                                                    </div>
+
+                                                                    <div class="container mb-3">
+                                                                        <label for="nombre">Repetir contraseña</label>
+                                                                        <input type="text" class="form-control" id="repassword" name="repassword"
+                                                                            placeholder="Contraseña" required>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                                <button type="submit" class="btn btn-primary">Guardar</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
 
                                 </tr>
                                 {% endfor %}
@@ -68,7 +113,7 @@ San Francisco - Empleados
     </div>
 </div>
 <!-- Modal -->
-<div class="modal fade" id="medicinaModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="empleadosModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
