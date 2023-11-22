@@ -107,7 +107,7 @@ def ingresarGanado():
             flash("Debe ingresar un nombre valido", "error")
             return render_template("ingresarNovillo.html")
         
-        if not raza.isdigit() or not raza or int(raza) < 1 or int(raza) > 10:
+        if not raza.isdigit() or not raza or int(raza) < 1 or int(raza) > 11:
             flash("Debe ingresar una raza valida", "error")
             return render_template("ingresarNovillo.html")
         
@@ -149,7 +149,7 @@ def ingresarGanado():
         tamaño = float(tamaño)
         peso = float(peso)
         procedencia = int(procedencia)
-        foto = subirImagen(request.files["foto"])
+        foto = subirImagen(request.files["foto"], codigo)
         isasignado = True
 
         if procedencia == 2:
@@ -179,6 +179,7 @@ def ingresarGanado():
                 flash("Ha ocurrido un error", "error")
                 return render_template("ingresarNovillo.html", razas=razas, origen=origen)
         
+        flash("Informacion registrada con exito", "exito")
         return render_template("ingresarNovillo.html", razas=razas, origen=origen)
 
     else:
@@ -214,9 +215,8 @@ def ganado():
     limit=10
     offset = page*limit - limit
     total = db.execute(text(f"SELECT * FROM ganado INNER JOIN raza ON ganado.razaid = raza.id WHERE estadoganadoid = 1")).rowcount
-    ganado = db.execute(text(f"SELECT * FROM ganado INNER JOIN raza ON ganado.razaid = raza.id WHERE estadoganadoid = 1 LIMIT {limit} OFFSET {offset}"))
+    ganado = db.execute(text(f"SELECT * FROM ganado INNER JOIN raza ON ganado.razaid = raza.id WHERE estadoganadoid = 1 ORDER BY ganado.id DESC LIMIT {limit} OFFSET {offset}"))
     page = request.args.get(get_page_parameter(), type=int, default=1)
-    print(ganado.rowcount)
     
     pagination = Pagination(page=page, per_page=limit, total=total, search=False, record_name='ganado')
 
@@ -235,7 +235,7 @@ def buscarganado():
 
     if busqueda:
         ganado = db.execute(text(f"""SELECT * FROM ganado INNER JOIN raza ON ganado.razaid = raza.id
-                                 WHERE estadoganadoid = 1 AND LOWER(nombre) LIKE '%{busqueda.lower()}%'
+                                 WHERE LOWER(nombre) LIKE '%{busqueda.lower()}%'
                                  OR LOWER(nombreraza) LIKE '%{busqueda.lower()}%'
                                  OR LOWER(codigochapa) LIKE '%{busqueda.lower()}%'
                                  """))
@@ -260,15 +260,179 @@ def buscarganado():
 
 @app.route("/infonovillo/<id>/edit", methods=["GET", "POST"])
 @login_required
+@admin_required
 def infonovillo(id):
+
+    #imagen_actual = None
+
     if request.method == "GET":
         novillo = db.execute(f"SELECT * FROM ganado INNER JOIN raza ON ganado.razaid = raza.id WHERE ganado.id = {id}")
+        #imagen_actual = db.execute(f"SELECT foto FROM ganado WHERE ganado.id = {id}").fetchone().foto
+
         razas = db.execute(text("SELECT * FROM raza ORDER BY nombreraza"))
-        return render_template("novillo.html", novillo = novillo, razas = razas)
-    if request.method == "POST":
-        flash("Los cambios se guardaran", "consultar")
-        return redirect(f"/infonovillo/{id}/edit")
+        origen = db.execute(text("select * from origenganado"))
+        return render_template("novillo.html", novillo = novillo, razas = razas, origen = origen)
     
+    if request.method == "POST":
+        nombre = request.form.get("nombre") #string
+        raza = request.form.get("raza") #int
+        fechaNacimiento = request.form.get("fechaNacimiento") #date
+        codigo = request.form.get("codigo") #string
+        color = request.form.get("color") #string
+        tamaño = request.form.get("tamaño") #real
+        peso = request.form.get("peso") #real
+        procedencia = request.form.get("procedencia") # int
+        foto = request.files["foto"] # file para subir y obtener el url como string
+        comentario = request.form.get("comentario") #string nullable
+
+        if not validarString(nombre):
+            flash("Debe ingresar un nombre valido", "error")
+            return redirect(f"/infonovillo/{id}/edit")
+        
+        if not raza.isdigit() or not raza or int(raza) < 1 or int(raza) > 11:
+            flash("Debe ingresar una raza valida", "error")
+            return redirect(f"/infonovillo/{id}/edit")
+        
+        if not fechaNacimiento or int(fechaNacimiento.split("-")[0]) != datetime.now().year:
+            flash("Debe ingresar una fecha valida", "error")
+            return redirect(f"/infonovillo/{id}/edit")
+        
+        if not codigo or codigo.isspace():
+            flash("Ha ingresado un codigo invalido o existente", "error")
+            return redirect(f"/infonovillo/{id}/edit")
+        
+        if not validarString(color):
+            flash("Debe ingresar el color del animal", "error")
+            return redirect(f"/infonovillo/{id}/edit")
+        
+        if not validarDouble(tamaño):
+            flash("Debe ingresar un tamaño valido", "error")
+            return redirect(f"/infonovillo/{id}/edit")
+        if not validarDouble(peso):
+            flash("Debe ingresar un peso valido", "error")
+            return redirect(f"/infonovillo/{id}/edit")
+        
+        if not procedencia or int(procedencia) < 1 or int(procedencia) > 2:
+            flash("Debe ingresar un origen valido", "error")
+            return redirect(f"/infonovillo/{id}/edit")
+        
+        raza = int(raza)
+        fechaNacimiento = str(fechaNacimiento)
+        tamaño = float(tamaño)
+        peso = float(peso)
+        procedencia = int(procedencia)
+
+        if foto:
+            foto = subirImagen(request.files["foto"], codigo)
+
+        if comentario :
+
+            if foto:        
+                try:
+                    db.execute(text(f"""UPDATE ganado SET nombre = '{nombre}',
+                            razaid = {raza},
+                            fechanacimiento = '{fechaNacimiento}',
+                            codigochapa = '{codigo}',
+                            color = '{color}',
+                            tamanio = {tamaño},
+                            peso = {peso},
+                            origenganadoid = {procedencia},
+                            foto = '{foto}',
+                            comentario = '{comentario}'
+                            WHERE id = {id}"""))
+                    
+                    db.commit()
+                
+                except:
+                    flash("Ha ocurrido un error", "error")
+                    return redirect(f"/infonovillo/{id}/edit")
+            
+            else:
+                try:
+                    db.execute(text(f"""UPDATE ganado SET nombre = '{nombre}',
+                            razaid = {raza},
+                            fechanacimiento = '{fechaNacimiento}',
+                            codigochapa = '{codigo}',
+                            color = '{color}',
+                            tamanio = {tamaño},
+                            peso = {peso},
+                            origenganadoid = {procedencia},
+                            comentario = '{comentario}'
+                            WHERE id = {id}"""))
+                    
+                    db.commit()
+                
+                except:
+                    flash("Ha ocurrido un error", "error")
+                    return redirect(f"/infonovillo/{id}/edit")
+
+            
+        if not comentario :        
+            if foto:        
+                try:
+                    db.execute(text(f"""UPDATE ganado SET nombre = '{nombre}',
+                            razaid = {raza},
+                            fechanacimiento = '{fechaNacimiento}',
+                            codigochapa = '{codigo}',
+                            color = '{color}',
+                            tamanio = {tamaño},
+                            peso = {peso},
+                            origenganadoid = {procedencia},
+                            foto = '{foto}'
+                            WHERE id = {id}"""))
+                    
+                    db.commit()
+                
+                except:
+                    flash("Ha ocurrido un error", "error")
+                    return redirect(f"/infonovillo/{id}/edit")
+            
+            else:
+                try:
+                    db.execute(text(f"""UPDATE ganado SET nombre = '{nombre}',
+                            razaid = {raza},
+                            fechanacimiento = '{fechaNacimiento}',
+                            codigochapa = '{codigo}',
+                            color = '{color}',
+                            tamanio = {tamaño},
+                            peso = {peso},
+                            origenganadoid = {procedencia}
+                            WHERE id = {id}"""))
+                    
+                    db.commit()
+
+                except:
+                    flash("Ha ocurrido un error", "error")
+                    return redirect(f"/infonovillo/{id}/edit")
+                
+        
+        flash("Informacion actualizada con exito", "exito")
+        return redirect("/ganado")
+
+
+@app.route("/infonovillo/<id>/muerto", methods=["GET"])
+@login_required
+def func_name(id):
+    db.execute(text(f"UPDATE ganado SET estadoganadoid = 3 WHERE id = {id}"))
+    db.commit()
+
+    flash("Se ha actualizado el estado del bovino", "exito")
+    return redirect(f"/infonovillo/{id}/edit")
+
+
+
+@app.route('/infonovillo/<id>/borrar', methods=["POST"])
+def borrar_novillo(id):
+    try:
+        db.execute(text(f"DELETE FROM ganado WHERE id = {id}"))
+        db.commit()
+    except:
+        flash("Ocurrió un error inesperado", "error")
+        return redirect("/ganado")
+    
+    flash("Registro eliminado exitosamente", "exito")
+    return redirect("/ganado")
+
 
 @app.route("/entidadesComerciales", methods=["GET", "POST"])
 @login_required

@@ -16,12 +16,6 @@ San Francisco - Ganado
       </div>
     </div>
   </div>
-  <!-- <div class="container-fluid d-flex text-center">
-    <label for="">Ordenar</label>
-    <select name="" id="">
-      <option disabled="" selected="" value="">Todos</option>
-    </select>
-  </div> -->
 </form>
 
 <div class="content">
@@ -38,11 +32,46 @@ San Francisco - Ganado
             <li class="list-group-item">Color: {{cabeza.color}}</li>
             <li class="list-group-item">Peso: {{cabeza.peso}} kg.</li>
             <li class="list-group-item">Tamaño: {{cabeza.tamanio}} mts.</li>
-            <li class="list-group-item">Fecha de nacimiento: {{cabeza.fechanacimiento | datetimeformat('%d de %B %Y')}}</li>
+            <li class="list-group-item">Fecha de nacimiento: {{cabeza.fechanacimiento | datetimeformat('%d de %B %Y')}}
+            </li>
           </ul>
           <div class="row d-flex">
             <div class="col-12 form-group" align="center">
-              <a class="btn btn-primary" href="/infonovillo/{{cabeza[0]}}/edit"><i class="fa-regular fa-pen-to-square"></i></a>
+
+              <a class="btn btn-primary" href="/infonovillo/{{cabeza[0]}}/edit">
+                <i class="fa-regular fa-pen-to-square"></i></a>
+
+              <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#EliminarModal{{cabeza[0]}}"><i
+                  class="fa-solid fa-trash-can"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal fade" id="EliminarModal{{cabeza[0]}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Eliminar bovino</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form action="/infonovillo/{{cabeza[0]}}/borrar" method="post" class="form-group">
+                <div class="row">
+                  <div class="container d-flex justify-content-center mb-4 flex-wrap">
+                    <div class="container">
+                      <h5>¿Estas seguro que deseas eliminar el bovino con codigo:
+                        <strong>{{cabeza.codigochapa}}</strong> y nombre <strong>{{cabeza.nombre}}</strong>?
+                      </h5>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer p-0">
+                  <button type="button" class="btn btn-secondary mb-0 mr-2" data-bs-dismiss="modal">Cancelar</button>
+                  <button type="submit" class="btn btn-danger mb-0">Eliminar</button>
+                </div>
+              </form>
             </div>
           </div>
         </div>

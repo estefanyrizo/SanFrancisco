@@ -63,7 +63,7 @@ def validarDouble(dato):
     return True
 
 
-def subirImagen(imagen):
+def subirImagen(imagen, folderimg):
 
     imagen = b64encode(request.files["foto"].stream.read())
     # Al codificarla, se agrega una letra y una comilla al inicio del texto, tambien una comilla al fina
@@ -75,7 +75,7 @@ def subirImagen(imagen):
     # print(imagen)
 
     res = ik.upload(file=imagen, file_name=request.form.get(
-        "codigo"), options=UploadFileRequestOptions(folder="Ganado"))
+        "codigo"), options=UploadFileRequestOptions(folder=f"Ganado/{folderimg}"))
     # El options es opcional de ponerlo y tiene varios parametros configurables, util como para custom_metadata = {"marca": "Gucci", "color":"rojo"}
     # print(res.url)
     # El url listo para guardar en la base de datos y mostrarlo en el html desde el link
