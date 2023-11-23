@@ -437,7 +437,58 @@ def borrar_novillo(id):
 @app.route("/entidadesComerciales", methods=["GET", "POST"])
 @login_required
 def entidadComercial():
-    return render_template("entidadComercial.html")
+
+    if request.method == "POST":
+        nombre = request.form.get("nombre")
+        apellido = request.form.get("apellido") #posibilidad de null si es entidad juridica
+        telefono = request.form.get("telefono") #posibilidad de null
+        identificacion = request.form.get("identificacion")
+        tipoentidadid = int(request.form.get("tipoEntidad"))
+
+        if not tipoentidadid or tipoentidadid < 1 or tipoentidadid > 2:
+            flash("Debe seleccionar el tipo de entidad comercial", "error")
+            return render_template("entidadComercial.html")
+        
+        if not nombre or nombre.isspace():
+            flash("Debe especificar el nombre de entidad comercial", "error")
+            return render_template("entidadComercial.html")
+        if tipoentidadid == 1:
+            if not apellido or apellido.isspace():
+                flash("Debe especificar el nombre de entidad comercial", "error")
+                return render_template("entidadComercial.html")
+        if not identificacion or identificacion.isspace():
+            flash("Debe especificar la cédula o RUC de la entidad comercial", "error")
+            return render_template("entidadComercial.html")
+        
+        
+        if tipoentidadid == 1:
+            if telefono:
+                db.execute(text(f"""INSERT INTO entidadcomercial(nombre, apellido, telefono, identificacion, tipoentidadid)
+                                VALUES('{nombre}', '{apellido}', {telefono}, '{identificacion}', {tipoentidadid})"""))
+            else:
+                db.execute(text(f"""INSERT INTO entidadcomercial(nombre, apellido, identificacion, tipoentidadid)
+                                VALUES('{nombre}', '{apellido}', '{identificacion}', {tipoentidadid})"""))
+            
+        else:
+            if telefono:
+                db.execute(text(f"""INSERT INTO entidadcomercial(nombre, telefono, identificacion, tipoentidadid)
+                                VALUES('{nombre}', '{telefono}', '{identificacion}', {tipoentidadid})"""))
+            else:
+                db.execute(text(f"""INSERT INTO entidadcomercial(nombre, identificacion, tipoentidadid)
+                                VALUES('{nombre}', '{identificacion}', {tipoentidadid})"""))
+            
+        try:
+            db.commit()
+        except:
+            flash("Ocurrió un error inesperado", "error")
+            return render_template("entidadComercial.html")
+
+        flash("La entidad comercial fue registrada exitosamente", "exito")
+        return redirect("/entidadesComerciales")
+    
+    else:
+        entidades = db.execute(text("SELECT * FROM entidadcomercial"))
+        return render_template("entidadComercial.html", entidades = entidades)
 
 
 @app.route("/empleados", methods=["GET", "POST"])

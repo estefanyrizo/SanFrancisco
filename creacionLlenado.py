@@ -32,6 +32,10 @@ estadoGanado = ["Disponible", "Vendido", "Muerto"]
 for est in estadoGanado:
   db.execute(text(f"insert into estadoganado(estado) values('{est}')"))
 
+tiposEntidad = ["Natural", "Juridica"]
+for tipo in tiposEntidad:
+  db.execute(text(f"INSERT INTO tipoentidad(tipoentidad) VALUES('{tipo}')"))
+
 '''
 
 db.commit()
