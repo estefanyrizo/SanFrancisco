@@ -105,44 +105,42 @@ def ingresarGanado():
 
         if not validarString(nombre):
             flash("Debe ingresar un nombre valido", "error")
-            return render_template("ingresarNovillo.html")
+            return redirect("/ingresarnovillo")
         
         if not raza.isdigit() or not raza or int(raza) < 1 or int(raza) > 11:
             flash("Debe ingresar una raza valida", "error")
-            return render_template("ingresarNovillo.html")
+            return redirect("/ingresarnovillo")
         
         if not fechaNacimiento or int(fechaNacimiento.split("-")[0]) != datetime.now().year:
             flash("Debe ingresar una fecha valida", "error")
-            return render_template("ingresarNovillo.html")
+            return redirect("/ingresarnovillo")
         
         #fecha = fechaNacimiento.split("-") # año(0)-mes(1)-dia(2)
         #print(date(int(fecha[0]), int(fecha[1]), int(fecha[2])))
 
         if not codigo or codigo.isspace() or db.execute(text(f"select * from ganado where codigochapa = '{codigo}'")).fetchone():
             flash("Ha ingresado un codigo invalido o existente", "error")
-            return render_template("ingresarNovillo.html")
+            return redirect("/ingresarnovillo")
         
         if not validarString(color):
             flash("Debe ingresar el color del animal", "error")
-            return render_template("ingresarNovillo.html")
+            return redirect("/ingresarnovillo")
         
         if not validarDouble(tamaño):
             flash("Debe ingresar un tamaño valido", "error")
-            return render_template("ingresarNovillo.html")
+            return redirect("/ingresarnovillo")
 
         if not validarDouble(peso):
             flash("Debe ingresar un peso valido", "error")
-            return render_template("ingresarNovillo.html")
+            return redirect("/ingresarnovillo")
         
         if not procedencia or int(procedencia) < 1 or int(procedencia) > 2:
             flash("Debe ingresar un origen valido", "error")
-            return render_template("ingresarNovillo.html")
+            return redirect("/ingresarnovillo")
         
         if not foto:
             flash("Debe ingresar una foto del animal", "error")
-            return render_template("ingresarNovillo.html")
-
-        flash("Informacion registrada con exito", "exito")
+            return redirect("/ingresarnovillo")
         
         raza = int(raza)
         fechaNacimiento = str(fechaNacimiento)
@@ -165,7 +163,7 @@ def ingresarGanado():
                 db.commit()
             except:
                 flash("Ha ocurrido un error", "error")
-                return render_template("ingresarNovillo.html", razas=razas, origen=origen)
+                return redirect("/ingresarnovillo")
             
         if not comentario :        
             query = text("""INSERT INTO ganado(nombre, fechaNacimiento, peso, tamanio, color, codigoChapa, foto, estadoGanadoId, razaId, origenGanadoId, isasignado)
@@ -177,10 +175,10 @@ def ingresarGanado():
                 db.commit()
             except:
                 flash("Ha ocurrido un error", "error")
-                return render_template("ingresarNovillo.html", razas=razas, origen=origen)
+                return redirect("/ingresarnovillo")
         
         flash("Informacion registrada con exito", "exito")
-        return render_template("ingresarNovillo.html", razas=razas, origen=origen)
+        return redirect("/ingresarnovillo")
 
     else:
         return render_template("ingresarNovillo.html", razas=razas, origen=origen)
@@ -461,18 +459,18 @@ def entidadComercial():
 
         if not tipoentidadid or tipoentidadid < 1 or tipoentidadid > 2:
             flash("Debe seleccionar el tipo de entidad comercial", "error")
-            return render_template("entidadComercial.html")
+            return redirect("/entidadesComerciales")
         
         if not nombre or nombre.isspace():
             flash("Debe especificar el nombre de entidad comercial", "error")
-            return render_template("entidadComercial.html")
+            return redirect("/entidadesComerciales")
         if tipoentidadid == 1:
             if not apellido or apellido.isspace():
-                flash("Debe especificar el nombre de entidad comercial", "error")
-                return render_template("entidadComercial.html")
+                flash("Debe especificar el apellido de entidad comercial", "error")
+                return redirect("/entidadesComerciales")
         if not identificacion or identificacion.isspace():
             flash("Debe especificar la cédula o RUC de la entidad comercial", "error")
-            return render_template("entidadComercial.html")
+            return redirect("/entidadesComerciales")
         
         
         if tipoentidadid == 1:
@@ -501,8 +499,58 @@ def entidadComercial():
         return redirect("/entidadesComerciales")
     
     else:
-        entidades = db.execute(text("SELECT * FROM entidadcomercial"))
-        return render_template("entidadComercial.html", entidades = entidades)
+        entidades = db.execute(text("SELECT * FROM entidadcomercial ORDER BY nombre"))
+        tiposentidad = db.execute(text("SELECT * FROM tipoentidad"))
+        return render_template("entidadComercial.html", entidades = entidades, tiposentidades = tiposentidad)
+    
+
+@app.route("/entidadesComerciales/<id>/editar", methods=["POST"])
+def editarentidad(id):
+
+    nombre = request.form.get("nombre")
+    apellido = request.form.get("apellido") #posibilidad de null si es entidad juridica
+    telefono = request.form.get("telefono") #posibilidad de null
+    identificacion = request.form.get("identificacion")
+    tipoentidadid = int(request.form.get("tipoEntidad"))
+
+    if not tipoentidadid or tipoentidadid < 1 or tipoentidadid > 2:
+        flash("Debe seleccionar el tipo de entidad comercial", "error")
+        return redirect("/entidadesComerciales")
+    
+    if not nombre or nombre.isspace():
+        flash("Debe especificar el nombre de entidad comercial", "error")
+        return redirect("/entidadesComerciales")
+    if tipoentidadid == 1:
+        if not apellido or apellido.isspace():
+            flash("Debe especificar el apellido de entidad comercial", "error")
+            return redirect("/entidadesComerciales")
+    if not identificacion or identificacion.isspace():
+        flash("Debe especificar la cédula o RUC de la entidad comercial", "error")
+        return redirect("/entidadesComerciales")
+    
+    if tipoentidadid == 1:
+            if telefono:
+                db.execute(text(f"UPDATE entidadcomercial SET nombre = '{nombre}', apellido = '{apellido}', telefono = '{telefono}', identificacion = '{identificacion}', tipoentidadid = {tipoentidadid} WHERE id = {id}"))
+                
+            else:
+                db.execute(text(f"UPDATE entidadcomercial SET nombre = '{nombre}', apellido = '{apellido}', telefono = null, identificacion = '{identificacion}', tipoentidadid = {tipoentidadid} WHERE id = {id}"))
+                 
+    else:
+        if telefono:
+            db.execute(text(f"UPDATE entidadcomercial SET nombre = '{nombre}', apellido = null, telefono = {telefono}, identificacion = '{identificacion}', tipoentidadid = {tipoentidadid} WHERE id = {id}"))
+                 
+        else:
+            db.execute(text(f"UPDATE entidadcomercial SET nombre = '{nombre}', apellido = null, telefono = null, identificacion = '{identificacion}', tipoentidadid = {tipoentidadid} WHERE id = {id}"))
+                 
+        
+    try:
+        db.commit()
+    except:
+        flash("Ocurrió un error inesperado", "error")
+        return redirect("/entidadesComerciales")
+    
+    flash("Se guardaron los cambios", "exito")
+    return redirect("/entidadesComerciales")
 
 
 @app.route("/empleados", methods=["GET", "POST"])

@@ -9,7 +9,7 @@ San Francisco - Entidad comercial
 {% block main%}
 <div class="content">
     <div class="row ganado">
-        <div class="col-md-7">
+        <div class="col-md-8">
             <div class="card">
                 <div class="card-header">
                     <h3 class="sign pt-2 pb-2 text-center">Nueva entidad comercial</h3>
@@ -63,14 +63,14 @@ San Francisco - Entidad comercial
             </div>
         </div>
 
-        <div class="col-md-4">
-            <div class="card entidades">
+        <div class="col-md-8">
+            <div class="card">
                 <div class="card-header">
-                    <h4 class="sign text-center">Relaciones comerciales</h4>
+                    <h3 class="sign pt-2 pb-2 text-center">Relaciones comerciales</h3>
                 </div>
                 <div class="form-group">
                     <div class="inputs">
-                        <div class="row m-2">
+                        <div class="row m-3">
                             <div class="col-12">
                                 <table class="table table-striped">
                                     <thead class=" text-primary">
@@ -80,18 +80,16 @@ San Francisco - Entidad comercial
                                         </tr>
                                     </thead>
                                     <tbody>
-
+                                        
                                         {% for entidad in entidades %}
                                         <tr>
                                             <td>{{entidad.nombre + ' ' + entidad.apellido|default('', true)}}</td>
                                             <td>{{entidad.telefono|default('-', true)}}</td>
-                                            <td> <a class="btn btn-primary"
-                                                    href="/entidadesComerciales/{{entidad.id}}/editar"><i
-                                                        class="fa-regular fa-eye"></i></a></td>
-                                                        
+                                            <td> <a class="btn btn-primary" href="/entidadesComerciales/{{entidad.id}}/editar"><i
+                                                        class="fa-regular fa-pen-to-square"></i></a></td>
                                         </tr>
                                         {% endfor %}
-
+                                        
                                     </tbody>
                                 </table>
                             </div>
