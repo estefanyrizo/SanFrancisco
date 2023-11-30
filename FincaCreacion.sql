@@ -161,7 +161,7 @@ CREATE TABLE IF NOT EXISTS detallepresentacion
 CREATE TABLE IF NOT EXISTS presentacion
 (
     id serial NOT NULL,
-    presentacion varchar(50) NOT NULL,
+    tipomedicina varchar(50) NOT NULL,
     viaAplicacion varchar(30) NOT NULL,
     unidadMedida varchar(20) NOT NULL,
     PRIMARY KEY (id)
