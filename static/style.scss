@@ -5,11 +5,13 @@ $text_color : white;
 
 
 /* Login */
+
 .main-content-login {
-	width: 50%;
+	//width: 50%;
 	border-radius: 20px;
 	box-shadow: 0 5px 5px rgba(0, 0, 0, 0.4);
-	margin: 5em auto;
+	margin: 0px 0px;
+	width: 100%;
 	display: flex;
 
 	.company__info {
@@ -61,6 +63,7 @@ $text_color : white;
 	form {
 		padding: 0 2em;
 	}
+<<<<<<< HEAD
 
 	.form__input {
 		width: 100%;
@@ -101,6 +104,61 @@ $text_color : white;
 }
 
 /*# sourceMappingURL=style.css.map */
+=======
+  }
+  .row > h2 {
+	color: #008080;
+  }
+  
+  .login_form {
+	background-color: #fff;
+	border-top-right-radius: 20px;
+	border-bottom-right-radius: 20px;
+	border-top: 1px solid #ccc;
+	border-right: 1px solid #ccc;
+  }
+  
+  form {
+	padding: 0 2em;
+  }
+  
+  .form__input {
+	width: 100%;
+	border: 0px solid transparent;
+	border-radius: 10px;
+	border-bottom: 1px solid #aaa;
+	padding: 1em 0.5em 0.5em;
+	padding-left: 2em;
+	outline: none;
+	margin: 1.5em auto;
+	transition: all 0.5s ease;
+  }
+  
+  .form__input:focus {
+	border-bottom-color: #008080;
+	box-shadow: 0 0 5px rgba(0, 80, 80, 0.4);
+	border-radius: 4px;
+  }
+  
+  .btnl {
+	transition: all 0.5s ease;
+	width: 60%;
+	border-radius: 30px;
+	color: #008080;
+	font-weight: 600;
+	background-color: #fff;
+	border: 1px solid #008080;
+	margin-top: 1.5em;
+	margin-bottom: 1em;
+  }
+  
+  .btnl:hover, .btnl:focus {
+	background-color: #008080;
+	color: #fff;
+  }
+  
+} /*# sourceMappingURL=style.css.map */
+>>>>>>> b1fd28b91cfdbacdb1e5128e040e3c25aee0d6d2
 /* Fin login */
 
 .datos_ganado {
@@ -257,8 +315,14 @@ $text_color : white;
 		justify-content: center;
 	}
 
+<<<<<<< HEAD
 	.ganado-card {
 		width: 60%;
+=======
+	.ganado-card
+	{
+		//width: 60%;
+>>>>>>> b1fd28b91cfdbacdb1e5128e040e3c25aee0d6d2
 		height: 80%;
 	}
 }
