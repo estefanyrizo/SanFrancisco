@@ -869,10 +869,61 @@ def editarregistrosmedicos():
     return redirect("/registrosmedicos")
 
 
-@app.route("/control_bovino")
+@app.route("/control_bovino", methods=["GET","POST"])
+@login_required
 def controlbovino():
-    return render_template("controlbovino.html")
+    if request.method == "GET":
+        ganado = db.execute(text("SELECT id, codigochapa, nombre FROM ganado"))
+        registros = db.execute(text("""SELECT g.id ganadoid,
+                                    rp.id idregistro,
+                                    g.codigochapa codigochapa,
+                                    rp.fecha fecha,
+                                    rp.peso peso,
+                                    rp.comentario comentario
+                                    FROM public.registroproduccion rp
+                                    inner join ganado g
+                                    on rp.ganadoid = g.id
+                                    inner join usuario u
+                                    on rp.usuarioid = u.id
+                                    order by fecha"""))
+        
+        return render_template("controlbovino.html", registros = [r for r in registros], ganado = [g for g in ganado])
+    
+    else:
+        fecha = str(request.form.get("fecha"))
+        ganadoid = int(request.form.get("bovino"))
+        peso = float(request.form.get("peso"))
+        comentario = request.form.get("comentario")
 
+        if not fecha:
+            flash("Debe ingresar la fecha de control", "error")
+            return redirect("/control_bovino")
+        if not ganadoid or ganadoid < 1:
+            flash("Debe seleccionar el bovino", "error")
+            return redirect("/control_bovino")
+        if not peso or peso < 1:
+            flash("Debe ingresar el peso del bovino", "error")
+            return redirect("/control_bovino")
+        
+        if comentario:
+            try:
+                db.execute(text(f"""INSERT INTO registroproduccion(fecha, ganadoid, peso, comentario, usuarioid) 
+                                VALUES('{fecha}', {ganadoid}, {peso}, '{comentario}', {session["user_id"]})"""))
+                db.commit()
+            except:
+                flash("Ocurrió un error inesperado", "error")
+                return redirect("/control_bovino")
+        else:
+            try:
+                db.execute(text(f"""INSERT INTO registroproduccion(fecha, ganadoid, peso, usuarioid) 
+                                VALUES('{fecha}', {ganadoid}, {peso}, {session["user_id"]})"""))
+                db.commit()
+            except:
+                flash("Ocurrió un error inesperado", "error")
+                return redirect("/control_bovino")
+            
+        flash("Registro creado exitosamente", "exito")
+        return redirect("/control_bovino")
 
 @app.route("/alimentoGanado", methods=["GET", "POST"])
 @login_required

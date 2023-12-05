@@ -2,109 +2,110 @@
 
 {%block title%}
 
-San Francisco - Alimentar ganado
+San Francisco - Control bovino
 
 {% endblock%}
 
 {% block main%}
 <div class="content">
-  <div class="row ganado">
-    <div class="col-md-10">
-      <div class="card">
-        <div class="card-header">
-          <h3 class="sign pt-2 pb-2 text-center">Alimento del ganado</h3>
-        </div>
-        <div class="form-group">
-          <div class="inputs">
-            <form action=""></form>
-            <div class="row m-3">
-              <div class="col-12 mb-3">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                  <i class="nc-icon nc-simple-add"></i>
-                </button>
-              </div>
-              <div class="col-12">
-                <table class="table">
-                  <thead class=" text-primary">
-                    <tr>
-                      <th scope="col">Nombre</th>
-                      <th scope="col"> Cantidad</th>
-                      <th scope="col"> Fecha</th>
-                      <th scope="col"> Costo</th>
-                      <th scope="col">Editar</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>Mark</td>
-                      <td>2 Kg</td>
-                      <td>16/2/2023</td>
-                      <td>C$5000</td>
-                      <td> <a class="btn btn-primary" href="#"><i class="fa-regular fa-pen-to-square"></i></a></td>
-                    </tr>
-                    <tr>
-                      <td>Jacob</td>
-                      <td>3 L</td>
-                      <td>16/2/2023</td>
-                      <td>C$5000</td>
-                      <td><a class="btn btn-primary" href="#"><i class="fa-regular fa-pen-to-square"></i></a></td>
-                    </tr>
-                    <tr>
-                      <td colspan="2">Larry the Bird</td>
-                      <td>16/2/2023</td>
-                      <td>C$5000</td>
-                      <td><a class="btn btn-primary" href="#"><i class="fa-regular fa-pen-to-square"></i></a></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+    <div class="row ganado">
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="sign pt-2 pb-2 text-center">Control del ganado</h3>
+                </div>
+                <div class="form-group">
+                    <div class="inputs">
+                        <div class="row m-3">
+                            <div class="col-12 mb-3">
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                    data-bs-target="#exampleModal">
+                                    <i class="nc-icon nc-simple-add"></i>
+                                </button>
+                            </div>
+                            <div class="col-12">
+                                <table class="table">
+                                    <thead class=" text-primary">
+                                        <tr>
+                                            <th scope="col">Chapa</th>
+                                            <th scope="col"> Fecha</th>
+                                            <th scope="col"> Peso</th>
+                                            <th scope="col"> Comentario</th>
+                                            <th scope="col">Editar</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        {% for reg in registros %}
+                                        <tr>
+                                            <td>{{reg.codigochapa}}</td>
+                                            <td>{{reg.fecha}}</td>
+                                            <td>{{reg.peso}}</td>
+                                            <td>{{reg.comentario|default('', true)}}</td>
+                                            <td><button class="btn btn-primary" data-bs-toggle="modal"
+                                                    data-bs-target="#exampleModal{{reg.idregistro}}"><i
+                                                        class="fa-regular fa-pen-to-square"></i></button></td>
+                                        </tr>
+                                        {% endfor %}
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-        <form action=""></form>
-      </div>
     </div>
-  </div>
 </div>
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Agregar alimento</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form action=""></form>
-        <div class="row">
-          <div class="col-6 mb-3">
-            <label for="alimento">Alimento</label>
-            <select class="form-control" id="alimento" name="alimento" required>
-              <option disabled="" selected="" value="">Seleccione un elemento</option>
-              <option value="1">Sal</option>
-              <option value="2">Melaza</option>
-              <option value="3">Pasto</option>
-            </select>
-          </div>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Agregar registro</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="/control_bovino" method="post">
+                    <div class="row">
 
-          <div class="col-6 mb-3">
-            <label for="cantidad">Cantidad</label>
-            <input type="text" class="form-control" id="cantidad" name="cantidad" placeholder="Kg, L, Lb" required>
-          </div>
+                        <div class="col-6 mb-3">
+                            <label for="fecha">Fecha</label>
+                            <input type="date" class="form-control" id="fecha" name="fecha" required>
+                        </div>
 
-          <div class="col-6 mb-3">
-            <label for="total">Total</label>
-            <input type="text" class="form-control" id="total" name="total" placeholder="1000 C$" required>
-          </div>
+                        <div class="col-6 mb-3">
+                            <label for="bovino">Bovino</label>
+                            <select class="form-control" id="bovino" name="bovino" required>
+                                <option>Seleccione un elemento</option>
+                                {% for gan in ganado %}
+                                <option value="{{gan.id}}">{{gan.codigochapa}} - {{gan.nombre}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="col-6 mb-3">
+                            <label for="peso">Peso (Kg)</label>
+                            <input type="text" class="form-control" id="peso" name="peso" placeholder="Peso en Kg"
+                                required>
+                        </div>
+
+                        <div class="col-6 mb-3">
+                            <label for="comentario">Comentario</label>
+                            <input type="text" class="form-control" id="comentario" name="comentario"
+                                placeholder="Comentario">
+                        </div>
+                    </div>
+
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                </form>
+            </div>
         </div>
-      </form>
-
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button type="button" class="btn btn-primary">Guardar</button>
-        </div>
-      </div>
     </div>
-  </div>
 
-  {% endblock%}
+    {% endblock%}

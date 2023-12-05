@@ -7,8 +7,8 @@ San Francisco - Ganado
 {% endblock%}
 
 {% block main%}
-<form>
-  <div class="container-fluid input-group col-sm-6  d-flex justify-items-center">
+<form class="d-flex">
+  <div class="container-fluid input-group col-sm-6 d-flex justify-items-center">
     <input type="text" value="" class="form-control" placeholder="Buscar..." id="buscarganadoinput">
     <div class="input-group-append">
       <div class="input-group-text">
@@ -16,6 +16,11 @@ San Francisco - Ganado
       </div>
     </div>
   </div>
+
+  <div class="container input-group ml-0 mr-0 col-sm-2 d-flex" style="width: auto;">
+    <a type="button" href="/ingresarnovillo" class="btn btn-primary m-0"><i class="nc-icon nc-simple-add"></i></a>
+  </div>
+  
 </form>
 
 <div class="content">
