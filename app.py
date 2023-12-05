@@ -971,6 +971,7 @@ def compraIndividualFin():
         db.execute("UPDATE ganado SET isasignado = true WHERE ganado.id = {id}")
         flash("Compra ingresada correctamente", "exito")
         return redirect("/")
+    
 @app.route("/compras")
 @login_required
 def compras():
