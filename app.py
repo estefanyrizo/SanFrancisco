@@ -252,12 +252,26 @@ def buscarganado():
             return '''<div class="container-fluid text-center">
                         <h3>Ningun resultado para los parametros de busqueda</h3>
                     </div>'''
+        
+@app.route("/infonovillo/<id>/", methods=["GET", "POST"])
+@login_required
+def infonovillo(id):
 
+    #imagen_actual = None
+
+    if request.method == "GET":
+        novillo = db.execute(f"SELECT * FROM ganado INNER JOIN raza ON ganado.razaid = raza.id WHERE ganado.id = {id}")
+        #imagen_actual = db.execute(f"SELECT foto FROM ganado WHERE ganado.id = {id}").fetchone().foto
+
+        razas = db.execute(text("SELECT * FROM raza ORDER BY nombreraza"))
+        origen = db.execute(text("select * from origenganado"))
+        return render_template("novilloinfo.html", novillo = novillo, razas = razas, origen = origen)
+    
 
 @app.route("/infonovillo/<id>/edit", methods=["GET", "POST"])
 @login_required
 @admin_required
-def infonovillo(id):
+def infonovilloedit(id):
 
     #imagen_actual = None
 

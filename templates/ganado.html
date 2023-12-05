@@ -24,17 +24,10 @@ San Francisco - Ganado
       {% for cabeza in ganado %}
       <div class="col-md-4 ganado-card">
         <div class="card">
-          <img class="img-top" src="{{cabeza.foto}}">
-          <h5 class="card-title">{{cabeza.nombre}}</h5>
-          <ul class="list-group datos_ganado">
-            <li class="list-group-item">Codigo: {{cabeza.codigochapa}}</li>
-            <li class="list-group-item">Raza: {{cabeza.nombreraza}}</li>
-            <li class="list-group-item">Color: {{cabeza.color}}</li>
-            <li class="list-group-item">Peso: {{cabeza.peso}} kg.</li>
-            <li class="list-group-item">Tamaño: {{cabeza.tamanio}} mts.</li>
-            <li class="list-group-item">Fecha de nacimiento: {{cabeza.fechanacimiento | datetimeformat('%d de %B %Y')}}
-            </li>
-          </ul>
+          <a href="/infonovillo/{{cabeza[0]}}">
+            <img class="img-top" src="{{cabeza.foto}}">
+          </a>
+          <h5 class="card-title">{{cabeza.codigochapa}} - {{cabeza.nombre}}</h5>
           <div class="row d-flex">
             <div class="col-12 form-group" align="center">
 
@@ -49,7 +42,8 @@ San Francisco - Ganado
         </div>
       </div>
 
-      <div class="modal fade" id="EliminarModal{{cabeza[0]}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal fade" id="EliminarModal{{cabeza[0]}}" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <div class="modal-header">

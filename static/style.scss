@@ -226,7 +226,6 @@ $text_color : white;
     padding-bottom : 3%;
 	.card
 	{
-		width: 100%;
 		margin-left: 0.5%;
 		margin-right: 0.5%;
 		.card-title{
@@ -251,6 +250,19 @@ $text_color : white;
 	{
 		justify-content: center;
 	}
+
+	.ganado-card
+	{
+		width: 60%;
+		height: 80%;
+	}
+}
+.entidades
+{
+  width: 350px;
+  height: 440px;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
 }
 
 @media only screen and (max-width: 800px) {

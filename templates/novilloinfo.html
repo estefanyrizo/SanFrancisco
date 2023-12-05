@@ -1,0 +1,115 @@
+{% extends "layout.html" %}
+
+{%block title%}
+
+San Francisco - Datos ganado
+
+{% endblock%}
+
+{% block main%}
+<div class="content">
+    <div class="row ganado">
+        <div class="col-md-9">
+            <div class="card card-user">
+                <div class="card-header mb-2 pb-5">
+                    <h3 class="sign pt-2 pb-2 text-center">Datos del animal</h3>
+                </div>
+                {%for novillo in novillo%}
+                    <div class="form-group">
+                        <div class="inputs">
+
+                            <div class="author">
+                                <img class="avatar" src="{{novillo.foto}}" id="img-preview">
+                                <br>
+                                <input type="file" id="img-uploader" name="foto" accept="image/*" hidden>
+                                <input name="perfil" id="url" hidden form="update-my-profile">
+                                <h5 class="title">{{novillo.nombre}}</h5>
+                            </div>
+
+                            <div class="card-body">
+                                <div class="row m-3">
+
+                                    <div class="col-6 mb-3">
+                                        <label for="nombre">Nombre</label>
+                                        <input type="text" class="form-control" id="nombre" name="nombre" value="{{novillo.nombre}}" required>
+                                    </div>
+
+                                    <div class="col-6 mb-3">
+                                        <label for="raza">Raza</label>
+                                        <select class="form-control" id="raza" name="raza">
+                                            <!-- <option value={{novillo.razaid}}>{{novillo.nombreraza}}</option> -->
+                                            {% for item in razas %}
+                                            <option value="{{item[0]}}"
+                                            {% if novillo.razaid == item[0] %}
+                                                selected
+                                            {% endif %}
+                                            >{{item[1]}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+                                    <div class="col-6 mb-3">
+                                        <label for="fechaNacimiento">Fecha de Nacimiento</label>
+                                        <input type="date" class="form-control" id="fechaNacimiento"
+                                            name="fechaNacimiento" value="{{novillo.fechanacimiento}}" required>
+                                    </div>
+
+                                    <div class="col-6 mb-3">
+                                        <label for="codigo">Codigo de chapa</label>
+                                        <input type="text" class="form-control" id="codigo" name="codigo"
+                                            value="{{novillo.codigochapa}}" required>
+                                    </div>
+                                    
+                                    <div class="col-3 mb-3">
+                                        <label for="color">Color</label>
+                                        <input type="text" class="form-control" id="color" name="color"
+                                            value="{{novillo.color}}" required>
+                                    </div>
+
+                                    <div class="col-3 mb-3">
+                                        <label for="tamaño">Tamaño(mts)</label>
+                                        <input type="text" class="form-control" id="tamaño" name="tamaño"
+                                            value="{{novillo.tamanio}}" required>
+                                    </div>
+
+                                    <div class="col-3 mb-3">
+                                        <label for="peso">Peso(kg)</label>
+                                        <input type="text" class="form-control" id="peso" name="peso"
+                                            value="{{novillo.peso}}" required>
+                                    </div>
+
+                                    <div class="col-3 mb-3">
+                                        <label for="procedencia">Procedencia</label>
+                                        <select class="form-control" id="procedencia" name="procedencia" required
+                                        {% if novillo.origenganadoid == 2 %}
+                                        disabled
+                                        {% endif %}
+                                        >
+                                            {% for item in origen %}
+                                                <option value="{{item[0]}}"
+                                                {% if novillo.origenganadoid == item[0] %}
+                                                selected
+                                                {% endif %}
+                                                >{{item[1]}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+                                    <div class="col-12 mb-1">
+                                        <label for="comentario">Comentario</label>
+                                        <input class="form-control mb-3" type="text" name="comentario" id="comentario"
+                                            placeholder="Comentario" {% if novillo.comentario %}
+                                            value="{{novillo.comentario}}" {% endif %}>
+                                    </div>
+
+                                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+{% endblock%}
