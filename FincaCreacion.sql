@@ -144,7 +144,6 @@ CREATE TABLE IF NOT EXISTS medicina
 (
     id serial NOT NULL,
     nombre varchar(255) NOT NULL,
-    fechaVencimiento date NOT NULL,
     PRIMARY KEY (id)
 );
 
@@ -152,6 +151,7 @@ CREATE TABLE IF NOT EXISTS detallepresentacion
 (
     id serial NOT NULL,
     contenido real NOT NULL,
+    cantidad integer NOT NULL,
     precio real NOT NULL,
     presentacionId integer NOT NULL,
     medicinaId integer NOT NULL,

@@ -18,124 +18,176 @@ San Francisco - Medicina
                     <div class="inputs">
                         <form action=""></form>
                         <div class="row m-3">
-                            <div class="col-12 mb-3">
+                            <div class="col-6 mb-3">
                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                                     data-bs-target="#medicinaModal">
                                     <i class="nc-icon nc-simple-add"></i>
                                 </button>
                             </div>
+
+                            <div class="col-6 mb-3 d-flex justify-content-end">
+                                <a type="button" class="btn btn-primary" href="/registrosmedicos">
+                                    Registros medicos
+                                </a>
+                            </div>
+
                             <div class="col-12">
                                 <table class="table">
                                     <thead class=" text-primary">
                                         <tr>
                                             <th scope="col">Nombre</th>
-                                            <th scope="col">Presentaci&oacute;n</th>
+                                            <th scope="col">Presentación</th>
                                             <th scope="col">Tipo</th>
                                             <th scope="col">Cantidad</th>
-                                            <th scope="col">Fecha</th>
-                                            <th scope="col">Costo</th>
+                                            <th scope="col">Precio</th>
                                             <th scope="col">Editar</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        {% for med in medicinas %}
                                         <tr>
-                                            <td>Mark</td>
-                                            <td>Inyectable</td>
-                                            <td>Vacunación</td>
-                                            <td>2 Kg</td>
-                                            <td>16/2/2023</td>
-                                            <td>C$5000</td>
-                                            <td> <a class="btn btn-primary" href="#"><i
-                                                        class="fa-regular fa-pen-to-square"></i></a></td>
+                                            <td>{{med.nombre}}</td>
+                                            <td>{{med.viaaplicacion}}</td>
+                                            <td>{{med.tipomedicina}}</td>
+                                            <td>{{med.cantidad}}</td>
+                                            <td>{{"C$ {:,.2f}".format(med.precio)}}</td>
+                                            <td> <button class="btn btn-primary" data-bs-toggle="modal"
+                                                    data-bs-target="#medicinaModal{{med.id}}"><i
+                                                        class="fa-regular fa-pen-to-square"></i></button></td>
                                         </tr>
-                                        <tr>
-                                            <td>Jacob</td>
-                                            <td>Desparasitante</td>
-                                            <td>Topicos</td>
-                                            <td>3 L</td>
-                                            <td>16/2/2023</td>
-                                            <td>C$5000</td>
-                                            <td><a class="btn btn-primary" href="#"><i
-                                                        class="fa-regular fa-pen-to-square"></i></a></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Larry the Bird</td>
-                                            <td>Oral</td>
-                                            <td>Antibióticos y medicamentos</td>
-                                            <td>3 L</td>
-                                            <td>16/2/2023</td>
-                                            <td>C$5000</td>
-                                            <td><a class="btn btn-primary" href="#"><i
-                                                        class="fa-regular fa-pen-to-square"></i></a></td>
-                                        </tr>
+
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="medicinaModal{{med.id}}" tabindex="-1"
+                                            aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Editar medicina
+                                                        </h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form action="/medicina/editar" method="post" class="form-group">
+                                                            <div class="row">
+                                                                
+                                                                <input type="text" class="form-control" id="medid" name="medid" value="{{med.id}}" hidden>
+                                                                <div class="col-6 mb-3">
+                                                                    <label for="nombre">Nombre</label>
+                                                                    <input type="text" class="form-control" id="nombre"
+                                                                        name="nombre" placeholder="Nombre" value="{{med.nombre}}" required>
+                                                                </div>
+
+                                                                <div class="col-6 mb-3">
+                                                                    <label for="tipomedicina">Tipo</label>
+                                                                    <select class="form-control" id="tipomedicina"
+                                                                        name="tipomedicina" required>
+                                                                        {% for tipo in tipomedicina %}
+                                                                        <option value="{{tipo.id}}" {% if tipo.tipomedicina == med.tipomedicina %}
+                                                                        selected
+                                                                    {% endif %}>
+                                                                            {{tipo.tipomedicina}} ({{tipo.viaaplicacion}})
+                                                                        </option>
+                                                                        {% endfor %}
+                                                                    </select>
+                                                                </div>
+
+                                                                <div class="col-6 mb-3">
+                                                                    <label for="contenidomed">Contenido</label>
+                                                                    <input type="text" class="form-control"
+                                                                        id="contenidomed" name="contenido"
+                                                                        placeholder="ml, mg" value="{{med.contenido}}" required>
+                                                                </div>
+
+                                                                <div class="col-6 mb-3">
+                                                                    <label for="cantidad">Cantidad</label>
+                                                                    <input type="number" class="form-control"
+                                                                        id="cantidad" name="cantidad" value="{{med.cantidad}}" required min="1">
+                                                                </div>
+
+                                                                <div class="col-6 mb-3">
+                                                                    <label for="precio">Precio</label>
+                                                                    <input type="text" class="form-control" id="precio"
+                                                                        name="precio" placeholder="Precio" value="{{med.precio}}" required>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary"
+                                                                    data-bs-dismiss="modal">Cancelar</button>
+                                                                <button type="submit"
+                                                                    class="btn btn-primary">Guardar</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {% endfor %}
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
                 </div>
-                <form action=""></form>
             </div>
         </div>
     </div>
 </div>
+
+
 <!-- Modal -->
 <div class="modal fade" id="medicinaModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Agregar medicina</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action=""></form>
-                <div class="row">
-                    <div class="col-6 mb-3">
-                        <label for="nombre">Nombre</label>
-                        <input type="text" class="form-control" id="nombre" name="nombre" placeholder="..." required>
-                    </div>
+                <form action="/medicina" method="post" class="form-group">
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <label for="nombre">Nombre</label>
+                            <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre"
+                                required>
+                        </div>
 
-                    <div class="col-6 mb-3">
-                        <label for="presentación">Presentación</label>
-                        <select class="form-control" id="presentación" name="presentación" required>
-                            <option disabled="" selected="" value="">Seleccione un elemento</option>
-                            <option value="1">Inyectable</option>
-                            <option value="1">Oral</option>
-                            <option value="1">Tópicos</option>
-                            <option value="2">Implantes subcutáneos</option>
-                            <option value="3">Aerosol nasal</option>
-                        </select>
-                    </div>
-                    <div class="col-6 mb-3">
-                        <label for="tipo">Tipo</label>
-                        <select class="form-control" id="tipo" name="tipo" required>
-                            <option disabled="" selected="" value="">Seleccione un elemento</option>
-                            <option value="1">Vacunación</option>
-                            <option value="2">Desparasitantes</option>
-                            <option value="3">Suplementos nutricionales</option>
-                            <option value="3">Antibióticos y medicamentos</option>         
-                        </select>
-                    </div>
+                        <div class="col-6 mb-3">
+                            <label for="tipomedicina">Tipo</label>
+                            <select class="form-control" id="tipomedicina" name="tipomedicina" required>
+                                <option selected disabled>Seleccione un elemento</option>
+                                {% for tipo in tipomedicina %}
+                                <option value="{{tipo.id}}">{{tipo.tipomedicina}} ({{tipo.viaaplicacion}})</option>
+                                {% endfor %}
+                            </select>
+                        </div>
 
-                    <div class="col-3 mb-3">
-                        <label for="cantidad">Cantidad</label>
-                        <input type="text" class="form-control" id="cantidad" name="cantidad" placeholder="Kg, L, Lb"
-                            required>
-                    </div>
+                        <div class="col-6 mb-3">
+                            <label for="contenidomed">Contenido</label>
+                            <input type="text" class="form-control" id="contenidomed" name="contenido"
+                                placeholder="ml, mg" required>
+                        </div>
 
-                    <div class="col-3 mb-3">
-                        <label for="total">Total</label>
-                        <input type="text" class="form-control" id="total" name="total" placeholder="1000 C$" required>
+                        <div class="col-6 mb-3">
+                            <label for="cantidad">Cantidad</label>
+                            <input type="number" class="form-control" id="cantidad" name="cantidad" required min="1">
+                        </div>
+
+                        <div class="col-6 mb-3">
+                            <label for="precio">Precio</label>
+                            <input type="text" class="form-control" id="precio" name="precio" placeholder="Precio"
+                                required>
+                        </div>
                     </div>
-                </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
                 </form>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary">Guardar</button>
-                </div>
             </div>
         </div>
     </div>
+</div>
 
-    {% endblock%}
+{% endblock%}

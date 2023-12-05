@@ -101,8 +101,6 @@ def ingresarGanado():
         foto = request.files["foto"] # file para subir y obtener el url como string
         comentario = request.form.get("comentario") #string nullable
         
-        print(request.form.to_dict())
-
         if not validarString(nombre):
             flash("Debe ingresar un nombre valido", "error")
             return redirect("/ingresarnovillo")
@@ -420,6 +418,7 @@ def func_name(id):
 
 
 @app.route('/infonovillo/<id>/borrar', methods=["POST"])
+@login_required
 def borrar_novillo(id):
     try:
         db.execute(text(f"DELETE FROM ganado WHERE id = {id}"))
@@ -491,6 +490,7 @@ def entidadComercial():
     
 
 @app.route("/entidadesComerciales/<id>/editar", methods=["POST"])
+@login_required
 def editarentidad(id):
 
     nombre = request.form.get("nombre")
@@ -595,6 +595,8 @@ def desactivarempleado(id):
 
 
 @app.route('/usuario/recuperar+contraseña/<id>', methods=["POST"])
+@login_required
+@admin_required
 def repass(id):
 
     id_user = request.form.get("id")
@@ -629,7 +631,228 @@ def alimento():
 @app.route("/medicina", methods=["GET", "POST"])
 @login_required
 def medicina():
-    return render_template("medicina.html")
+    tipomedicina = db.execute(text("SELECT * FROM presentacion ORDER BY tipomedicina"))
+    medicinas = db.execute(text("""select dp.id id,
+                                m.nombre nombre,
+                                p.viaaplicacion viaaplicacion,
+                                p.tipomedicina tipomedicina,
+                                dp.contenido contenido,
+                                dp.cantidad cantidad,
+                                dp.precio precio,
+                                p.unidadmedida unidadmedida
+                                from detallepresentacion dp
+                                inner join medicina m
+                                on dp.medicinaid = m.id
+                                inner join presentacion p
+                                on dp.presentacionid = p.id"""))
+
+    if request.method == "GET":
+        return render_template("medicina.html", tipomedicina = [t for t in tipomedicina], medicinas = [m for m in medicinas])
+
+    else:
+        nombre = request.form.get("nombre")
+        tipo = request.form.get("tipomedicina")
+        contenido = request.form.get("contenido")
+        cantidad = request.form.get("cantidad")
+        precio = request.form.get("precio")
+
+        if not nombre or nombre.isspace():
+            flash("Debe ingresar un nombre valido", "error")
+            return redirect("/medicina")
+        if not tipo or int(tipo) > 19 or int(tipo) < 1:
+            flash("Debe ingresar un tipo de medicina valido", "error")
+            return redirect("/medicina")
+        if not contenido or contenido.isspace() or float(contenido) < 0:
+            flash("Debe ingresar el contenido de produto", "error")
+            return redirect("/medicina")
+        if not cantidad or int(cantidad) < 1:
+            flash("Debe ingresar una cantidad valida", "error")
+            return redirect("/medicina")
+        if not precio or precio.isspace() or float(precio) < 0:
+            flash("Debe ingresar un precio valido", "error")
+            return redirect("/medicina")
+        
+        med = db.execute(text(f"SELECT * FROM medicina WHERE nombre = '{nombre}'")).fetchone()
+        
+        if med:
+            try:
+                cant = db.execute(f"SELECT * FROM detallepresentacion WHERE medicinaid = {med['id']}").fetchone()["cantidad"] + int(cantidad)
+                db.execute(text(f"UPDATE detallepresentacion SET cantidad = {cant} WHERE medicinaid = {med['id']}"))
+                db.commit()
+            except:
+                flash("Ocurrió un error inesperado", "error")
+                return redirect("/medicina")
+            
+        else:
+            try:
+                idmedicina = db.execute(text(f"INSERT INTO medicina (nombre) VALUES('{nombre}') RETURNING id")).fetchone()[0]
+                db.execute(text(f"""INSERT INTO detallepresentacion (contenido, cantidad, precio, presentacionid, medicinaid)
+                                VALUES ({float(contenido)}, {int(cantidad)}, {float(precio)}, {tipo}, {idmedicina})"""))
+                
+                db.commit()
+            except:
+                flash("Ocurrió un error inesperado", "error")
+                return redirect("/medicina")
+
+        flash("La medicina se ha registrado exitosamente", "exito")
+        return redirect("/medicina")
+
+
+@app.route("/medicina/editar", methods=["POST"])
+@login_required
+def mededit():
+        
+        idmed = request.form.get("medid")
+        nombre = request.form.get("nombre")
+        tipo = request.form.get("tipomedicina")
+        contenido = request.form.get("contenido")
+        cantidad = request.form.get("cantidad")
+        precio = request.form.get("precio")
+
+        if not nombre or nombre.isspace():
+            flash("Debe ingresar un nombre valido", "error")
+            return redirect("/medicina")
+        if not tipo or int(tipo) > 19 or int(tipo) < 1:
+            flash("Debe ingresar un tipo de medicina valido", "error")
+            return redirect("/medicina")
+        if not contenido or contenido.isspace() or float(contenido) < 0:
+            flash("Debe ingresar el contenido de produto", "error")
+            return redirect("/medicina")
+        if not cantidad or int(cantidad) < 1:
+            flash("Debe ingresar una cantidad valida", "error")
+            return redirect("/medicina")
+        if not precio or precio.isspace() or float(precio) < 0:
+            flash("Debe ingresar un precio valido", "error")
+            return redirect("/medicina")
+        
+        medid = db.execute(text(f"SELECT medicinaid FROM detallepresentacion WHERE id = '{idmed}'")).fetchone()
+
+        #try:
+        db.execute(f"UPDATE medicina SET nombre = '{nombre}' WHERE id = {medid['medicinaid']}")
+        db.execute(f"UPDATE detallepresentacion SET contenido = {contenido}, precio = {precio}, presentacionid = {tipo}, medicinaid = {medid['medicinaid']}, cantidad = {cantidad} WHERE id = {int(idmed)}")
+        db.commit()
+        #except:
+            #flash("Ha ocurrido un error inesperado", "error")
+            #return redirect("/medicina")
+        
+        flash("Se actualizó el registro exitosamente", "exito")
+        return redirect("/medicina")
+
+
+@app.route('/registrosmedicos', methods=["GET", "POST"])
+@login_required
+def registrosmedicos():
+    if request.method == "GET":
+        enfermedades = db.execute(text("SELECT * FROM enfermedad ORDER BY nombre"))
+        medicinas =  db.execute(text("SELECT * FROM medicina ORDER BY nombre"))
+        registros = db.execute(text("""SELECT r.id,
+                                    g.codigochapa,
+                                    e.nombre enfermedad,
+                                    r.fecha,
+                                    m.nombre medicina,
+                                    r.dosis,
+                                    r.diagnostico
+                                    FROM registromedico  r
+                                    INNER JOIN ganado g on r.ganadoid = g.id
+                                    INNER JOIN enfermedad e on r.enfermedadid = e.id
+                                    INNER JOIN medicina m on r.medicinaid = m.id
+                                    ORDER BY fecha"""))
+
+        return render_template("registrosmedicos.html", enfermedades = [e for e in enfermedades], medicinas = [m for m in medicinas], registros = [r for r in registros])
+    else:
+        chapa = request.form.get("chapa")
+        enfermedad = int(request.form.get("enfermedad"))
+        fecha = str(request.form.get("fecha"))
+        medicina = int(request.form.get("medicina"))
+        dosis = request.form.get("dosis")
+        diagnostico = request.form.get("diagnostico")
+
+        if not chapa or chapa.isspace():
+            flash("Debe ingresar una cahpa valida", "error")
+            return redirect("/registrosmedicos", "error")
+        if not dosis or dosis.isspace():
+            flash("Debe ingresar una dosis valida", "error")
+            return redirect("/registrosmedicos")
+        if not validarString(diagnostico):
+            flash("Debe ingresar un diagnostico valido", "error")
+            return redirect("/registrosmedicos")
+        if not enfermedad or enfermedad < 1:
+            flash("Debe ingresar una enfermedad valida", "error")
+            return redirect("/registrosmedicos")
+        if not medicina or medicina < 1:
+            flash("Debe ingresar una medicina valida", "error")
+            return redirect("/registrosmedicos")
+
+        bovinoid = 0
+        try:
+            bovinoid =  db.execute(text(f"SELECT * FROM ganado WHERE codigochapa = '{chapa}'")).fetchone()["id"]
+        except:
+            flash("El bovino ingresado no existe", "error")
+            return redirect("/registrosmedicos")
+        
+        try:
+            db.execute(text(f"""INSERT INTO registromedico(dosis, fecha, diagnostico, medicinaid, enfermedadid, ganadoid)
+                            VALUES('{dosis}', '{fecha}', '{diagnostico}', {medicina}, {enfermedad}, {bovinoid})"""))
+            
+            db.commit()
+
+        except:
+            flash("Ocurrio un error inesperado", "error")
+            return redirect("/registrosmedicos")
+        
+        flash("Registro agregado exitosamente", "exito")
+        return redirect("/registrosmedicos")
+    
+
+@app.route('/registrosmedicos/editar', methods=["POST"])
+@login_required
+def editarregistrosmedicos():
+    
+    idreg = int(request.form.get("idreg"))
+    chapa = request.form.get("chapa")
+    enfermedad = int(request.form.get("enfermedad"))
+    fecha = str(request.form.get("fecha"))
+    medicina = int(request.form.get("medicina"))
+    dosis = request.form.get("dosis")
+    diagnostico = request.form.get("diagnostico")
+
+    if not chapa or chapa.isspace():
+        flash("Debe ingresar una cahpa valida", "error")
+        return redirect("/registrosmedicos", "error")
+    if not dosis or dosis.isspace():
+        flash("Debe ingresar una dosis valida", "error")
+        return redirect("/registrosmedicos")
+    if not validarString(diagnostico):
+        flash("Debe ingresar un diagnostico valido", "error")
+        return redirect("/registrosmedicos")
+    if not enfermedad or enfermedad < 1:
+        flash("Debe ingresar una enfermedad valida", "error")
+        return redirect("/registrosmedicos")
+    if not medicina or medicina < 1:
+        flash("Debe ingresar una medicina valida", "error")
+        return redirect("/registrosmedicos")
+
+    bovinoid = 0
+    try:
+        bovinoid =  db.execute(text(f"SELECT * FROM ganado WHERE codigochapa = '{chapa}'")).fetchone()["id"]
+    except:
+        flash("El bovino ingresado no existe", "error")
+        return redirect("/registrosmedicos")
+    
+    try:
+        db.execute(text(f"""UPDATE registromedico SET 
+                        dosis = '{dosis}', fecha = '{fecha}', diagnostico = '{diagnostico}', 
+                        medicinaid = {medicina}, enfermedadid = {enfermedad}, ganadoid = {bovinoid}
+                        WHERE id = {idreg}"""))
+        
+        db.commit()
+
+    except:
+        flash("Ocurrio un error inesperado", "error")
+        return redirect("/registrosmedicos")
+    
+    flash("Registro editado exitosamente", "exito")
+    return redirect("/registrosmedicos")
 
 
 @app.route("/alimentoGanado", methods=["GET", "POST"])

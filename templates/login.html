@@ -8,34 +8,30 @@ Finca San Francisco
 
 {% block main %}
 
-<div class="container-fluid">
-    <div class="row main-content-login bg-success text-center">
+<div class="container-fluid col-xl-6 col-md-7" style="height: 80vh; align-items: center; display: flex;">
+    <div class="row main-content-login text-center">
         <div class="col-md-4 text-center company__info">
             <span class="company__logo"><img class="logo" src="/static/imagenes/favicon.png" alt=""></span>
         </div>
         <div class="col-md-8 col-xs-12 col-sm-12 login_form">
             <div class="container-fluid">
-                <div class="d">
-                    <h2>Bienvenido</h2>
-                </div>
-                <div class="d">
-                    <form action="/login" method="post" class="form-group">
-                        <div class="form-input"> 
-                            <input type="text" name="username" id="username" class="form__input"
-                                placeholder="Nombre de usuario" autofocus>
-                            </div>
-                        </div>
-                        <div class="form-input">
-                            <input type="password" name="password" id="password" class="form__input"
-                                placeholder="Contraseña">
-                        </div>
-                        <div class="form-input">
-                            <input type="submit" value="Iniciar sesion" class="btn">
-                        </div>
-                    </form>
-                </div>
+                <h2 class="mt-4">Bienvenido</h2>
+                <form action="/login" method="post" class="form-group pr-0 pl-0">
+                    <div>
+                        <input type="text" name="username" id="username" class="form__input"
+                            placeholder="Nombre de usuario" autofocus>
+                    </div>
+                    <div>
+                        <input type="password" name="password" id="password" class="form__input"
+                            placeholder="Contraseña">
+                    </div>
+                    <div class="form-input login_input">
+                        <input type="submit" value="Iniciar sesion" class="btn m-3" style="border-radius: 10px;">
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+</div>
 </div>
 {% endblock %}

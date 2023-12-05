@@ -36,7 +36,77 @@ tiposEntidad = ["Natural", "Juridica"]
 for tipo in tiposEntidad:
   db.execute(text(f"INSERT INTO tipoentidad(tipoentidad) VALUES('{tipo}')"))
 
+
+db.execute(text("""
+INSERT INTO presentacion (tipomedicina, viaaplicacion, unidadmedida) VALUES
+('Antibióticos', 'Oral', 'mg'),
+('Antibióticos', 'Inyectable', 'mg'),
+('Desparasitantes Internos', 'Oral', 'mg o ml'),
+('Desparasitantes Externos', 'Tópica', 'ml'),
+('Desparasitantes Externos', 'Baño', 'ml o kg'),
+('Vitaminas y Minerales', 'Oral', 'mg'),
+('Antiinflamatorios', 'Oral', 'mg'),
+('Antiinflamatorios', 'Inyectable', 'mg'),
+('Antipiréticos', 'Oral', 'mg'),
+('Antialérgicos', 'Oral', 'mg'),
+('Inmunomoduladores', 'Oral', 'mg'),
+('Vacunas', 'Inyectable', 'ml'),
+('Agentes Tópicos', 'Cutánea', 'mg o ml'),
+('Rehidratantes y Electrolitos', 'Oral', 'ml'),
+('Hormonas', 'Inyectable', 'ml'),
+('Analgésicos', 'Oral', 'mg'),
+('Analgésicos', 'Inyectable', 'mg'),
+('Desinfectantes y Antisépticos', 'Tópica', 'ml'),
+('Implantes', 'Subcutáneo', 'Unidades');
+"""))
+
+
+db.execute(text("""
+INSERT INTO enfermedad (nombre, contagiosa) VALUES
+('Fiebre Aftosa', true),
+('Anaplasmosis', true),
+('Brucelosis', true),
+('Mastitis', true),
+('Enfermedad de la Bursa Aviar (IBD)', true),
+('Leptospirosis', true),
+('Tuberculosis Bovina', true),
+('Campylobacteriosis', true),
+('Clostridiosis', false),
+('Enterotoxemia (Ovine Progressive Pneumonia)', false),
+('Hemoglobinuria Bacilar', true),
+('Hepatitis Infecciosa Bovina (BHV-1)', true),
+('Peste Bovina', true),
+('Rinotraqueítis Infecciosa Bovina (IBR)', true),
+('Salmonelosis', true),
+('Theileriosis', true),
+('Tristeza Parasitaria Bovina (TPB)', true),
+('Virus de la Diarrea Viral Bovina (BVDV)', true),
+('Hiperqueratosis de la Pezuña', false),
+('Hemorragia Viral de Bovinos (EVB)', true),
+('Enfermedad Respiratoria Bovina (BRD)', true),
+('Fascioliasis', true),
+('Cisticercosis', false),
+('Enfermedad de las Clostridias', false),
+('Coprofagia', false),
+('Coccidiosis', true),
+('Dermatitis Digital', false),
+('Encefalopatía Espongiforme Bovina (EEB)', true),
+('Estomatitis Vesicular', true),
+('Histomoniasis', true),
+('Nematodiasis', true),
+('Piroplasmosis', true),
+('Sarna Bovina', true),
+('Toxoplasmosis', true),
+('Urolitiasis', false),
+('Viruela Bovina', true),
+('Enfermedad de los Ojos Blancos', true),
+('Babesiosis', true),
+('Neosporosis', true),
+('Actinobacilosis', true);
+"""))
+
 '''
+
 
 db.commit()
 print("Exito")
