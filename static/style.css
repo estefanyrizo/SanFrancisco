@@ -74,7 +74,8 @@
   margin-top: 1.5em;
   margin-bottom: 1em;
 }
-.main-content-login .btnl:hover, .main-content-login .btnl:focus {
+.main-content-login .btnl:hover,
+.main-content-login .btnl:focus {
   background-color: #008080;
   color: #fff;
 }
@@ -150,7 +151,9 @@
   align-items: center;
 }
 
-.mi-cuenta, .ganado, .bloque {
+.mi-cuenta,
+.ganado,
+.bloque {
   display: flex;
   justify-content: center;
 }
@@ -213,7 +216,9 @@
   text-align: center;
   margin-top: 10%;
 }
-.ganado-list .boton, .ganado-list .boton:hover, .ganado-list .boton:focus {
+.ganado-list .boton,
+.ganado-list .boton:hover,
+.ganado-list .boton:focus {
   border-color: transparent;
   background-color: transparent;
 }
@@ -235,6 +240,17 @@
   height: 440px;
   overflow-y: scroll;
   scroll-behavior: smooth;
+}
+
+.tipoComer {
+  display: flex;
+  justify-content: center;
+}
+.tipoComer .img-tipoComer {
+  width: 220px;
+  height: 280px;
+  border: rgb(29, 29, 29) 1px solid;
+  border-radius: 20px;
 }
 
 @media only screen and (max-width: 800px) {

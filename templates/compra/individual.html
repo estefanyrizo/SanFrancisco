@@ -1,0 +1,112 @@
+{% extends "layout.html" %}
+
+{%block title%}
+
+Compra individual
+
+{% endblock%}
+
+{% block main%}
+<div class="content">
+
+    <div class="row ganado">
+        <div class="col-md-8">
+            <div class="card">
+                <form action="/compra/individual" method="post" onsubmit="return submitForm(this);">
+                    <div class="card-header">
+                        <h3 class="sign pt-2 pb-2 text-center">Seleccionar bovino</h3>
+                    </div>
+                    <div class="form-group">
+                        <div class="inputs">
+
+                            <div class="row m-3">
+                                <!-- <div class="col-12 mb-3">
+                                    <div class="input-group d-flex">
+                                        <input type="text" value="" class="form-control" placeholder="Buscar..."
+                                            id="buscarganadoinput">
+                                        <div class="input-group-append">
+                                            <div class="input-group-text">
+                                                <i class="nc-icon nc-zoom-split"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                            </div> -->
+                                <div class="col-12">
+                                    <table class="table">
+                                        <thead class=" text-primary">
+
+                                            <tr>
+                                                <th scope="col">Codigo</th>
+                                                <th scope="col">Nombre</th>
+                                                <th scope="col">Raza</th>
+                                                <th scope="col">Tamaño</th>
+                                                <th scope="col">Peso</th>
+                                                <th scope="col">Seleccionar</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for cabeza in ganado %}
+                                            <tr>
+
+                                                <td>{{cabeza.codigochapa}}</th>
+                                                <td>{{cabeza.nombre}}</td>
+                                                <td>{{cabeza.nombreraza}}</td>
+                                                <td>{{cabeza.tamanio}}</td>
+                                                <td>{{cabeza.peso}}</td>
+                                                <td> <input type="radio" id="bovino{{ cabeza.id }}" name="bovino"
+                                                        value="{{cabeza.id}}" required></td>
+                                            </tr>
+                                            {% endfor %}
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-12 form-group" align="center">
+                                    <button type="submit" class="btn btn-primary">Continuar</button>
+                                </div>
+                </form>
+                <script>
+                    function submitForm(form) {
+                        // Obtener todos los radios del grupo
+                        var radios = document.getElementsByName('bovino');
+
+                        // Variables para almacenar el ID y nombre del radio seleccionado
+                        var idSeleccionado = '';
+                        var nombreSeleccionado = '';
+
+                        // Recorrer los radios y encontrar el seleccionado
+                        for (var i = 0; i < radios.length; i++) {
+                            if (radios[i].checked) {
+                                // Obtener el ID y nombre del radio seleccionado
+                                idSeleccionado = radios[i].id;
+                                nombreSeleccionado = "{{ ganado.nombre }}"; // Obtener el nombre del contexto de la plantilla
+                                break; // Salir del bucle una vez que se encuentra el radio seleccionado
+                            }
+                        }
+                        swal(
+                            {
+                                title: "Confirmar selección",
+                                text: "Estas comprando el bovino Lechon" + nombreSeleccionado,
+                                icon: "warning",
+                                buttons: true,
+                            })
+                            .then((isOkay) => {
+                                if (isOkay)
+                                    form.submit();
+                            });
+
+                        return false;
+                    }
+
+                </script>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+</div>
+</div>
+</div>
+</div>
+{% endblock%}

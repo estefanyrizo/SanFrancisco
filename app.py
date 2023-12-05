@@ -2,7 +2,7 @@ from datetime import date, datetime
 import os
 import requests
 from dotenv import load_dotenv
-from flask import Flask, json, session
+from flask import Flask, json, session, url_for
 from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -651,6 +651,52 @@ def medicina():
 def alimentoGanado():
     return render_template("alimentoGanado.html")
 
+@app.route("/compra", methods=["GET", "POST"])
+@login_required
+def compra():
+    return render_template("/compra/pri.html")
+@app.route("/compra/individual", methods=["GET", "POST"])
+@login_required
+def compraIndividual():
+    if request.method == "GET":
+        ganado = db.execute(text(f"SELECT codigochapa, nombre, nombreraza, tamanio, peso, ganado.id AS id, raza FROM ganado INNER JOIN raza ON ganado.razaid = raza.id WHERE estadoganadoid = 1 AND isasignado = false ORDER BY ganado.id"))
+        return render_template("compra/individual.html", ganado = ganado)
+    else:
+        id = request.form.get("bovino")
+        print(id)
+        novillo = db.execute(f"SELECT * FROM ganado INNER JOIN raza ON ganado.razaid = raza.id WHERE ganado.id = {id}").fetchone()
+        flash(f"Has seleccionado el bovino {novillo.nombre} con codigo {novillo.codigochapa}", "consultar")
+        return redirect(url_for("compraIndividualFin", id=id))
+
+@app.route("/compra/individual/fin", methods=["GET", "POST"])
+@login_required
+def compraIndividualFin():
+    if request.method == "GET":
+        id = request.args.get('id')
+        novillo = db.execute(f"SELECT codigochapa, nombre, nombreraza, tamanio, ganado.id AS id, raza FROM ganado INNER JOIN raza ON ganado.razaid = raza.id WHERE ganado.id = {id}")
+        entidad = db.execute(f"SELECT * FROM entidadcomercial")
+        return render_template("compra/fin.html", ganado=novillo, proveedor=entidad)
+    else:
+        
+        fecha = request.form.get("fechaCompra")
+        proveedor = request.form.get("proveedor")
+        costo = request.form.get("costo")
+        if not fecha or not proveedor or not costo:
+            flash("Debe ingresar todos los datos solicitados", "error")
+            return redirect(url_for("compraIndividualFin", id=id))
+
+        fecha = str(fecha)
+        compra = db.execute(f"INSERT INTO compra(fecha, cantidad, montoTotal, usuarioId, entidadComercialId) VALUES('{fecha}', 1, {costo}, {session['user_id']}, {proveedor})")
+        print(compra)
+        db.execute(f"INSERT INTO detallecompra(compraId, ganadoId) VALUES ({compra}, {id})")
+        db.execute("UPDATE ganado SET isasignado = true WHERE ganado.id = {id}")
+        flash("Compra ingresada correctamente", "exito")
+        return redirect("/")
+@app.route("/compras")
+@login_required
+def compras():
+    compras = db.execute("SELECT * FROM compra")
+    return render_template("compras.html", compras = compras)
 
 @app.route("/logout")
 @login_required
