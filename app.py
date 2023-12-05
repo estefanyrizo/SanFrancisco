@@ -869,6 +869,11 @@ def editarregistrosmedicos():
     return redirect("/registrosmedicos")
 
 
+@app.route("/control_bovino")
+def controlbovino():
+    return render_template("controlbovino.html")
+
+
 @app.route("/alimentoGanado", methods=["GET", "POST"])
 @login_required
 def alimentoGanado():
