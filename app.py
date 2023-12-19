@@ -955,8 +955,9 @@ def compraIndividualFin():
         novillo = db.execute(f"SELECT codigochapa, nombre, nombreraza, tamanio, ganado.id AS id, raza FROM ganado INNER JOIN raza ON ganado.razaid = raza.id WHERE ganado.id = {id}")
         entidad = db.execute(f"SELECT * FROM entidadcomercial")
         return render_template("compra/fin.html", ganado=novillo, proveedor=entidad)
+    
     else:
-        
+        id = request.form.get("bovino")
         fecha = request.form.get("fechaCompra")
         proveedor = request.form.get("proveedor")
         costo = request.form.get("costo")
@@ -965,17 +966,18 @@ def compraIndividualFin():
             return redirect(url_for("compraIndividualFin", id=id))
 
         fecha = str(fecha)
-        compra = db.execute(f"INSERT INTO compra(fecha, cantidad, montoTotal, usuarioId, entidadComercialId) VALUES('{fecha}', 1, {costo}, {session['user_id']}, {proveedor})")
+        compra = db.execute(text(f"INSERT INTO compra(fecha, cantidad, montoTotal, usuarioid, entidadcomercialid) VALUES('{fecha}', 1, {costo}, {session['user_id']}, {proveedor}) RETURNING id")).fetchone()[0]
         print(compra)
-        db.execute(f"INSERT INTO detallecompra(compraId, ganadoId) VALUES ({compra}, {id})")
-        db.execute("UPDATE ganado SET isasignado = true WHERE ganado.id = {id}")
+        db.execute(text(f"INSERT INTO detallecompra(compraid, ganadoid) VALUES ({compra}, {23})"))
+        db.execute(text(f"UPDATE ganado SET isasignado = true WHERE ganado.id = {id}"))
+        db.commit()
         flash("Compra ingresada correctamente", "exito")
         return redirect("/")
     
 @app.route("/compras")
 @login_required
 def compras():
-    compras = db.execute("SELECT * FROM compra")
+    compras = db.execute("SELECT * FROM compra INNER JOIN entidadcomercial ON compra.entidadcomercialid = entidadcomercial.id")
     return render_template("compras.html", compras = compras)
 
 @app.route("/logout")

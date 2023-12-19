@@ -84,9 +84,7 @@ San Francisco - Actualizar ganado
                                     <div class="col-3 mb-3">
                                         <label for="procedencia">Procedencia</label>
                                         <select class="form-control" id="procedencia" name="procedencia" required
-                                        {% if novillo.origenganadoid == 2 %}
-                                        disabled
-                                        {% endif %}
+                                        
                                         >
                                             {% for item in origen %}
                                                 <option value="{{item[0]}}"
