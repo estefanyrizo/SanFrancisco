@@ -49,7 +49,7 @@ Compra individual
                                             <tr>
 
                                                 <td>{{cabeza.codigochapa}}</th>
-                                                <td>{{cabeza.nombre}}</td>
+                                                <td id="{{cabeza.id}}">{{cabeza.nombre}}</td>
                                                 <td>{{cabeza.nombreraza}}</td>
                                                 <td>{{cabeza.tamanio}}</td>
                                                 <td>{{cabeza.peso}}</td>
@@ -78,15 +78,17 @@ Compra individual
                         for (var i = 0; i < radios.length; i++) {
                             if (radios[i].checked) {
                                 // Obtener el ID y nombre del radio seleccionado
-                                idSeleccionado = radios[i].id;
-                                nombreSeleccionado = "{{ ganado.nombre }}"; // Obtener el nombre del contexto de la plantilla
+                                idSeleccionado = radios[i].value;
+                                nombreSeleccionado = (document.getElementById(idSeleccionado)).textContent;
+
+                                // Obtener el nombre del contexto de la plantilla
                                 break; // Salir del bucle una vez que se encuentra el radio seleccionado
                             }
                         }
                         swal(
                             {
                                 title: "Confirmar selección",
-                                text: "Estas comprando el bovino Lechon" + nombreSeleccionado,
+                                text: "Estas comprando el bovino " + nombreSeleccionado,
                                 icon: "warning",
                                 buttons: true,
                             })

@@ -192,17 +192,6 @@ def imagen():
         return {"status":"415"}
 
 
-@app.route("/micuenta", methods=["GET", "POST"])
-@login_required
-def miCuenta():
-    if request.method == "GET":
-        usuario = db.execute(f"SELECT * FROM usuario WHERE id = {session['user_id']}")
-        return render_template("miCuenta.html", usuario = usuario)
-    if request.method == "POST":
-        flash("Los cambios se guardaran", "consultar")
-        return redirect("/micuenta")
-
-
 @app.route("/ganado", methods=["GET"])
 @login_required
 def ganado():
@@ -553,7 +542,7 @@ def editarentidad(id):
     return redirect("/entidadesComerciales")
 
 
-@app.route("/empleados", methods=["GET", "POST"])
+@app.route("/usuarios", methods=["GET", "POST"])
 @login_required
 @admin_required
 def empleados():
@@ -950,17 +939,20 @@ def compraIndividual():
 @app.route("/compra/individual/fin", methods=["GET", "POST"])
 @login_required
 def compraIndividualFin():
+    
     if request.method == "GET":
         id = request.args.get('id')
-        novillo = db.execute(f"SELECT codigochapa, nombre, nombreraza, tamanio, ganado.id AS id, raza FROM ganado INNER JOIN raza ON ganado.razaid = raza.id WHERE ganado.id = {id}")
+        novillo = db.execute(f"SELECT codigochapa, nombre, nombreraza, tamanio, peso, ganado.id AS id, raza FROM ganado INNER JOIN raza ON ganado.razaid = raza.id WHERE ganado.id = {id}")
         entidad = db.execute(f"SELECT * FROM entidadcomercial")
-        return render_template("compra/fin.html", ganado=novillo, proveedor=entidad)
+        return render_template("compra/fin.html", ganado=[n for n in novillo], proveedor=entidad)
     
     else:
         id = request.form.get("bovino")
         fecha = request.form.get("fechaCompra")
         proveedor = request.form.get("proveedor")
-        costo = request.form.get("costo")
+        precioKilo = request.form.get("precioKilo")
+        peso = request.form.get("peso")
+        costo = float(precioKilo) * float(peso) 
         if not fecha or not proveedor or not costo:
             flash("Debe ingresar todos los datos solicitados", "error")
             return redirect(url_for("compraIndividualFin", id=id))

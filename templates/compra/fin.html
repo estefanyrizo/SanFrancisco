@@ -38,6 +38,11 @@ San Francisco - Registrar ganado
                                             value="{{cabeza.nombreraza}}" disabled>
                                     </div>
                                     <div class="col-6 mb-3">
+                                        <label for="raza">Peso</label>
+                                        <input type="text" class="form-control" id="peso" name="peso"
+                                            value="{{cabeza.peso}}">
+                                    </div>
+                                    <div class="col-6 mb-3">
                                         <label for="fechaCompra">Fecha de compra</label>
                                         <input type="date" class="form-control" id="fechaCompra"
                                             name="fechaCompra" required>
@@ -52,11 +57,11 @@ San Francisco - Registrar ganado
                                         </select>
                                     </div>
                                     <div class="col-6 mb-3">
-                                        <label for="costo">Costo</label>
-                                        <input class="form-control" type="text" placeholder="10 000"
-                                            name="costo" required>
+                                        <label for="precioKilo">Precio kilo</label>
+                                        <input class="form-control" type="text" placeholder="80"
+                                            name="precioKilo" required>
                                     </div>
-                                    <div class="col-12 mb-3">
+                                    <div class="col-6 mb-3">
                                         <label for="file">Seleccione carta de compra <i class="fa fa-upload"></i></label>
                                         <input class="form-control mb-4" type="file" name="foto" id="img-uploader"
                                             accept="pdf/*">
