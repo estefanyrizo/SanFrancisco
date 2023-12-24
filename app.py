@@ -34,7 +34,9 @@ Session(app)
 engine = create_engine(os.getenv("DATABASE_URL"),pool_pre_ping=True)
 db = scoped_session(sessionmaker(bind=engine))
 
-locale.setlocale(locale.LC_TIME, 'es_ES')
+#locale.setlocale(locale.LC_TIME, 'es_ES')
+
+load_dotenv()
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -340,6 +342,9 @@ def infonovilloedit(id):
                             comentario = '{comentario}'
                             WHERE id = {id}"""))
                     
+                    if procedencia == 2:
+                        db.execute(text("UPDATE ganado SET isasignado = false WHERE id = id"))
+                    
                     db.commit()
                 
                 except:
@@ -358,6 +363,9 @@ def infonovilloedit(id):
                             origenganadoid = {procedencia},
                             comentario = '{comentario}'
                             WHERE id = {id}"""))
+                    
+                    if procedencia == 2:
+                        db.execute(text("UPDATE ganado SET isasignado = false WHERE id = id"))
                     
                     db.commit()
                 
@@ -380,6 +388,9 @@ def infonovilloedit(id):
                             foto = '{foto}'
                             WHERE id = {id}"""))
                     
+                    if procedencia == 2:
+                        db.execute(text("UPDATE ganado SET isasignado = false WHERE id = id"))
+                    
                     db.commit()
                 
                 except:
@@ -397,6 +408,9 @@ def infonovilloedit(id):
                             peso = {peso},
                             origenganadoid = {procedencia}
                             WHERE id = {id}"""))
+                    
+                    if procedencia == 2:
+                        db.execute(text("UPDATE ganado SET isasignado = false WHERE id = id"))
                     
                     db.commit()
 
