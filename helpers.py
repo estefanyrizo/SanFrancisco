@@ -7,13 +7,9 @@ from base64 import b64encode
 from imagekitio import ImageKit
 from imagekitio.models.UploadFileRequestOptions import UploadFileRequestOptions
 
-
-IK_PUBLIC = os.environ.get("IK_PUBLIC")
-IK_PRIVATE = os.environ.get("IK_PRIVATE")
-IK_URL = os.environ.get("IK_URL")
-
-ik = ImageKit(private_key=IK_PRIVATE,
-              public_key=IK_PUBLIC, url_endpoint=IK_URL)
+ik = ImageKit(private_key='private_pbBN7H3s6r1YGqTsxPQqdelGb38=',
+                public_key='public_rKkJyqI11fEPBRHq/2QD3PyJJwo=',
+                url_endpoint='https://ik.imagekit.io/JefferssonVMT')
 
 
 def login_required(f):
