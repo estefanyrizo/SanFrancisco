@@ -353,6 +353,9 @@ def infonovilloedit(id):
                             comentario = '{comentario}'
                             WHERE id = {id}"""))
                     
+                    if procedencia == 2:
+                        db.execute(text("UPDATE ganado SET isasignado = false WHERE id = id"))
+                    
                     db.commit()
                 
                 except:
@@ -371,6 +374,9 @@ def infonovilloedit(id):
                             origenganadoid = {procedencia},
                             comentario = '{comentario}'
                             WHERE id = {id}"""))
+                    
+                    if procedencia == 2:
+                        db.execute(text("UPDATE ganado SET isasignado = false WHERE id = id"))
                     
                     db.commit()
                 
@@ -393,6 +399,9 @@ def infonovilloedit(id):
                             foto = '{foto}'
                             WHERE id = {id}"""))
                     
+                    if procedencia == 2:
+                        db.execute(text("UPDATE ganado SET isasignado = false WHERE id = id"))
+                    
                     db.commit()
                 
                 except:
@@ -410,6 +419,9 @@ def infonovilloedit(id):
                             peso = {peso},
                             origenganadoid = {procedencia}
                             WHERE id = {id}"""))
+                    
+                    if procedencia == 2:
+                        db.execute(text("UPDATE ganado SET isasignado = false WHERE id = id"))
                     
                     db.commit()
 
