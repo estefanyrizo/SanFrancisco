@@ -40,6 +40,12 @@ San Francisco - Entidad comercial
                                         placeholder="Nombre" required>
                                 </div>
 
+                                <div class="col-xl-6 mb-3">
+                                    <label for="nombre">CUE</label>
+                                    <input type="text" class="form-control" id="cue" name="cue" placeholder="CUE" required>
+                                </div>
+
+
                                 <div class="col-xl-6 mb-3" id="div_apellido">
                                     <label for="nombre">Apellido</label>
                                     <input type="text" class="form-control" id="apellido" name="apellido"
@@ -148,6 +154,14 @@ San Francisco - Entidad comercial
                                                                                 name="apellido"
                                                                                 value="{{entidad.apellido|default('', true)}}"
                                                                                 placeholder="Apellido">
+                                                                        </div>
+
+                                                                        <div class="col-xl-6 mb-3">
+                                                                            <label for="nombre">CUE</label>
+                                                                            <input type="text" class="form-control"
+                                                                                id="cue" name="cue"
+                                                                                value="{{entidad.cue}}"
+                                                                                placeholder="CUE" required>
                                                                         </div>
 
                                                                         <div class="col-xl-6 mb-3">
