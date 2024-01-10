@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS entidadcomercial
     apellido varchar(100),
     telefono varchar(20),
     identificacion varchar(50) NOT NULL,
+    cue varchar(50) NOT NULL,
     tipoEntidadId integer NOT NULL,
     PRIMARY KEY (id)
 );

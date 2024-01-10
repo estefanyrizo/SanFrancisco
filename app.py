@@ -154,24 +154,30 @@ def ingresarGanado():
             isasignado = False
 
         if comentario :        
-            query = text("""INSERT INTO ganado(nombre, fechaNacimiento, peso, tamanio, color, codigoChapa, foto, comentario, estadoGanadoId, razaId, origenGanadoId, isasignado)
-                        VALUES(:nombre, :fechaNacimiento, :peso, :tamaño, :color, :codigoChapa, :foto, :comentario, :estadoGanadoId, :razaId, :origenGanadoId, :isasignado)
-                        """)
             
             try:
-                db.execute(query, {"nombre":nombre, "fechaNacimiento":fechaNacimiento, "peso":peso, "tamaño":tamaño, "color":color, "codigoChapa":codigo, "foto":foto, "comentario":comentario, "estadoGanadoId":1, "razaId":raza, "origenGanadoId":procedencia, "isasignado":isasignado})
+                query = db.execute(text(f"""INSERT INTO ganado(nombre, fechaNacimiento, peso, tamanio, color, codigoChapa, foto, comentario, estadoGanadoId, razaId, origenGanadoId, isasignado)
+                        VALUES('{nombre}', '{fechaNacimiento}', {peso}, {tamaño}, '{color}', {codigo}, '{foto}', '{comentario}', 1, {raza}, {procedencia}, {isasignado})
+                        RETURNING id""")).fetchone()[0]
+                
+                db.execute(text(f"""INSERT INTO registroproduccion(fecha, ganadoid, peso, comentario, usuarioid) 
+                                VALUES('{fechaNacimiento}', {query}, {peso}, '{comentario}', {session["user_id"]})"""))
+                
                 db.commit()
             except:
                 flash("Ha ocurrido un error", "error")
                 return redirect("/ingresarnovillo")
             
         if not comentario :        
-            query = text("""INSERT INTO ganado(nombre, fechaNacimiento, peso, tamanio, color, codigoChapa, foto, estadoGanadoId, razaId, origenGanadoId, isasignado)
-                        VALUES(:nombre, :fechaNacimiento, :peso, :tamaño, :color, :codigoChapa, :foto, :estadoGanadoId, :razaId, :origenGanadoId, :isasignado)
-                        """)
-            
+
             try:
-                db.execute(query, {"nombre":nombre, "fechaNacimiento":fechaNacimiento, "peso":peso, "tamaño":tamaño, "color":color, "codigoChapa":codigo, "foto":foto, "estadoGanadoId":1, "razaId":raza, "origenGanadoId":procedencia, "isasignado":isasignado})
+                query = db.execute(text(f"""INSERT INTO ganado(nombre, fechaNacimiento, peso, tamanio, color, codigoChapa, foto, estadoGanadoId, razaId, origenGanadoId, isasignado)
+                        VALUES('{nombre}', '{fechaNacimiento}', {peso}, {tamaño}, '{color}', {codigo}, '{foto}', 1, {raza}, {procedencia}, {isasignado})
+                        RETURNING id""")).fetchone()[0]
+                
+                db.execute(text(f"""INSERT INTO registroproduccion(fecha, ganadoid, peso, usuarioid) 
+                                VALUES('{fechaNacimiento}', {query}, {peso}, {session["user_id"]})"""))
+                
                 db.commit()
             except:
                 flash("Ha ocurrido un error", "error")
@@ -455,6 +461,7 @@ def entidadComercial():
 
     if request.method == "POST":
         nombre = request.form.get("nombre")
+        cue = request.form.get("cue")
         apellido = request.form.get("apellido") #posibilidad de null si es entidad juridica
         telefono = request.form.get("telefono") #posibilidad de null
         identificacion = request.form.get("identificacion")
@@ -467,10 +474,16 @@ def entidadComercial():
         if not nombre or nombre.isspace():
             flash("Debe especificar el nombre de entidad comercial", "error")
             return redirect("/entidadesComerciales")
+        
+        if not cue or not cue.isalnum() or cue.isspace() or db.execute(text(f"SELECT COUNT(id) FROM entidadcomercial WHERE cue='{cue}'")).fetchone()[0] != 0:
+            flash("Debe especificar un CUE valido para la entidad comercial, este CUE es invalido o ya esta registrado", "error")
+            return redirect("/entidadesComerciales")
+
         if tipoentidadid == 1:
             if not apellido or apellido.isspace():
                 flash("Debe especificar el apellido de entidad comercial", "error")
                 return redirect("/entidadesComerciales")
+            
         if not identificacion or identificacion.isspace():
             flash("Debe especificar la cédula o RUC de la entidad comercial", "error")
             return redirect("/entidadesComerciales")
@@ -478,19 +491,19 @@ def entidadComercial():
         
         if tipoentidadid == 1:
             if telefono:
-                db.execute(text(f"""INSERT INTO entidadcomercial(nombre, apellido, telefono, identificacion, tipoentidadid)
-                                VALUES('{nombre}', '{apellido}', {telefono}, '{identificacion}', {tipoentidadid})"""))
+                db.execute(text(f"""INSERT INTO entidadcomercial(nombre, cue, apellido, telefono, identificacion, tipoentidadid)
+                                VALUES('{nombre}', '{cue}', '{apellido}', {telefono}, '{identificacion}', {tipoentidadid})"""))
             else:
-                db.execute(text(f"""INSERT INTO entidadcomercial(nombre, apellido, identificacion, tipoentidadid)
-                                VALUES('{nombre}', '{apellido}', '{identificacion}', {tipoentidadid})"""))
+                db.execute(text(f"""INSERT INTO entidadcomercial(nombre, cue, apellido, identificacion, tipoentidadid)
+                                VALUES('{nombre}', '{cue}', '{apellido}', '{identificacion}', {tipoentidadid})"""))
             
         else:
             if telefono:
-                db.execute(text(f"""INSERT INTO entidadcomercial(nombre, telefono, identificacion, tipoentidadid)
-                                VALUES('{nombre}', '{telefono}', '{identificacion}', {tipoentidadid})"""))
+                db.execute(text(f"""INSERT INTO entidadcomercial(nombre, cue, telefono, identificacion, tipoentidadid)
+                                VALUES('{nombre}', '{cue}', '{telefono}', '{identificacion}', {tipoentidadid})"""))
             else:
-                db.execute(text(f"""INSERT INTO entidadcomercial(nombre, identificacion, tipoentidadid)
-                                VALUES('{nombre}', '{identificacion}', {tipoentidadid})"""))
+                db.execute(text(f"""INSERT INTO entidadcomercial(nombre, cue, identificacion, tipoentidadid)
+                                VALUES('{nombre}', '{cue}', '{identificacion}', {tipoentidadid})"""))
             
         try:
             db.commit()
@@ -512,6 +525,7 @@ def entidadComercial():
 def editarentidad(id):
 
     nombre = request.form.get("nombre")
+    cue = request.form.get("cue")
     apellido = request.form.get("apellido") #posibilidad de null si es entidad juridica
     telefono = request.form.get("telefono") #posibilidad de null
     identificacion = request.form.get("identificacion")
@@ -524,6 +538,11 @@ def editarentidad(id):
     if not nombre or nombre.isspace():
         flash("Debe especificar el nombre de entidad comercial", "error")
         return redirect("/entidadesComerciales")
+    
+    if not cue or not cue.isalnum() or cue.isspace() or db.execute(text(f"SELECT COUNT(id) FROM entidadcomercial WHERE cue='{cue}'")).fetchone()[0] != 0:
+            flash("Debe especificar un CUE valido para la entidad comercial, este CUE es invalido o ya esta registrado", "error")
+            return redirect("/entidadesComerciales")
+
     if tipoentidadid == 1:
         if not apellido or apellido.isspace():
             flash("Debe especificar el apellido de entidad comercial", "error")
@@ -534,17 +553,17 @@ def editarentidad(id):
     
     if tipoentidadid == 1:
             if telefono:
-                db.execute(text(f"UPDATE entidadcomercial SET nombre = '{nombre}', apellido = '{apellido}', telefono = '{telefono}', identificacion = '{identificacion}', tipoentidadid = {tipoentidadid} WHERE id = {id}"))
+                db.execute(text(f"UPDATE entidadcomercial SET nombre = '{nombre}', cue = '{cue}', apellido = '{apellido}', telefono = '{telefono}', identificacion = '{identificacion}', tipoentidadid = {tipoentidadid} WHERE id = {id}"))
                 
             else:
-                db.execute(text(f"UPDATE entidadcomercial SET nombre = '{nombre}', apellido = '{apellido}', telefono = null, identificacion = '{identificacion}', tipoentidadid = {tipoentidadid} WHERE id = {id}"))
+                db.execute(text(f"UPDATE entidadcomercial SET nombre = '{nombre}', cue = '{cue}', apellido = '{apellido}', telefono = null, identificacion = '{identificacion}', tipoentidadid = {tipoentidadid} WHERE id = {id}"))
                  
     else:
         if telefono:
-            db.execute(text(f"UPDATE entidadcomercial SET nombre = '{nombre}', apellido = null, telefono = {telefono}, identificacion = '{identificacion}', tipoentidadid = {tipoentidadid} WHERE id = {id}"))
+            db.execute(text(f"UPDATE entidadcomercial SET nombre = '{nombre}', cue = '{cue}', apellido = null, telefono = {telefono}, identificacion = '{identificacion}', tipoentidadid = {tipoentidadid} WHERE id = {id}"))
                  
         else:
-            db.execute(text(f"UPDATE entidadcomercial SET nombre = '{nombre}', apellido = null, telefono = null, identificacion = '{identificacion}', tipoentidadid = {tipoentidadid} WHERE id = {id}"))
+            db.execute(text(f"UPDATE entidadcomercial SET nombre = '{nombre}', cue = '{cue}', apellido = null, telefono = null, identificacion = '{identificacion}', tipoentidadid = {tipoentidadid} WHERE id = {id}"))
                  
         
     try:
@@ -693,13 +712,25 @@ def medicina():
         med = db.execute(text(f"SELECT * FROM medicina WHERE nombre = '{nombre}'")).fetchone()
         
         if med:
-            try:
-                cant = db.execute(f"SELECT * FROM detallepresentacion WHERE medicinaid = {med['id']}").fetchone()["cantidad"] + int(cantidad)
-                db.execute(text(f"UPDATE detallepresentacion SET cantidad = {cant} WHERE medicinaid = {med['id']}"))
-                db.commit()
-            except:
-                flash("Ocurrió un error inesperado", "error")
-                return redirect("/medicina")
+            if not db.execute(text(f"SELECT * FROM detallepresentacion WHERE medicinaid = '{med['id']}'")).fetchone()["contenido"] == contenido:
+                try:
+                    idmedicina = db.execute(text(f"INSERT INTO medicina (nombre) VALUES('{nombre}') RETURNING id")).fetchone()[0]
+                    db.execute(text(f"""INSERT INTO detallepresentacion (contenido, cantidad, precio, presentacionid, medicinaid)
+                                    VALUES ({float(contenido)}, {int(cantidad)}, {float(precio)}, {tipo}, {idmedicina})"""))
+                    
+                    db.commit()
+                except:
+                    flash("Ocurrió un error inesperado", "error")
+                    return redirect("/medicina")
+
+            else:
+                try:
+                    cant = db.execute(f"SELECT * FROM detallepresentacion WHERE medicinaid = {med['id']}").fetchone()["cantidad"] + int(cantidad)
+                    db.execute(text(f"UPDATE detallepresentacion SET cantidad = {cant} WHERE medicinaid = {med['id']}"))
+                    db.commit()
+                except:
+                    flash("Ocurrió un error inesperado", "error")
+                    return redirect("/medicina")
             
         else:
             try:
@@ -877,7 +908,7 @@ def editarregistrosmedicos():
 @login_required
 def controlbovino():
     if request.method == "GET":
-        ganado = db.execute(text("SELECT id, codigochapa, nombre FROM ganado"))
+        ganado = db.execute(text("SELECT id, codigochapa, nombre FROM ganado WHERE estadoganadoid = 1"))
         registros = db.execute(text("""SELECT g.id ganadoid,
                                     rp.id idregistro,
                                     g.codigochapa codigochapa,
@@ -889,7 +920,8 @@ def controlbovino():
                                     on rp.ganadoid = g.id
                                     inner join usuario u
                                     on rp.usuarioid = u.id
-                                    order by fecha"""))
+                                    WHERE estadoganadoid = 1
+                                    order by codigochapa, fecha"""))
         
         return render_template("controlbovino.html", registros = [r for r in registros], ganado = [g for g in ganado])
     
@@ -913,6 +945,10 @@ def controlbovino():
             try:
                 db.execute(text(f"""INSERT INTO registroproduccion(fecha, ganadoid, peso, comentario, usuarioid) 
                                 VALUES('{fecha}', {ganadoid}, {peso}, '{comentario}', {session["user_id"]})"""))
+                
+                
+                db.execute(text(f"UPDATE ganado SET peso = {peso} WHERE id = {ganadoid}"))
+
                 db.commit()
             except:
                 flash("Ocurrió un error inesperado", "error")
@@ -921,6 +957,9 @@ def controlbovino():
             try:
                 db.execute(text(f"""INSERT INTO registroproduccion(fecha, ganadoid, peso, usuarioid) 
                                 VALUES('{fecha}', {ganadoid}, {peso}, {session["user_id"]})"""))
+                
+                db.execute(text(f"UPDATE ganado SET peso = {peso} WHERE id = {ganadoid}"))
+
                 db.commit()
             except:
                 flash("Ocurrió un error inesperado", "error")
@@ -928,6 +967,48 @@ def controlbovino():
             
         flash("Registro creado exitosamente", "exito")
         return redirect("/control_bovino")
+    
+
+@app.route("/editar_registro_bovino/<id>", methods=["POST"])
+@login_required
+def editar_registro_bovino(id):
+    fecha = str(request.form.get("fecha"))
+    ganadoid = int(request.form.get("bovino"))
+    peso = float(request.form.get("peso"))
+    comentario = request.form.get("comentario")
+
+    if not fecha:
+        flash("Debe ingresar la fecha de control", "error")
+        return redirect("/control_bovino")
+    if not ganadoid or ganadoid < 1:
+        flash("Debe seleccionar el bovino", "error")
+        return redirect("/control_bovino")
+    if not peso or peso < 1:
+        flash("Debe ingresar el peso del bovino", "error")
+        return redirect("/control_bovino")
+    
+    if comentario or not comentario.isspace():
+        try:
+            db.execute(text(f"""UPDATE registroproduccion set fecha='{fecha}', ganadoid = {ganadoid}, peso = {peso}, comentario = '{comentario}', usuarioid = {session["user_id"]} 
+                            WHERE id={id} """))
+
+            db.commit()
+        except:
+            flash("Ocurrió un error inesperado", "error")
+            return redirect("/control_bovino")
+    else:
+        try:
+            db.execute(text(f"""UPDATE registroproduccion set fecha='{fecha}', ganadoid = {ganadoid}, peso = {peso}, usuarioid = {session["user_id"]} 
+                            WHERE id={id} """))
+
+            db.commit()
+        except:
+            flash("Ocurrió un error inesperado", "error")
+            return redirect("/control_bovino")
+        
+    flash("Se actualizó el registro", "exito")
+    return redirect("/control_bovino")
+
 
 @app.route("/alimentoGanado", methods=["GET", "POST"])
 @login_required
