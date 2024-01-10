@@ -1,0 +1,82 @@
+{% extends "layout.html" %}
+
+{%block title%}
+
+San Francisco - Registrar ganado
+
+{% endblock%}
+
+{% block main%}
+<div class="content">
+    <div class="row ganado">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="text-center">Finalizar compra</h3>
+                </div>
+                <div class="card-body">
+                    {% for cabeza in ganado %}
+                    <div class="form-group">
+                        <div class="inputs">
+                            <form action="/compra/individual/fin" method="post" enctype="multipart/form-data">
+                                <div class="row m-1">
+                                    <div class="col-6 mb-3">
+                                        <label for="nombre">Nombre</label>
+                                        <input type="text" class="form-control" id="nombre" name="nombre"
+                                            value="{{cabeza.nombre}}" disabled>
+                                    </div>
+                                    <div class="col-6 mb-3">
+                                        <label for="nombre">Chapa</label>
+                                        <input type="text" class="form-control" id="codigo" name="codigo"
+                                            value="{{cabeza.codigochapa}}" disabled>
+                                            <input type="text" class="form-control" id="bovino" name="bovino"
+                                            value="{{cabeza.id}}" hidden>
+                                    </div>
+                                    <div class="col-6 mb-3">
+                                        <label for="raza">Raza</label>
+                                        <input type="text" class="form-control" id="raza" name="raza"
+                                            value="{{cabeza.nombreraza}}" disabled>
+                                    </div>
+                                    <div class="col-6 mb-3">
+                                        <label for="raza">Peso</label>
+                                        <input type="text" class="form-control" id="peso" name="peso"
+                                            value="{{cabeza.peso}}">
+                                    </div>
+                                    <div class="col-6 mb-3">
+                                        <label for="fechaCompra">Fecha de compra</label>
+                                        <input type="date" class="form-control" id="fechaCompra"
+                                            name="fechaCompra" required>
+                                    </div>
+                                    <div class="col-6 mb-3">
+                                        <label for="proveedor">Proveedor</label>
+                                        <select class="form-control" id="proveedor" name="proveedor" required>
+                                            <option disabled="" selected="" value="">Seleccione un elemento</option>
+                                            {% for item in proveedor %}
+                                            <option value="{{item[0]}}">{{item[1]}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="col-6 mb-3">
+                                        <label for="precioKilo">Precio kilo</label>
+                                        <input class="form-control" type="text" placeholder="80"
+                                            name="precioKilo" required>
+                                    </div>
+                                    <div class="col-6 mb-3">
+                                        <label for="file">Seleccione carta de compra <i class="fa fa-upload"></i></label>
+                                        <input class="form-control mb-4" type="file" name="foto" id="img-uploader"
+                                            accept="pdf/*">
+                                        <progress id="img-upload-bar" value="0" max="100"
+                                            style="width: 100%;height: 40px;"></progress>
+                                    </div>
+                                    <div class="col-12 form-group" align="center">
+                                        <button class="btn btn-primary" type="submit">Ingresar</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            {% endblock%}

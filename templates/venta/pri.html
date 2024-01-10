@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+
+{%block title%}
+
+Compra
+
+{% endblock%}
+
+{% block main%}
+<div class="content">
+    <div class="row ganado">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="sign pt-2 pb-2 text-center">Seleccione el tipo de compra</h3>
+                </div>
+                <div class="row m-5">
+                    <div class="col-md-6 tipoComer">
+                        <a href="venta/individual"><img class="img-tipoComer" src="/static/imagenes/1.png" alt=""></a>
+                    </div>
+                    <div class="col-md-6 tipoComer">
+                        <a href="venta/lote"><img class="img-tipoComer" src="/static/imagenes/2.png" alt=""></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock%}

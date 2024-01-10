@@ -104,7 +104,7 @@ San Francisco - Actualizar ganado
                                     </div>
 
                                     <div class="col-6 form-group mb-0" align="center">
-                                        <button type="button" class="btn btn-danger" onclick="matarBovino('{{novillo[0]}}')"
+                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#MatarModal"
                                         {% if novillo.estadoganadoid == 3 %}
                                             disabled
                                         {% endif %}
@@ -112,7 +112,32 @@ San Francisco - Actualizar ganado
                                             Marcar muerto <i class="fa-solid fa-skull-crossbones"></i>
                                         </button>
                                     </div>
-   
+
+                                    <div class="modal fade" id="MatarModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                          <div class="modal-content">
+                                            <div class="modal-header">
+                                              <h5 class="modal-title" id="exampleModalLabel">¿Bovino muerto?</h5>
+                                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="row">
+                                                  <div class="container d-flex justify-content-center mb-4 flex-wrap">
+                                                    <div class="container">
+                                                      <h5>¿Estas seguro que deseas marcar este bovino como fallecido?</h5>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                                <div class="modal-footer p-0">
+                                                  <button type="button" class="btn btn-secondary mr-2" data-bs-dismiss="modal">Cancelar</button>
+                                                  <a class="btn btn-primary" type="submit" href="/infonovillo/{{novillo[0]}}/muerto">Guardar cambios</a>
+                                                </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+
+
                                     <div class="col-6 form-group mb-0" align="center">
                                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#EditarModal">
                                             Guardar cambios
