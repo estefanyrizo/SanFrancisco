@@ -1141,7 +1141,7 @@ def compras():
     INNER JOIN raza ON ganado.razaid = raza.id
     INNER JOIN entidadcomercial ON compra.entidadcomercialid = entidadcomercial.id
     GROUP BY compra.id, compra.fecha, entidadcomercial.nombre, usuario.nombre;"""))
-    return render_template("compras.html", compras = compras))
+    return render_template("compras.html", compras = compras)
 
 @app.route('/eliminarcompra/<id>', methods=["GET"])
 @login_required
