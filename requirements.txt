@@ -5,7 +5,7 @@ Jinja2
 requests
 SQLAlchemy
 Werkzeug
-psycopg2
+psycopg2-binary
 Flask-Session
 python-dotenv
 imagekitio
