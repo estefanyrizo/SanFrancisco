@@ -111,7 +111,7 @@ def ingresarGanado():
             flash("Debe ingresar una raza valida", "error")
             return redirect("/ingresarnovillo")
         
-        if not fechaNacimiento or int(fechaNacimiento.split("-")[0]) != datetime.now().year:
+        if not fechaNacimiento:
             flash("Debe ingresar una fecha valida", "error")
             return redirect("/ingresarnovillo")
         
@@ -661,7 +661,38 @@ def repass(id):
 @app.route("/alimento", methods=["GET", "POST"])
 @login_required
 def alimento():
-    return render_template("alimento.html")
+    if request.method == "GET":
+        alimentos = db.execute(text("SELECT * FROM alimento"))
+        return render_template("alimento.html", alimentos = [a for a in alimentos])
+    
+    else:
+        nombre = request.form.get("nombre")
+        cantidad = request.form.get("cantidad")
+        precio = request.form.get("precio")
+        fecha = request.form.get("fecha")
+
+        if not nombre or nombre.isspace():
+            flash("Debe ingresar un nombre valido", "error")
+            return redirect("/alimento")
+        if not cantidad or float(cantidad) < 0:
+            flash("Debe ingresar una cantidad valida", "error")
+            return redirect("/alimento")
+        if not precio or float(precio) < 0:
+            flash("Debe ingresar un precio valido", "error")
+            return redirect("/alimento")
+        if not fecha:
+            flash("Debe ingresar una fecha valida", "error")
+            return redirect("/alimento")
+        
+        try:
+            db.execute(text(f"INSERT INTO alimento(nombre, preciocompra, cantidadcomprada, fechacompra) VALUES('{nombre}', {float(precio)}, {float(cantidad)}, '{str(fecha)}')"))
+            db.commit()
+        except:
+            flash("Ocurrió un error inesperado", "error")
+            return redirect("/alimento")
+        
+        flash("Alimento registrado exitosamente", "exito")
+        return redirect("/alimento")
 
 
 @app.route("/medicina", methods=["GET", "POST"])
@@ -944,7 +975,6 @@ def controlbovino():
             try:
                 db.execute(text(f"""INSERT INTO registroproduccion(fecha, ganadoid, peso, comentario, usuarioid) 
                                 VALUES('{fecha}', {ganadoid}, {peso}, '{comentario}', {session["user_id"]})"""))
-                
                 
                 db.execute(text(f"UPDATE ganado SET peso = {peso} WHERE id = {ganadoid}"))
 

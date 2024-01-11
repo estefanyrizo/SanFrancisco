@@ -2,7 +2,7 @@
 
 {%block title%}
 
-San Francisco - Alimentar ganado
+San Francisco - Alimento ganado
 
 {% endblock%}
 
@@ -16,7 +16,6 @@ San Francisco - Alimentar ganado
         </div>
         <div class="form-group">
           <div class="inputs">
-            <form action=""></form>
             <div class="row m-3">
               <div class="col-12 mb-3">
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
@@ -35,33 +34,21 @@ San Francisco - Alimentar ganado
                     </tr>
                   </thead>
                   <tbody>
+                    {% for alimento in alimentos %}
                     <tr>
-                      <td>Mark</td>
-                      <td>2 Kg</td>
-                      <td>16/2/2023</td>
-                      <td>C$5000</td>
-                      <td> <a class="btn btn-primary" href="#"><i class="fa-regular fa-pen-to-square"></i></a></td>
+                      <td>{{alimento.nombre}}</td>
+                      <td>{{alimento.cantidadcomprada}} Kg</td>
+                      <td>{{alimento.fechacompra}}</td>
+                      <td>C$ {{alimento.preciocompra}}</td>
+                      <td> <button class="btn btn-primary"><i class="fa-regular fa-pen-to-square"></i></button></td>
                     </tr>
-                    <tr>
-                      <td>Jacob</td>
-                      <td>3 L</td>
-                      <td>16/2/2023</td>
-                      <td>C$5000</td>
-                      <td><a class="btn btn-primary" href="#"><i class="fa-regular fa-pen-to-square"></i></a></td>
-                    </tr>
-                    <tr>
-                      <td colspan="2">Larry the Bird</td>
-                      <td>16/2/2023</td>
-                      <td>C$5000</td>
-                      <td><a class="btn btn-primary" href="#"><i class="fa-regular fa-pen-to-square"></i></a></td>
-                    </tr>
+                    {% endfor %}
                   </tbody>
                 </table>
               </div>
             </div>
           </div>
         </div>
-        <form action=""></form>
       </div>
     </div>
   </div>
@@ -75,34 +62,34 @@ San Francisco - Alimentar ganado
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form action=""></form>
-        <div class="row">
-          <div class="col-6 mb-3">
-            <label for="alimento">Alimento</label>
-            <select class="form-control" id="alimento" name="alimento" required>
-              <option disabled="" selected="" value="">Seleccione un elemento</option>
-              <option value="1">Sal</option>
-              <option value="2">Melaza</option>
-              <option value="3">Pasto</option>
-            </select>
+        <form action="/alimento" method="post" class="form-group">
+          <div class="row">
+            <div class="col-6 mb-3">
+              <label for="nombre">Nombre</label>
+              <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre" required>
+            </div>
+
+            <div class="col-6 mb-3">
+              <label for="cantidad">Cantidad</label>
+              <input type="text" class="form-control" id="cantidad" name="cantidad" placeholder="Kg, L, Lb" required>
+            </div>
+
+            <div class="col-6 mb-3">
+              <label for="precio">Precio</label>
+              <input type="text" class="form-control" id="precio" name="precio" placeholder="Precio unitario" required>
+            </div>
+
+            <div class="col-6 mb-3">
+              <label for="fecha">Fecha</label>
+              <input type="date" class="form-control" id="fecha" name="fecha" required>
+            </div>
           </div>
 
-          <div class="col-6 mb-3">
-            <label for="cantidad">Cantidad</label>
-            <input type="text" class="form-control" id="cantidad" name="cantidad" placeholder="Kg, L, Lb" required>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Guardar</button>
           </div>
-
-          <div class="col-6 mb-3">
-            <label for="total">Total</label>
-            <input type="text" class="form-control" id="total" name="total" placeholder="1000 C$" required>
-          </div>
-        </div>
-      </form>
-
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button type="button" class="btn btn-primary">Guardar</button>
-        </div>
+        </form>
       </div>
     </div>
   </div>

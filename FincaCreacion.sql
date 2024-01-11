@@ -96,7 +96,7 @@ CREATE TABLE IF NOT EXISTS alimento
     id serial NOT NULL,
     nombre varchar(255) NOT NULL,
     precioCompra real NOT NULL,
-    cantidadComprada integer NOT NULL,
+    cantidadComprada real NOT NULL,
     fechaCompra date NOT NULL,
     PRIMARY KEY (id)
 );
