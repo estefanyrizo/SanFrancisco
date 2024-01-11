@@ -3,11 +3,11 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.sql import text
 from werkzeug.security import check_password_hash, generate_password_hash
 
-engine = create_engine("postgresql://finca_w3np_user:c1W9vy5mfQt9hq22T33nJgeHVwVHZxjl@dpg-ckj6gggmccbs73e45m90-a.oregon-postgres.render.com/finca_w3np")
+engine = create_engine("postgresql://fincasanfrancisco_user:S5Mywbfl6XanGYLXEVKel6ce5DYXnmOx@dpg-cmfjmqocmk4c739botlg-a.oregon-postgres.render.com/fincasanfrancisco")
 db = scoped_session(sessionmaker(bind=engine))
 
 
-'''with open("FincaCreacion.sql", 'r') as query:
+with open("FincaCreacion.sql", 'r') as query:
   data = query.read()
   db.execute(data)
 
@@ -105,7 +105,6 @@ INSERT INTO enfermedad (nombre, contagiosa) VALUES
 ('Actinobacilosis', true);
 """))
 
-'''
 
 
 db.commit()
