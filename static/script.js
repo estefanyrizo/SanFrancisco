@@ -66,4 +66,56 @@ buscadorganado.addEventListener("input", function () {
 });
 //-----------------------------------------------------------------------------------------------------------------
 
+//Eliminar ganado
 
+function eliminarBovino(id, chapa, nombre) {
+	swal({
+		title: "¿Estas seguro?",
+		text: "Estas a punto de eliminar los datos del bovino: " + nombre + " con chapa " + chapa,
+		icon: "warning",
+		buttons: ["Cancelar", true],
+		dangerMode: true,
+	})
+	.then((willDelete) => {
+		if (willDelete) {
+		window.location.href="/infonovillo/" + id + "/borrar"
+		} else {
+		  swal("Tus datos están a salvo");
+		}
+	  });
+}
+//Matar ganado
+
+function matarBovino(id) {
+	swal({
+		title: "¿Estas seguro?",
+		text: "¿Estas seguro que deseas marcar este bovino como fallecido?",
+		icon: "warning",
+		buttons: ["Cancelar", true],
+		dangerMode: true,
+	})
+	.then((willDelete) => {
+		if (willDelete) {
+			window.location.href="/infonovillo/" + id + "/muerto"
+		}
+	  });
+}
+
+// Eliminar compra
+
+function eliminarCompra(id) {
+	swal({
+		title: "¿Estas seguro?",
+		text: "Estas a punto de eliminar los datos de esta compra",
+		icon: "warning",
+		buttons: ["Cancelar", true],
+		dangerMode: true,
+	})
+	.then((willDelete) => {
+		if (willDelete) {
+		window.location.href="/eliminarcompra//" + id
+		} else {
+		  swal("Tus datos están a salvo");
+		}
+	  });
+}
