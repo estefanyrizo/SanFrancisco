@@ -260,7 +260,7 @@ Copyright (c) 2015 Daniel Eden
   text-transform: uppercase;
   border: none;
   margin: 10px 1px;
-  border-radius: 3px;
+  border-radius: 10px;
   padding: 11px 22px;
   cursor: pointer;
   background-color: #66615B;
@@ -946,7 +946,7 @@ fieldset[disabled]
 
 .btn-sm {
   font-size: 0.8571em;
-  border-radius: 3px;
+  border-radius: 10px;
   padding: 5px 15px; }
   .btn-sm.btn-simple {
     padding: 4px 14px; }
@@ -1882,7 +1882,7 @@ a[data-toggle="collapse"][aria-expanded="true"] .caret,
   .navbar .navbar-nav .nav-item .nav-link:not(.btn):focus,
   .navbar .navbar-nav .nav-item .nav-link:not(.btn):hover,
   .navbar .navbar-nav .nav-item .nav-link:not(.btn):active {
-    border-radius: 3px;
+    border-radius: 10px;
     color: #66615B; }
   .navbar .logo-container {
     width: 27px;
@@ -2385,7 +2385,7 @@ a[data-toggle="collapse"][aria-expanded="true"] .caret,
 
 .alert {
   border: 0;
-  border-radius: 3px;
+  border-radius: 10px;
   color: #FFFFFF;
   padding-top: .9rem;
   padding-bottom: .9rem;
@@ -2436,7 +2436,7 @@ a[data-toggle="collapse"][aria-expanded="true"] .caret,
 
 img {
   max-width: 100%;
-  border-radius: 3px; }
+  border-radius: 10px; }
 
 .img-raised {
   box-shadow: 0px 10px 25px 0px rgba(0, 0, 0, 0.3); }
@@ -3661,7 +3661,7 @@ License - nucleoapp.com/license/
     .card .card-header .card-title {
       margin-top: 10px; }
   .card .map {
-    border-radius: 3px; }
+    border-radius: 10px; }
     .card .map.map-big {
       height: 500px; }
   .card[data-background-color="orange"] {

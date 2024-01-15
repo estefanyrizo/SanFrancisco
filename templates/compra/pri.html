@@ -12,14 +12,22 @@ Nueva compra
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="sign pt-2 pb-2 text-center">Seleccione el tipo de compra</h3>
+                    <h3 class="sign pb-2 pt-2 text-center">Seleccione el tipo de compra</h3>
                 </div>
-                <div class="row m-5">
-                    <div class="col-md-6 tipoComer">
-                        <a href="/compra/individual"><img class="img-tipoComer" src="/static/imagenes/1.png" alt=""></a>
+                <div class="row g-3 m-3 mb-5">
+                    <div class="col-md-6 tipoComer .d-flex">
+                        <div class="box">
+                            <center><img class="img-tipoComer" src="/static/imagenes/indi.png" alt=""></center>
+                            <center><h3>Individual</h3></center>
+                            <center><a href="/compra/individual" class="btn btn-primary mt-5" type="submit">Seleccionar</a></center>
+                        </div>
                     </div>
                     <div class="col-md-6 tipoComer">
-                        <a href="compra/lote"><img class="img-tipoComer" src="/static/imagenes/2.png" alt=""></a>
+                        <div class="box">
+                            <center><img class="img-tipoComer" src="/static/imagenes/lote.png" alt=""></center>
+                            <center><h3>Lote</h3></center>
+                            <center><a href="/conpra/lote" class="btn btn-primary mt-5" type="submit">Seleccionar</a></center>
+                        </div>
                     </div>
                 </div>
             </div>

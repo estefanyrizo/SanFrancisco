@@ -1284,3 +1284,7 @@ def eliminarventa(id):
 def logout():
     session.clear()
     return redirect("/login")
+@app.route("/transaccion")
+@login_required
+def transaccion():
+    return render_template("transaccion.html")
