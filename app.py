@@ -1336,7 +1336,7 @@ def ventas():
     INNER JOIN raza ON ganado.razaid = raza.id
     INNER JOIN entidadcomercial ON venta.entidadcomercialid = entidadcomercial.id
     GROUP BY venta.id, venta.fecha, entidadcomercial.nombre, usuario.nombre;"""))
-    return render_template("venta/pri.html", ventas = ventas)
+    return render_template("ventas.html", ventas = ventas)
 
 @app.route('/eliminarventa/<id>', methods=["GET"])
 @login_required
