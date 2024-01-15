@@ -22,34 +22,36 @@ Compra individual
 
                             <div class="row m-3">
                                 <div class="col-12">
-                                    <table class="table">
-                                        <thead class=" text-primary">
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead class=" text-primary">
 
-                                            <tr>
-                                                <th scope="col">Codigo</th>
-                                                <th scope="col">Nombre</th>
-                                                <th scope="col">Raza</th>
-                                                <th scope="col">Tamaño</th>
-                                                <th scope="col">Peso</th>
-                                                <th scope="col">Seleccionar</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {% for cabeza in ganado %}
-                                            <tr>
+                                                <tr>
+                                                    <th scope="col">Codigo</th>
+                                                    <th scope="col">Nombre</th>
+                                                    <th scope="col">Raza</th>
+                                                    <th scope="col">Tamaño</th>
+                                                    <th scope="col">Peso</th>
+                                                    <th scope="col">Seleccionar</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for cabeza in ganado %}
+                                                <tr>
 
-                                                <td>{{cabeza.codigochapa}}</th>
-                                                <td id="{{cabeza.id}}">{{cabeza.nombre}}</td>
-                                                <td>{{cabeza.nombreraza}}</td>
-                                                <td>{{cabeza.tamanio}}</td>
-                                                <td>{{cabeza.peso}}</td>
-                                                <td> <input type="radio" id="bovino{{ cabeza.id }}" name="bovino"
-                                                        value="{{cabeza.id}}" required></td>
-                                            </tr>
-                                            {% endfor %}
+                                                    <td>{{cabeza.codigochapa}}</th>
+                                                    <td id="{{cabeza.id}}">{{cabeza.nombre}}</td>
+                                                    <td>{{cabeza.nombreraza}}</td>
+                                                    <td>{{cabeza.tamanio}}</td>
+                                                    <td>{{cabeza.peso}}</td>
+                                                    <td> <input type="radio" id="bovino{{ cabeza.id }}" name="bovino"
+                                                            value="{{cabeza.id}}" required></td>
+                                                </tr>
+                                                {% endfor %}
 
-                                        </tbody>
-                                    </table>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                                 <div class="col-12 form-group" align="center">
                                     <button type="submit" class="btn btn-primary">Continuar</button>

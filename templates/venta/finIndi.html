@@ -2,7 +2,7 @@
 
 {%block title%}
 
-San Francisco - Registrar ganado
+Fin venta individual
 
 {% endblock%}
 
@@ -18,7 +18,7 @@ San Francisco - Registrar ganado
                     {% for cabeza in ganado %}
                     <div class="form-group">
                         <div class="inputs">
-                            <form action="/compra/individual/fin" method="post" enctype="multipart/form-data">
+                            <form action="/venta/individual/fin" method="post" enctype="multipart/form-data">
                                 <div class="row m-1">
                                     <div class="col-6 mb-3">
                                         <label for="nombre">Nombre</label>
@@ -40,18 +40,18 @@ San Francisco - Registrar ganado
                                     <div class="col-6 mb-3">
                                         <label for="raza">Peso</label>
                                         <input type="text" class="form-control" id="peso" name="peso"
-                                            value="{{cabeza.peso}}">
+                                            value="{{cabeza.peso}}" required>
                                     </div>
                                     <div class="col-6 mb-3">
-                                        <label for="fechaCompra">Fecha de compra</label>
-                                        <input type="date" class="form-control" id="fechaCompra"
-                                            name="fechaCompra" required>
+                                        <label for="fechaVenta">Fecha de venta</label>
+                                        <input type="date" class="form-control" id="fechaVenta"
+                                            name="fechaVenta" required>
                                     </div>
                                     <div class="col-6 mb-3">
-                                        <label for="proveedor">Proveedor</label>
-                                        <select class="form-control" id="proveedor" name="proveedor" required>
+                                        <label for="cliente">Cliente</label>
+                                        <select class="form-control" id="cliente" name="cliente" required>
                                             <option disabled="" selected="" value="">Seleccione un elemento</option>
-                                            {% for item in proveedor %}
+                                            {% for item in cliente %}
                                             <option value="{{item[0]}}">{{item[1]}}</option>
                                             {% endfor %}
                                         </select>
@@ -62,7 +62,7 @@ San Francisco - Registrar ganado
                                             name="precioKilo" required>
                                     </div>
                                     <div class="col-6 mb-3">
-                                        <label for="file">Seleccione carta de compra <i class="fa fa-upload"></i></label>
+                                        <label for="file">Seleccione carta de venta <i class="fa fa-upload"></i></label>
                                         <input class="form-control mb-4" type="file" name="foto" id="img-uploader"
                                             accept="pdf/*">
                                         <progress id="img-upload-bar" value="0" max="100"
