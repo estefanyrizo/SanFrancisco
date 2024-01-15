@@ -15,100 +15,100 @@ Compras
           <h3 class="sign pt-2 text-center">Historial de compras</h3>
         </div>
         <div class="form-group">
-          <div class="pr-5 pl-5">
-            <table class="table table-hover">
-              <thead>
-                <tr>
-                  <th scope="col">Fecha</th>
-                  <th scope="col">Proveedor</th>
-                  <th scope="col">Cantidad</th>
-                  <th scope="col">Total</th>
-                  <th scope="col">Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for compra in compras %}
-                <tr>
-                  <td>{{ compra.fecha }}</td>
-                  <td>{{ compra.proveedor }}</td>
-                  <td>{{ compra.cantidad }}</td>
-                  <td>C$ {{ compra.montototal }}</td>
-                  <td>
-                    <!-- Botón para abrir el modal -->
-                    <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal{{ compra.id }}"><i
-                        class="fa fa-eye"></i></a>
+            <div class="table-responsive pr-5 pl-5">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th scope="col">Fecha</th>
+                    <th scope="col">Proveedor</th>
+                    <th scope="col">Cantidad</th>
+                    <th scope="col">Total</th>
+                    <th scope="col">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for compra in compras %}
+                  <tr>
+                    <td>{{ compra.fecha }}</td>
+                    <td>{{ compra.proveedor }}</td>
+                    <td>{{ compra.cantidad }}</td>
+                    <td>C$ {{ compra.montototal }}</td>
+                    <td>
+                      <!-- Botón para abrir el modal -->
+                      <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal{{ compra.id }}"><i
+                          class="fa fa-eye"></i></a>
 
-                    <!-- Modal -->
-                    <div class="modal fade" id="modal{{ compra.id }}" tabindex="-1"
-                      aria-labelledby="modalLabel{{ compra.id }}" aria-hidden="true">
-                      <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h5 class="modal-title" id="modalLabel{{ compra.id }}">Detalles de la compra</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                          </div>
-                          <div class="modal-body">
-                            <!-- Contenido del modal -->
-                            <div class="row m-1">
-                              <div class="col-6 p-1">
-                                Proveedor: {{ compra.proveedor }}
-                              </div>
-                              <div class="col-6 p-1">
-                                Fecha: {{ compra.fecha }}
-                              </div>
-                              <div class="col-6 p-1">
-                                Monto: C$ {{ compra.montototal }}
-                              </div>
-                              <div class="col-6 p-1">
-                                Usuario: {{ compra.usuario }}
-                              </div>
+                      <!-- Modal -->
+                      <div class="modal fade" id="modal{{ compra.id }}" tabindex="-1"
+                        aria-labelledby="modalLabel{{ compra.id }}" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="modalLabel{{ compra.id }}">Detalles de la compra</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
                             </div>
-                            <br>
-                            <h6 align="center">Datos del ganado</h6>
-                            <table class="table">
-                              <thead class="text-primary">
-                                <tr>
-                                  <th scope="col">Codigo</th>
-                                  <th scope="col">Nombre</th>
-                                  <th scope="col">Raza</th>
-                                  <th scope="col">Tamaño</th>
-                                  <th scope="col">Peso</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {% set chapas_ganado = compra.chapas_ganado .split(',')%}
-                                {% set nombres_ganado = compra.nombres_ganado .split(',')%}
-                                {% set razas_ganado = compra.razas_ganado .split(',')%}
-                                {% set tamanios_ganado = compra.tamanios .split(',')%}
-                                {% set pesos_ganado = compra.pesos .split(',')%}
-                                {% for i in range(chapas_ganado|length) %}
-                                <tr>
-                                  <td>{{ chapas_ganado[i]|trim }}</td>
-                                  <td>{{ nombres_ganado[i]|trim }}</td>
-                                  <td>{{ razas_ganado[i]|trim }}</td>
-                                  <td>{{ tamanios_ganado[i]|trim }}</td>
-                                  <td>{{ pesos_ganado[i]|trim }}</td>
-                                </tr>
-                                {% endfor %}
-                              </tbody>
-                            </table>
-                          </div>
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <div class="modal-body">
+                              <!-- Contenido del modal -->
+                              <div class="row m-1">
+                                <div class="col-6 p-1">
+                                  Proveedor: {{ compra.proveedor }}
+                                </div>
+                                <div class="col-6 p-1">
+                                  Fecha: {{ compra.fecha }}
+                                </div>
+                                <div class="col-6 p-1">
+                                  Monto: C$ {{ compra.montototal }}
+                                </div>
+                                <div class="col-6 p-1">
+                                  Usuario: {{ compra.usuario }}
+                                </div>
+                              </div>
+                              <br>
+                              <h6 align="center">Datos del ganado</h6>
+                              <table class="table">
+                                <thead class="text-primary">
+                                  <tr>
+                                    <th scope="col">Codigo</th>
+                                    <th scope="col">Nombre</th>
+                                    <th scope="col">Raza</th>
+                                    <th scope="col">Tamaño</th>
+                                    <th scope="col">Peso</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {% set chapas_ganado = compra.chapas_ganado .split(',')%}
+                                  {% set nombres_ganado = compra.nombres_ganado .split(',')%}
+                                  {% set razas_ganado = compra.razas_ganado .split(',')%}
+                                  {% set tamanios_ganado = compra.tamanios .split(',')%}
+                                  {% set pesos_ganado = compra.pesos .split(',')%}
+                                  {% for i in range(chapas_ganado|length) %}
+                                  <tr>
+                                    <td>{{ chapas_ganado[i]|trim }}</td>
+                                    <td>{{ nombres_ganado[i]|trim }}</td>
+                                    <td>{{ razas_ganado[i]|trim }}</td>
+                                    <td>{{ tamanios_ganado[i]|trim }} mts</td>
+                                    <td>{{ pesos_ganado[i]|trim }} Kg</td>
+                                  </tr>
+                                  {% endfor %}
+                                </tbody>
+                              </table>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </td>
-                  <td><button class="btn btn-danger" onclick="eliminarCompra('{{compra.id}}')"><i
-                    class="fa-solid fa-trash-can"></i>
-                </button></a>
+                    </td>
+                    <td><button class="btn btn-danger" onclick="eliminarCompra('{{compra.id}}')"><i
+                          class="fa-solid fa-trash-can"></i>
+                      </button></a>
 
-                </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
           </div>
         </div>
       </div>

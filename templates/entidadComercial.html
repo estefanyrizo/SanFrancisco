@@ -42,7 +42,8 @@ San Francisco - Entidad comercial
 
                                 <div class="col-xl-6 mb-3">
                                     <label for="nombre">CUE</label>
-                                    <input type="text" class="form-control" id="cue" name="cue" placeholder="CUE" required>
+                                    <input type="text" class="form-control" id="cue" name="cue" placeholder="CUE"
+                                        required>
                                 </div>
 
 
@@ -78,144 +79,150 @@ San Francisco - Entidad comercial
                     <div class="inputs">
                         <div class="row m-2">
                             <div class="col-12">
-                                <table class="table table-striped">
-                                    <thead class=" text-primary">
-                                        <tr>
-                                            <th scope="col">Nombre</th>
-                                            <th scope="col">Telefono</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead class=" text-primary">
+                                            <tr>
+                                                <th scope="col">Nombre</th>
+                                                <th scope="col">Telefono</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
 
-                                        {% for entidad in entidades %}
-                                        <tr>
+                                            {% for entidad in entidades %}
+                                            <tr>
 
-                                            <td>{{entidad.nombre + ' ' + entidad.apellido|default('', true)}}</td>
-                                            <td>{{entidad.telefono|default('-', true)}}</td>
-                                            <td> <button class="btn btn-primary" data-bs-toggle="modal"
-                                                    data-bs-target="#EntidadModal{{entidad.id}}"><i
-                                                        class="fa-regular fa-pen-to-square"></i></button></td>
+                                                <td>{{entidad.nombre + ' ' + entidad.apellido|default('', true)}}</td>
+                                                <td>{{entidad.telefono|default('-', true)}}</td>
+                                                <td> <button class="btn btn-primary" data-bs-toggle="modal"
+                                                        data-bs-target="#EntidadModal{{entidad.id}}"><i
+                                                            class="fa-regular fa-pen-to-square"></i></button></td>
 
-                                            <div class="modal fade" id="EntidadModal{{entidad.id}}" tabindex="-1"
-                                                aria-labelledby="exampleModalLabel{{entidad.id}}" aria-hidden="true">
-                                                <div class="modal-dialog modal-dialog-centered">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title"
-                                                                id="exampleModalLabel{{entidad.id}}">Editar
-                                                                entidad</h5>
-                                                            <button type="button" class="btn-close"
-                                                                data-bs-dismiss="modal" aria-label="Close"></button>
-                                                        </div>
+                                                <div class="modal fade" id="EntidadModal{{entidad.id}}" tabindex="-1"
+                                                    aria-labelledby="exampleModalLabel{{entidad.id}}"
+                                                    aria-hidden="true">
+                                                    <div class="modal-dialog modal-dialog-centered">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title"
+                                                                    id="exampleModalLabel{{entidad.id}}">Editar
+                                                                    entidad</h5>
+                                                                <button type="button" class="btn-close"
+                                                                    data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
 
-                                                        <div class="modal-body">
-                                                            <form action="/entidadesComerciales/{{entidad.id}}/editar"
-                                                                method="post">
-                                                                <div class="inputs">
+                                                            <div class="modal-body">
+                                                                <form
+                                                                    action="/entidadesComerciales/{{entidad.id}}/editar"
+                                                                    method="post">
+                                                                    <div class="inputs">
 
-                                                                    <div class="row m-3">
+                                                                        <div class="row m-3">
 
-                                                                        <div class="col-xl-6 mb-3">
-                                                                            <label for="tipoEntidad{{entidad.id}}">Tipo
-                                                                                de
-                                                                                entidad</label>
-                                                                            <select class="form-control"
-                                                                                id="tipoEntidad{{entidad.id}}"
-                                                                                name="tipoEntidad" required>
-                                                                                <option value="1">Natural</option>
-                                                                                <option value="2">Juridica</option>
-                                                                            </select>
+                                                                            <div class="col-xl-6 mb-3">
+                                                                                <label
+                                                                                    for="tipoEntidad{{entidad.id}}">Tipo
+                                                                                    de
+                                                                                    entidad</label>
+                                                                                <select class="form-control"
+                                                                                    id="tipoEntidad{{entidad.id}}"
+                                                                                    name="tipoEntidad" required>
+                                                                                    <option value="1">Natural</option>
+                                                                                    <option value="2">Juridica</option>
+                                                                                </select>
+                                                                            </div>
+
+                                                                            <div class="col-xl-6 mb-3">
+                                                                                <label
+                                                                                    for="identificacion{{entidad.id}}">Identificación</label>
+                                                                                <input type="text" class="form-control"
+                                                                                    id="identificacion{{entidad.id}}"
+                                                                                    name="identificacion"
+                                                                                    value="{{entidad.identificacion}}"
+                                                                                    placeholder="Identificación"
+                                                                                    required>
+                                                                            </div>
+
+                                                                            <div class="col-xl-6 mb-3" id="div_nombre">
+                                                                                <label for="nombre">Nombre</label>
+                                                                                <input type="text" class="form-control"
+                                                                                    id="nombre" name="nombre"
+                                                                                    value="{{entidad.nombre}}"
+                                                                                    placeholder="Nombre" required>
+                                                                            </div>
+
+                                                                            <div class="col-xl-6 mb-3"
+                                                                                id="div_apellido{{entidad.id}}">
+                                                                                <label
+                                                                                    for="apellido{{entidad.id}}">Apellido</label>
+                                                                                <input type="text" class="form-control"
+                                                                                    id="apellido{{entidad.id}}"
+                                                                                    name="apellido"
+                                                                                    value="{{entidad.apellido|default('', true)}}"
+                                                                                    placeholder="Apellido">
+                                                                            </div>
+
+                                                                            <div class="col-xl-6 mb-3">
+                                                                                <label for="nombre">CUE</label>
+                                                                                <input type="text" class="form-control"
+                                                                                    id="cue" name="cue"
+                                                                                    value="{{entidad.cue}}"
+                                                                                    placeholder="CUE" required>
+                                                                            </div>
+
+                                                                            <div class="col-xl-6 mb-3">
+                                                                                <label for="telefono">Telefono</label>
+                                                                                <input type="tel" class="form-control"
+                                                                                    id="telefono" name="telefono"
+                                                                                    value="{{entidad.telefono|default('', true)}}"
+                                                                                    placeholder="Telefono">
+                                                                            </div>
+
                                                                         </div>
 
-                                                                        <div class="col-xl-6 mb-3">
-                                                                            <label
-                                                                                for="identificacion{{entidad.id}}">Identificación</label>
-                                                                            <input type="text" class="form-control"
-                                                                                id="identificacion{{entidad.id}}"
-                                                                                name="identificacion"
-                                                                                value="{{entidad.identificacion}}"
-                                                                                placeholder="Identificación" required>
-                                                                        </div>
-
-                                                                        <div class="col-xl-6 mb-3" id="div_nombre">
-                                                                            <label for="nombre">Nombre</label>
-                                                                            <input type="text" class="form-control"
-                                                                                id="nombre" name="nombre"
-                                                                                value="{{entidad.nombre}}"
-                                                                                placeholder="Nombre" required>
-                                                                        </div>
-
-                                                                        <div class="col-xl-6 mb-3"
-                                                                            id="div_apellido{{entidad.id}}">
-                                                                            <label
-                                                                                for="apellido{{entidad.id}}">Apellido</label>
-                                                                            <input type="text" class="form-control"
-                                                                                id="apellido{{entidad.id}}"
-                                                                                name="apellido"
-                                                                                value="{{entidad.apellido|default('', true)}}"
-                                                                                placeholder="Apellido">
-                                                                        </div>
-
-                                                                        <div class="col-xl-6 mb-3">
-                                                                            <label for="nombre">CUE</label>
-                                                                            <input type="text" class="form-control"
-                                                                                id="cue" name="cue"
-                                                                                value="{{entidad.cue}}"
-                                                                                placeholder="CUE" required>
-                                                                        </div>
-
-                                                                        <div class="col-xl-6 mb-3">
-                                                                            <label for="telefono">Telefono</label>
-                                                                            <input type="tel" class="form-control"
-                                                                                id="telefono" name="telefono"
-                                                                                value="{{entidad.telefono|default('', true)}}"
-                                                                                placeholder="Telefono">
-                                                                        </div>
 
                                                                     </div>
-
-
-                                                                </div>
-                                                                <div class="modal-footer">
-                                                                    <button type="button" class="btn btn-secondary"
-                                                                        data-bs-dismiss="modal">Cancelar</button>
-                                                                    <button type="submit"
-                                                                        class="btn btn-primary">Guardar</button>
-                                                                </div>
-                                                            </form>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary"
+                                                                            data-bs-dismiss="modal">Cancelar</button>
+                                                                        <button type="submit"
+                                                                            class="btn btn-primary">Guardar</button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </tr>
+                                            </tr>
 
-                                        <script>
+                                            <script>
 
-                                            document.getElementById("tipoEntidad{{entidad.id}}").value = '{{entidad.tipoentidadid}}';
+                                                document.getElementById("tipoEntidad{{entidad.id}}").value = '{{entidad.tipoentidadid}}';
 
-                                            if (document.getElementById("tipoEntidad{{entidad.id}}").value == 2) {
-                                                document.getElementById("identificacion{{entidad.id}}").placeholder = "Número RUC";
-                                                document.getElementById("div_apellido{{entidad.id}}").hidden = true;
-                                            }
-
-                                            document.getElementById("tipoEntidad{{entidad.id}}").addEventListener('change', function () {
                                                 if (document.getElementById("tipoEntidad{{entidad.id}}").value == 2) {
                                                     document.getElementById("identificacion{{entidad.id}}").placeholder = "Número RUC";
-                                                    document.getElementById("apellido{{entidad.id}}").value = '';
                                                     document.getElementById("div_apellido{{entidad.id}}").hidden = true;
-
                                                 }
-                                                else {
-                                                    document.getElementById("identificacion{{entidad.id}}").placeholder = "Número de cédula";
-                                                    document.getElementById("div_apellido{{entidad.id}}").hidden = false;
-                                                }
-                                            })
-                                        </script>
 
-                                        {% endfor %}
+                                                document.getElementById("tipoEntidad{{entidad.id}}").addEventListener('change', function () {
+                                                    if (document.getElementById("tipoEntidad{{entidad.id}}").value == 2) {
+                                                        document.getElementById("identificacion{{entidad.id}}").placeholder = "Número RUC";
+                                                        document.getElementById("apellido{{entidad.id}}").value = '';
+                                                        document.getElementById("div_apellido{{entidad.id}}").hidden = true;
 
-                                    </tbody>
-                                </table>
+                                                    }
+                                                    else {
+                                                        document.getElementById("identificacion{{entidad.id}}").placeholder = "Número de cédula";
+                                                        document.getElementById("div_apellido{{entidad.id}}").hidden = false;
+                                                    }
+                                                })
+                                            </script>
+
+                                            {% endfor %}
+
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -25,126 +25,128 @@ San Francisco - Registros medicos
                                 </button>
                             </div>
                             <div class="col-12">
-                                <table class="table">
-                                    <thead class=" text-primary">
-                                        <tr>
-                                            <th scope="col">Chapa</th>
-                                            <th scope="col">Enfermedad</th>
-                                            <th scope="col">Fecha</th>
-                                            <th scope="col">Medicina</th>
-                                            <th scope="col">Dosis</th>
-                                            <th scope="col">Diagnostico</th>
-                                            <th scope="col">Editar</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead class=" text-primary">
+                                            <tr>
+                                                <th scope="col">Chapa</th>
+                                                <th scope="col">Enfermedad</th>
+                                                <th scope="col">Fecha</th>
+                                                <th scope="col">Medicina</th>
+                                                <th scope="col">Dosis</th>
+                                                <th scope="col">Diagnostico</th>
+                                                <th scope="col">Editar</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
 
-                                        {% for reg in registros %}
-                                        <tr>
-                                            <td>{{reg.codigochapa}}</td>
-                                            <td>{{reg.enfermedad}}</td>
-                                            <td>{{reg.fecha}}</td>
-                                            <td>{{reg.medicina}}</td>
-                                            <td>{{reg.dosis}}</td>
-                                            <td>{{reg.diagnostico}}</td>
-                                            <td> <button class="btn btn-primary" data-bs-toggle="modal"
-                                                data-bs-target="#exampleModal{{reg.id}}"><i
-                                                        class="fa-regular fa-pen-to-square"></i></button></td>
-                                                        
-                                        </tr>
+                                            {% for reg in registros %}
+                                            <tr>
+                                                <td>{{reg.codigochapa}}</td>
+                                                <td>{{reg.enfermedad}}</td>
+                                                <td>{{reg.fecha}}</td>
+                                                <td>{{reg.medicina}}</td>
+                                                <td>{{reg.dosis}}</td>
+                                                <td>{{reg.diagnostico}}</td>
+                                                <td> <button class="btn btn-primary" data-bs-toggle="modal"
+                                                        data-bs-target="#exampleModal{{reg.id}}"><i
+                                                            class="fa-regular fa-pen-to-square"></i></button></td>
 
-                                        <!-- Modal -->
-                                        <div class="modal fade" id="exampleModal{{reg.id}}" tabindex="-1"
-                                            aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-centered">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleModalLabel">Editar registro
-                                                            medico</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                            aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <form action="/registrosmedicos/editar" method="post">
-                                                            <div class="row">
+                                            </tr>
 
-                                                                <input type="text" class="form-control" id="idreg"
-                                                                        name="idreg" value="{{reg.id}}"
-                                                                        required hidden>
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="exampleModal{{reg.id}}" tabindex="-1"
+                                                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel">Editar
+                                                                registro
+                                                                medico</h5>
+                                                            <button type="button" class="btn-close"
+                                                                data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <form action="/registrosmedicos/editar" method="post">
+                                                                <div class="row">
 
-                                                                <div class="col-6 mb-3">
-                                                                    <label for="chapa">Chapa</label>
-                                                                    <input type="text" class="form-control" id="chapa"
-                                                                        name="chapa" placeholder="Codigo chapa" value="{{reg.codigochapa}}"
-                                                                        required>
+                                                                    <input type="text" class="form-control" id="idreg"
+                                                                        name="idreg" value="{{reg.id}}" required hidden>
+
+                                                                    <div class="col-6 mb-3">
+                                                                        <label for="chapa">Chapa</label>
+                                                                        <input type="text" class="form-control"
+                                                                            id="chapa" name="chapa"
+                                                                            placeholder="Codigo chapa"
+                                                                            value="{{reg.codigochapa}}" required>
+                                                                    </div>
+
+                                                                    <div class="col-6 mb-3">
+                                                                        <label for="enfermedad">Enfermedad</label>
+                                                                        <select class="form-control" id="enfermedad"
+                                                                            name="enfermedad" required>
+                                                                            {% for enf in enfermedades %}
+                                                                            <option value="{{enf.id}}" {% if
+                                                                                reg.enfermedad==enf.nombre %} selected
+                                                                                {% endif %}>{{enf.nombre}}
+                                                                            </option>
+                                                                            {% endfor %}
+                                                                        </select>
+                                                                    </div>
+
+                                                                    <div class="col-6 mb-3">
+                                                                        <label for="fecha">Fecha</label>
+                                                                        <input type="date" class="form-control"
+                                                                            id="fecha" name="fecha"
+                                                                            value="{{reg.fecha}}" required>
+                                                                    </div>
+
+                                                                    <div class="col-6 mb-3">
+                                                                        <label for="medicina">Medicina</label>
+                                                                        <select class="form-control" id="medicina"
+                                                                            name="medicina" required>
+                                                                            {% for med in medicinas %}
+                                                                            <option value="{{med.id}}" {% if
+                                                                                med.nombre==reg.medicina %} selected {%
+                                                                                endif %}>{{med.nombre}}
+                                                                            </option>
+                                                                            {% endfor %}
+                                                                        </select>
+                                                                    </div>
+
+                                                                    <div class="col-6 mb-3">
+                                                                        <label for="dosis">Dosis</label>
+                                                                        <input type="text" class="form-control"
+                                                                            id="dosis" name="dosis"
+                                                                            placeholder="Dosis aplicada"
+                                                                            value="{{reg.dosis}}" required>
+                                                                    </div>
+
+                                                                    <div class="col-6 mb-3">
+                                                                        <label for="diag">Diagnostico</label>
+                                                                        <input type="text" class="form-control"
+                                                                            id="diag" name="diagnostico"
+                                                                            placeholder="Diagnostico"
+                                                                            value="{{reg.diagnostico}}" required>
+                                                                    </div>
                                                                 </div>
 
-                                                                <div class="col-6 mb-3">
-                                                                    <label for="enfermedad">Enfermedad</label>
-                                                                    <select class="form-control" id="enfermedad"
-                                                                        name="enfermedad" required>
-                                                                        {% for enf in enfermedades %}
-                                                                        <option value="{{enf.id}}" 
-                                                                        {% if reg.enfermedad == enf.nombre %}
-                                                                            selected
-                                                                        {% endif %}
-                                                                        >{{enf.nombre}}
-                                                                        </option>
-                                                                        {% endfor %}
-                                                                    </select>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary"
+                                                                        data-bs-dismiss="modal">Cancelar</button>
+                                                                    <button type="submit"
+                                                                        class="btn btn-primary">Guardar</button>
                                                                 </div>
-
-                                                                <div class="col-6 mb-3">
-                                                                    <label for="fecha">Fecha</label>
-                                                                    <input type="date" class="form-control" id="fecha"
-                                                                        name="fecha" value="{{reg.fecha}}" required>
-                                                                </div>
-
-                                                                <div class="col-6 mb-3">
-                                                                    <label for="medicina">Medicina</label>
-                                                                    <select class="form-control" id="medicina"
-                                                                        name="medicina" required>
-                                                                        {% for med in medicinas %}
-                                                                        <option value="{{med.id}}" 
-                                                                        {% if med.nombre == reg.medicina %}
-                                                                            selected
-                                                                        {% endif %}
-                                                                        >{{med.nombre}}
-                                                                        </option>
-                                                                        {% endfor %}
-                                                                    </select>
-                                                                </div>
-
-                                                                <div class="col-6 mb-3">
-                                                                    <label for="dosis">Dosis</label>
-                                                                    <input type="text" class="form-control" id="dosis"
-                                                                        name="dosis" placeholder="Dosis aplicada" value="{{reg.dosis}}"
-                                                                        required>
-                                                                </div>
-
-                                                                <div class="col-6 mb-3">
-                                                                    <label for="diag">Diagnostico</label>
-                                                                    <input type="text" class="form-control" id="diag"
-                                                                        name="diagnostico" placeholder="Diagnostico" value="{{reg.diagnostico}}"
-                                                                        required>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary"
-                                                                    data-bs-dismiss="modal">Cancelar</button>
-                                                                <button type="submit"
-                                                                    class="btn btn-primary">Guardar</button>
-                                                            </div>
-                                                        </form>
+                                                            </form>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
 
 
-                                            {% endfor %}
-                                    </tbody>
-                                </table>
+                                                {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>

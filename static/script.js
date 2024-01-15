@@ -139,3 +139,21 @@ function eliminarCompra(id) {
 		}
 	  });
 }
+// Eliminar venta
+
+function eliminarVenta(id) {
+	swal({
+		title: "¿Estas seguro?",
+		text: "Estas a punto de eliminar los datos de esta venta",
+		icon: "warning",
+		buttons: ["Cancelar", true],
+		dangerMode: true,
+	})
+	.then((willDelete) => {
+		if (willDelete) {
+		window.location.href="/eliminarventa//" + id
+		} else {
+		  swal("Tus datos están a salvo");
+		}
+	  });
+}

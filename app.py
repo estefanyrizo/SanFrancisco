@@ -1223,8 +1223,11 @@ def compras():
 @login_required
 def eliminarCompra(id):
     try:
+        ganado = db.execute(text(f"SELECT ganadoid FROM detallecompra WHERE compraid = {id}"))
         db.execute(text(f"DELETE FROM detallecompra WHERE compraid = {id}"))
         db.execute(text(f"DELETE FROM compra WHERE id = {id}"))
+        for i in ganado:                     
+            db.execute(text(f"UPDATE ganado SET isasignado = false WHERE ganado.id = {i.ganadoid}"))
         db.commit()
     except:
         flash("Ocurrió un error inesperado", "error")
@@ -1255,33 +1258,33 @@ def ventaIndividualFin():
         id = request.args.get('id')
         novillo = db.execute(text(f"SELECT codigochapa, nombre, nombreraza, tamanio, peso, ganado.id AS id, raza FROM ganado INNER JOIN raza ON ganado.razaid = raza.id WHERE ganado.id = {id}"))
         entidad = db.execute(text(f"SELECT * FROM entidadcomercial"))
-        return render_template("venta/finIndi.html", ganado=[n for n in novillo], proveedor=entidad)
+        return render_template("venta/finIndi.html", ganado=[n for n in novillo], cliente=entidad)
     
     else:
         id = request.form.get("bovino")
-        fecha = request.form.get("fechaventa")
-        proveedor = request.form.get("proveedor")
+        fecha = request.form.get("fechaVenta")
+        cliente = request.form.get("cliente")
         precioKilo = request.form.get("precioKilo")
         peso = request.form.get("peso")
         costo = float(precioKilo) * float(peso) 
-        if not fecha or not proveedor or not costo:
-            flash("Debe ingresar todos los datos solicitados", "error")
+        if not fecha or not cliente or not costo:
+            flash(f"Debe ingresar todos los datos solicitados", "error")
             return redirect(url_for("ventaIndividualFin", id=id))
 
         fecha = str(fecha)
-        venta = db.execute(text(f"INSERT INTO venta(fecha, cantidad, montoTotal, usuarioid, entidadcomercialid) VALUES('{fecha}', 1, {costo}, {session['user_id']}, {proveedor}) RETURNING id")).fetchone()[0]
+        venta = db.execute(text(f"INSERT INTO venta(fecha, cantidad, montoTotal, usuarioid, entidadcomercialid) VALUES('{fecha}', 1, {costo}, {session['user_id']}, {cliente}) RETURNING id")).fetchone()[0]
         print(venta)
         db.execute(text(f"INSERT INTO detalleventa(ventaid, ganadoid) VALUES ({venta}, {id})"))
-        db.execute(text(f"UPDATE ganado SET isasignado = true WHERE ganado.id = {id}"))
+        db.execute(text(f"UPDATE ganado SET estadoganadoid = 2 WHERE ganado.id = {id}"))
         db.commit()
-        flash("venta ingresada correctamente", "exito")
+        flash("Venta ingresada correctamente", "exito")
         return redirect("/")
 
 @app.route("/venta/lote", methods=["GET", "POST"])
 @login_required
 def ventaLote():
     if request.method == "GET":
-        ganado = db.execute(text(f"SELECT codigochapa, nombre, nombreraza, tamanio, peso, ganado.id AS id, raza FROM ganado INNER JOIN raza ON ganado.razaid = raza.id WHERE estadoganadoid = 1 AND isasignado = false ORDER BY ganado.id"))
+        ganado = db.execute(text(f"SELECT codigochapa, nombre, nombreraza, tamanio, peso, ganado.id AS id, raza FROM ganado INNER JOIN raza ON ganado.razaid = raza.id WHERE estadoganadoid = 1 ORDER BY ganado.id"))
         return render_template("venta/lote.html", ganado = ganado)
     else:
         ids = request.form.getlist('bovino')
@@ -1295,23 +1298,23 @@ def ventaLoteFin(lista):
         sql_query = text("SELECT codigochapa, nombre, nombreraza, tamanio, peso, ganado.id AS id, raza FROM ganado INNER JOIN raza ON ganado.razaid = raza.id WHERE ganado.id = ANY(:ids)")
         ganado = db.execute(sql_query, {'ids': ids})
         entidad = db.execute(text(f"SELECT * FROM entidadcomercial"))
-        return render_template("venta/finLote.html", ganado=ganado, proveedor=entidad, lista=ids)
+        return render_template("venta/finLote.html", ganado=ganado, cliente=entidad, lista=ids)
     
     else:
-        fecha = request.form.get("fechaventa")
-        proveedor = request.form.get("proveedor")
+        fecha = request.form.get("fechaVenta")
+        cliente = request.form.get("cliente")
         total = request.form.get("total")
-        if not fecha or not proveedor or not total:
+        if not fecha or not cliente or not total:
             flash("Debe ingresar todos los datos solicitados", "error")
             return redirect(url_for("ventaIndividualFin", id=id))
 
         fecha = str(fecha)
-        venta = db.execute(text(f"INSERT INTO venta(fecha, cantidad, montoTotal, usuarioid, entidadcomercialid) VALUES('{fecha}', {len(ids)}, {total}, {session['user_id']}, {proveedor}) RETURNING id")).fetchone()[0]
+        venta = db.execute(text(f"INSERT INTO venta(fecha, cantidad, montoTotal, usuarioid, entidadcomercialid) VALUES('{fecha}', {len(ids)}, {total}, {session['user_id']}, {cliente}) RETURNING id")).fetchone()[0]
         for i in ids:                     
             db.execute(text(f"INSERT INTO detalleventa(ventaid, ganadoid) VALUES ({venta}, {i})"))
-            db.execute(text(f"UPDATE ganado SET isasignado = true WHERE ganado.id = {i}"))
+            db.execute(text(f"UPDATE ganado SET estadoganadoid = 2 WHERE ganado.id = {i}"))
         db.commit()
-        flash("venta ingresada correctamente", "exito")
+        flash("Venta ingresada correctamente", "exito")
         return redirect("/")
     
 @app.route("/ventas", methods=["GET"])
@@ -1320,7 +1323,7 @@ def ventas():
     ventas = db.execute(text("""SELECT venta.id, montototal, cantidad,
 	   venta.fecha, 
 	   usuario.nombre AS usuario, 
-	   entidadcomercial.nombre AS proveedor, 
+	   entidadcomercial.nombre AS cliente, 
 	   STRING_AGG(ganado.nombre, ', ') AS nombres_ganado,
 	   STRING_AGG(ganado.codigochapa, ', ') AS chapas_ganado,
 	   STRING_AGG(raza.nombreraza, ', ') AS razas_ganado,
@@ -1339,8 +1342,11 @@ def ventas():
 @login_required
 def eliminarventa(id):
     try:
+        ganado = db.execute(text(f"SELECT ganadoid FROM detalleventa WHERE ventaid = {id}"))
         db.execute(text(f"DELETE FROM detalleventa WHERE ventaid = {id}"))
         db.execute(text(f"DELETE FROM venta WHERE id = {id}"))
+        for i in ganado:
+            db.execute(text(f"UPDATE ganado SET estadoganadoid = 1 WHERE ganado.id = {i.ganadoid}"))
         db.commit()
     except:
         flash("Ocurrió un error inesperado", "error")
@@ -1354,3 +1360,7 @@ def eliminarventa(id):
 def logout():
     session.clear()
     return redirect("/login")
+@app.route("/transaccion")
+@login_required
+def transaccion():
+    return render_template("transaccion.html")

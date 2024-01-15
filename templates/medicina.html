@@ -32,100 +32,112 @@ San Francisco - Medicina
                             </div>
 
                             <div class="col-12">
-                                <table class="table">
-                                    <thead class=" text-primary">
-                                        <tr>
-                                            <th scope="col">Nombre</th>
-                                            <th scope="col">Presentación</th>
-                                            <th scope="col">Tipo</th>
-                                            <th scope="col">Cantidad</th>
-                                            <th scope="col">Precio</th>
-                                            <th scope="col">Editar</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for med in medicinas %}
-                                        <tr>
-                                            <td>{{med.nombre}}</td>
-                                            <td>{{med.viaaplicacion}}</td>
-                                            <td>{{med.tipomedicina}}</td>
-                                            <td>{{med.cantidad}}</td>
-                                            <td>{{"C$ {:,.2f}".format(med.precio)}}</td>
-                                            <td> <button class="btn btn-primary" data-bs-toggle="modal"
-                                                    data-bs-target="#medicinaModal{{med.id}}"><i
-                                                        class="fa-regular fa-pen-to-square"></i></button></td>
-                                        </tr>
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead class=" text-primary">
+                                            <tr>
+                                                <th scope="col">Nombre</th>
+                                                <th scope="col">Presentación</th>
+                                                <th scope="col">Tipo</th>
+                                                <th scope="col">Cantidad</th>
+                                                <th scope="col">Precio</th>
+                                                <th scope="col">Editar</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for med in medicinas %}
+                                            <tr>
+                                                <td>{{med.nombre}}</td>
+                                                <td>{{med.viaaplicacion}}</td>
+                                                <td>{{med.tipomedicina}}</td>
+                                                <td>{{med.cantidad}}</td>
+                                                <td>{{"C$ {:,.2f}".format(med.precio)}}</td>
+                                                <td> <button class="btn btn-primary" data-bs-toggle="modal"
+                                                        data-bs-target="#medicinaModal{{med.id}}"><i
+                                                            class="fa-regular fa-pen-to-square"></i></button></td>
+                                            </tr>
 
-                                        <!-- Modal -->
-                                        <div class="modal fade" id="medicinaModal{{med.id}}" tabindex="-1"
-                                            aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-centered">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleModalLabel">Editar medicina
-                                                        </h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                            aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <form action="/medicina/editar" method="post" class="form-group">
-                                                            <div class="row">
-                                                                
-                                                                <input type="text" class="form-control" id="medid" name="medid" value="{{med.id}}" hidden>
-                                                                <div class="col-6 mb-3">
-                                                                    <label for="nombre">Nombre</label>
-                                                                    <input type="text" class="form-control" id="nombre"
-                                                                        name="nombre" placeholder="Nombre" value="{{med.nombre}}" required>
-                                                                </div>
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="medicinaModal{{med.id}}" tabindex="-1"
+                                                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel">Editar
+                                                                medicina
+                                                            </h5>
+                                                            <button type="button" class="btn-close"
+                                                                data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <form action="/medicina/editar" method="post"
+                                                                class="form-group">
+                                                                <div class="row">
 
-                                                                <div class="col-6 mb-3">
-                                                                    <label for="tipomedicina">Tipo</label>
-                                                                    <select class="form-control" id="tipomedicina"
-                                                                        name="tipomedicina" required>
-                                                                        {% for tipo in tipomedicina %}
-                                                                        <option value="{{tipo.id}}" {% if tipo.tipomedicina == med.tipomedicina %}
-                                                                        selected
-                                                                    {% endif %}>
-                                                                            {{tipo.tipomedicina}} ({{tipo.viaaplicacion}})
-                                                                        </option>
-                                                                        {% endfor %}
-                                                                    </select>
-                                                                </div>
+                                                                    <input type="text" class="form-control" id="medid"
+                                                                        name="medid" value="{{med.id}}" hidden>
+                                                                    <div class="col-6 mb-3">
+                                                                        <label for="nombre">Nombre</label>
+                                                                        <input type="text" class="form-control"
+                                                                            id="nombre" name="nombre"
+                                                                            placeholder="Nombre" value="{{med.nombre}}"
+                                                                            required>
+                                                                    </div>
 
-                                                                <div class="col-6 mb-3">
-                                                                    <label for="contenidomed">Contenido</label>
-                                                                    <input type="text" class="form-control"
-                                                                        id="contenidomed" name="contenido"
-                                                                        placeholder="ml, mg" value="{{med.contenido}}" required>
-                                                                </div>
+                                                                    <div class="col-6 mb-3">
+                                                                        <label for="tipomedicina">Tipo</label>
+                                                                        <select class="form-control" id="tipomedicina"
+                                                                            name="tipomedicina" required>
+                                                                            {% for tipo in tipomedicina %}
+                                                                            <option value="{{tipo.id}}" {% if
+                                                                                tipo.tipomedicina==med.tipomedicina %}
+                                                                                selected {% endif %}>
+                                                                                {{tipo.tipomedicina}}
+                                                                                ({{tipo.viaaplicacion}})
+                                                                            </option>
+                                                                            {% endfor %}
+                                                                        </select>
+                                                                    </div>
 
-                                                                <div class="col-6 mb-3">
-                                                                    <label for="cantidad">Cantidad</label>
-                                                                    <input type="number" class="form-control"
-                                                                        id="cantidad" name="cantidad" value="{{med.cantidad}}" required min="1">
-                                                                </div>
+                                                                    <div class="col-6 mb-3">
+                                                                        <label for="contenidomed">Contenido</label>
+                                                                        <input type="text" class="form-control"
+                                                                            id="contenidomed" name="contenido"
+                                                                            placeholder="ml, mg"
+                                                                            value="{{med.contenido}}" required>
+                                                                    </div>
 
-                                                                <div class="col-6 mb-3">
-                                                                    <label for="precio">Precio</label>
-                                                                    <input type="text" class="form-control" id="precio"
-                                                                        name="precio" placeholder="Precio" value="{{med.precio}}" required>
+                                                                    <div class="col-6 mb-3">
+                                                                        <label for="cantidad">Cantidad</label>
+                                                                        <input type="number" class="form-control"
+                                                                            id="cantidad" name="cantidad"
+                                                                            value="{{med.cantidad}}" required min="1">
+                                                                    </div>
+
+                                                                    <div class="col-6 mb-3">
+                                                                        <label for="precio">Precio</label>
+                                                                        <input type="text" class="form-control"
+                                                                            id="precio" name="precio"
+                                                                            placeholder="Precio" value="{{med.precio}}"
+                                                                            required>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary"
-                                                                    data-bs-dismiss="modal">Cancelar</button>
-                                                                <button type="submit"
-                                                                    class="btn btn-primary">Guardar</button>
-                                                            </div>
-                                                        </form>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary"
+                                                                        data-bs-dismiss="modal">Cancelar</button>
+                                                                    <button type="submit"
+                                                                        class="btn btn-primary">Guardar</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
 
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>

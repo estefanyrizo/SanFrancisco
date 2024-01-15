@@ -22,6 +22,7 @@ Usuarios
                         </button>
                     </div>
                     <div class="col-12">
+                        <div class="table-responsive">
                         <table class="table">
                             <thead class=" text-primary">
                                 <tr>
@@ -99,6 +100,7 @@ Usuarios
 
                             </tbody>
                         </table>
+                    </div>
 
                         {% if conteo.cant < 2 %} <h4 class="text-center mt-5 mb-5">Aun no hay empleados
                             registrados</h4>
@@ -123,7 +125,7 @@ Usuarios
 
             </div>
             <div class="modal-body">
-                <form action="/empleados" method="post" class="form-group">
+                <form action="/usuarios" method="post" class="form-group">
                     <div class="row">
                         <div class="container d-flex justify-content-center mb-4 flex-wrap">
 
