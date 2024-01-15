@@ -86,6 +86,7 @@ CREATE TABLE IF NOT EXISTS detallealimento
     id serial NOT NULL,
     cantidadSuministrada real NOT NULL,
     costo real NOT NULL,
+    fecha date NOT NULL,
     alimentoId integer NOT NULL,
     ganadoId integer NOT NULL,
     PRIMARY KEY (id)

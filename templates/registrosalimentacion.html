@@ -1,0 +1,119 @@
+{% extends "layout.html" %}
+
+{%block title%}
+
+San Francisco - Registros de alimentación
+
+{% endblock%}
+
+{% block main%}
+<div class="content">
+    <div class="row ganado">
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="sign pt-2 pb-2 text-center">Registros de alimentación</h3>
+                </div>
+                <div class="form-group">
+                    <div class="inputs">
+                        <div class="row m-3">
+                            <div class="col-6 mb-3">
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                    data-bs-target="#exampleModal">
+                                    <i class="nc-icon nc-simple-add"></i>
+                                </button>
+                            </div>
+
+                            <div class="col-12">
+                                <table class="table">
+                                    <thead class=" text-primary">
+                                        <tr>
+                                            <th scope="col">Fecha</th>
+                                            <th scope="col">Alimento</th>
+                                            <th scope="col">Cantidad</th>
+                                            <th scope="col">Costo</th>
+                                            <th scope="col">Anular</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for detalle in detalles %}
+                                        <tr>
+                                            <td>{{detalle.fecha}}</td>
+                                            <td>{{detalle.nombre}}</td>
+                                            <td>{{detalle.cantidad}}</td>
+                                            <td>C$ {{detalle.costo}}</td>
+                                            
+                                            <td>
+                                                <button class="btn btn-danger" 
+                                                onclick="eliminarAlimentacion('{{detalle.fecha}}', '{{detalle.nombre}}')"><i class="fa-solid fa-trash-can"></i></button>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+
+                                {% if not detalles %}
+                                <h4 class="text-center mt-5 mb-5">Aun no hay registros</h4>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Agregar registro de alimentacion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="/registrosalimentacion" method="post" class="form-group">
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <label for="fecha">Fecha</label>
+                            <input type="date" class="form-control" id="fecha" name="fecha" required>
+                        </div>
+
+                        <div class="col-6 mb-3">
+                            <label for="alimento">Alimento</label>
+                            <select class="form-control" id="alimento" name="alimento" required>
+                                <option selected disabled>Seleccione una opción</option>
+                                {% for item in alimentos %}
+                                    <option value="{{item.id}}">{{item.nombre}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="col-6 mb-3">
+                            <label for="cantidad">Cantidad</label>
+                            <input type="text" class="form-control" id="cantidad" name="cantidad"
+                                placeholder="Kg, L, Lb" required>
+                        </div>
+
+                        <div class="col-6 mb-3">
+                            <label for="costo">Costo</label>
+                            <input type="text" class="form-control" id="costo" name="costo"
+                                placeholder="Costo total" required>
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {% endblock%}

@@ -84,6 +84,26 @@ function eliminarBovino(id, chapa, nombre) {
 		}
 	  });
 }
+
+//Eliminar registro de alimentacion
+
+function eliminarAlimentacion(fecha, nombrealimento) {
+	swal({
+		title: "¿Estas seguro?",
+		text: "Estas a punto de eliminar todos los datos de alimentacion del bovino para la fecha: " + fecha + " con relacion a " + nombrealimento,
+		icon: "warning",
+		buttons: ["Cancelar", true],
+		dangerMode: true,
+	})
+	.then((willDelete) => {
+		if (willDelete) {
+		window.location.href="/eliminarDatosAlimentacion/" + fecha + "+" + nombrealimento
+		} else {
+		  swal("Tus datos están a salvo");
+		}
+	  });
+}
+
 //Matar ganado
 
 function matarBovino(id) {

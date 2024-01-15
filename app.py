@@ -446,7 +446,6 @@ def borrar_novillo(id):
         flash("Ocurrió un error inesperado", "error")
         return redirect("/ganado")
     
-
     flash("El bovino ha sido eliminado satisfactoriamente", "exito")
     return redirect("/ganado")
 
@@ -690,6 +689,83 @@ def alimento():
         
         flash("Alimento registrado exitosamente", "exito")
         return redirect("/alimento")
+
+
+@app.route("/registrosalimentacion", methods=["GET", "POST"])
+@login_required
+def registrosalimentacion():
+
+    registros = db.execute(text(f"""SELECT detallealimento.fecha fecha,
+                    SUM(detallealimento.cantidadsuministrada) cantidad,
+                    SUM(detallealimento.costo) costo,
+                    alimento.nombre nombre
+                    FROM detallealimento
+                    inner join alimento 
+                    on alimento.id = detallealimento.alimentoid
+                    inner join ganado
+                    on ganado.id = detallealimento.ganadoid
+					group by fecha, alimento.nombre
+					order by fecha, alimento.nombre"""))
+    
+    alimentos = db.execute(text(f"select id, nombre from alimento where id in (Select max(id) FROM alimento group by nombre)"))
+
+    ganado = db.execute(text(f"SELECT id FROM ganado WHERE estadoganadoid = 1"))
+
+    if request.method == "GET":
+
+        return render_template("registrosalimentacion.html", detalles = [reg for reg in registros], alimentos = [ali for ali in alimentos])
+    
+    else:
+        """ for gan in ganado:
+            print(ganado.rowcount)
+            print(gan[0]) """
+
+        fecha = request.form.get("fecha")
+        nombrealimento = request.form.get("alimento")
+        cantidad = request.form.get("cantidad")
+        costo = request.form.get("costo")
+
+        if not fecha:
+            flash("Debe ingresar una fecha valida", "error")
+            return redirect("/registrosalimentacion")
+        if not nombrealimento or int(nombrealimento) < 1:
+            flash("Debe seleccionar el alimento suministrado", "error")
+            return redirect("/registrosalimentacion")
+        if not cantidad or cantidad.isspace():
+            flash("Debe ingresar una cantidad valida", "error")
+            return redirect("/registrosalimentacion")
+        if not costo or costo.isspace():
+            flash("Debe ingresar el costo total del suministro a registrar", "error")
+            return redirect("/registrosalimentacion")
+         
+        try:
+            for gan in ganado:
+                db.execute(text(f"""INSERT INTO detallealimento(fecha, alimentoid, cantidadsuministrada, costo, ganadoid) 
+                                VALUES('{str(fecha)}', {nombrealimento}, {float(cantidad)/float(ganado.rowcount)}, {float(costo)/float(ganado.rowcount)}, {gan[0]})"""))
+            db.commit()
+
+        except:
+            flash("Ha ocurrido un error inesperado", "error")
+            return redirect("/registrosalimentacion")
+
+        flash("Informacion registrada exitosamente", "exito")
+        return redirect("/registrosalimentacion")
+
+
+@app.route("/eliminarDatosAlimentacion/<fecha>+<alimento>", methods=["GET"])
+@login_required
+def eliminarAlimentacion(fecha, alimento):
+
+    try:
+        db.execute(text(f"DELETE FROM detallealimento WHERE fecha = '{fecha}' AND alimentoid = (SELECT MAX(id) FROM alimento WHERE nombre = '{alimento}')"))
+        db.commit()
+
+    except:
+        flash("Ha ocurrido un error inesperado", "error")
+        return redirect("/registrosalimentacion")
+
+    flash("Registro anulado exitosamente", "exito")
+    return redirect("/registrosalimentacion")
 
 
 @app.route("/medicina", methods=["GET", "POST"])
@@ -1238,7 +1314,7 @@ def ventaLoteFin(lista):
         flash("venta ingresada correctamente", "exito")
         return redirect("/")
     
-@app.route("/ventas")
+@app.route("/ventas", methods=["GET"])
 @login_required
 def ventas():
     ventas = db.execute(text("""SELECT venta.id, montototal, cantidad,
@@ -1257,7 +1333,7 @@ def ventas():
     INNER JOIN raza ON ganado.razaid = raza.id
     INNER JOIN entidadcomercial ON venta.entidadcomercialid = entidadcomercial.id
     GROUP BY venta.id, venta.fecha, entidadcomercial.nombre, usuario.nombre;"""))
-    return render_template("ventas.html", ventas = ventas)
+    return render_template("venta/pri.html", ventas = ventas)
 
 @app.route('/eliminarventa/<id>', methods=["GET"])
 @login_required
