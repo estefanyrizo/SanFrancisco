@@ -66,61 +66,62 @@ Ventas
                             <br>
                             <h6 align="center">Datos del ganado</h6>
                             <div class="table-responsive">
-                            <table class="table">
-                              <thead class="text-primary">
-                                <tr>
-                                  <th scope="col">Codigo</th>
-                                  <th scope="col">Nombre</th>
-                                  <th scope="col">Raza</th>
-                                  <th scope="col">Tamaño</th>
-                                  <th scope="col">Peso</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {% set chapas_ganado = venta.chapas_ganado .split(',')%}
-                                {% set nombres_ganado = venta.nombres_ganado .split(',')%}
-                                {% set razas_ganado = venta.razas_ganado .split(',')%}
-                                {% set tamanios_ganado = venta.tamanios .split(',')%}
-                                {% set pesos_ganado = venta.pesos .split(',')%}
-                                {% for i in range(chapas_ganado|length) %}
-                                <tr>
-                                  <td>{{ chapas_ganado[i]|trim }}</td>
-                                  <td>{{ nombres_ganado[i]|trim }}</td>
-                                  <td>{{ razas_ganado[i]|trim }}</td>
-                                  <td>{{ tamanios_ganado[i]|trim }} Mts</td>
-                                  <td>{{ pesos_ganado[i]|trim }} Kg</td>
-                                </tr>
-                                {% endfor %}
-                              </tbody>
-                            </table>
-                            {% if venta.cartaventa %}
-                            <div class="text-center">
-                              <a href="{{venta.cartaventa}}" target="_blank"><i class="fa-solid fa-file-pdf fa-2xl" style="color: #e00606;"></i>Ver/Descargar carta PDF</a>
+                              <table class="table">
+                                <thead class="text-primary">
+                                  <tr>
+                                    <th scope="col">Codigo</th>
+                                    <th scope="col">Nombre</th>
+                                    <th scope="col">Raza</th>
+                                    <th scope="col">Tamaño</th>
+                                    <th scope="col">Peso</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {% set chapas_ganado = venta.chapas_ganado .split(',')%}
+                                  {% set nombres_ganado = venta.nombres_ganado .split(',')%}
+                                  {% set razas_ganado = venta.razas_ganado .split(',')%}
+                                  {% set tamanios_ganado = venta.tamanios .split(',')%}
+                                  {% set pesos_ganado = venta.pesos .split(',')%}
+                                  {% for i in range(chapas_ganado|length) %}
+                                  <tr>
+                                    <td>{{ chapas_ganado[i]|trim }}</td>
+                                    <td>{{ nombres_ganado[i]|trim }}</td>
+                                    <td>{{ razas_ganado[i]|trim }}</td>
+                                    <td>{{ tamanios_ganado[i]|trim }} Mts</td>
+                                    <td>{{ pesos_ganado[i]|trim }} Kg</td>
+                                  </tr>
+                                  {% endfor %}
+                                </tbody>
+                              </table>
+                              {% if venta.cartaventa %}
+                              <div class="text-center">
+                                <a href="{{venta.cartaventa}}" target="_blank"><i class="fa-solid fa-file-pdf fa-2xl"
+                                    style="color: #e00606;"></i>Ver/Descargar carta PDF</a>
+                              </div>
+                              {% endif %}
                             </div>
-                            {% endif %}
-                          </div>
-                          
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
                   </td>
                   <td><button class="btn btn-danger" onclick="eliminarVenta('{{venta.id}}')"><i
-                    class="fa-solid fa-trash-can"></i>
-                </button></a>
+                        class="fa-solid fa-trash-can"></i>
+                    </button></a>
 
                 </tr>
                 {% endfor %}
               </tbody>
             </table>
           </div>
-          </div>
         </div>
       </div>
     </div>
   </div>
+</div>
 </div>
 
 
