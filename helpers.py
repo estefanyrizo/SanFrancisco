@@ -78,3 +78,22 @@ def subirImagen(imagen, folderimg):
 
     # print(res.response_metadata.raw)
     return res.url
+
+
+def subirArchivo(archivo, nombre, folder):
+    archivo = b64encode(request.files["file"].stream.read())
+    # Al codificarla, se agrega una letra y una comilla al inicio del texto, tambien una comilla al fina
+    # str(imagen)[2:len(imagen)] omito los primeros 2 caracteres y el ultimo
+
+    archivo = str(archivo)[2:len(archivo)]
+
+    # return f'<img src="data:image/png;base64,{imagen}">'
+    # print(imagen)
+
+    res = ik.upload(file=archivo, file_name=nombre, options= UploadFileRequestOptions(folder=folder))
+    # El options es opcional de ponerlo y tiene varios parametros configurables, util como para custom_metadata = {"marca": "Gucci", "color":"rojo"}
+    # print(res.url)
+    # El url listo para guardar en la base de datos y mostrarlo en el html desde el link
+
+    # print(res.response_metadata.raw)
+    return res.url

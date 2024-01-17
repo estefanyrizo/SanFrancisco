@@ -9,7 +9,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from flask import Flask, flash, redirect, render_template, request, session
 from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
-from helpers import admin_required, login_required, subirImagen, validarDouble, validarString
+from helpers import admin_required, login_required, subirImagen, validarDouble, validarString, subirArchivo
 from flask import jsonify
 from sqlalchemy.sql import text
 import helpers
@@ -1121,6 +1121,7 @@ def alimentoGanado():
 @login_required
 def compra():
     return render_template("/compra/pri.html")
+
 @app.route("/compra/individual", methods=["GET", "POST"])
 @login_required
 def compraIndividual():
@@ -1147,13 +1148,15 @@ def compraIndividualFin():
         proveedor = request.form.get("proveedor")
         precioKilo = request.form.get("precioKilo")
         peso = request.form.get("peso")
-        costo = float(precioKilo) * float(peso) 
-        if not fecha or not proveedor or not costo:
+        costo = float(precioKilo) * float(peso)
+        carta =  request.files["file"]
+        if not fecha or not proveedor or not costo or not carta:
             flash("Debe ingresar todos los datos solicitados", "error")
             return redirect(url_for("compraIndividualFin", id=id))
 
         fecha = str(fecha)
-        compra = db.execute(text(f"INSERT INTO compra(fecha, cantidad, montoTotal, usuarioid, entidadcomercialid) VALUES('{fecha}', 1, {costo}, {session['user_id']}, {proveedor}) RETURNING id")).fetchone()[0]
+        carta = subirArchivo(carta, str(datetime.now().date()), "Compras")
+        compra = db.execute(text(f"INSERT INTO compra(fecha, cantidad, montoTotal, usuarioid, entidadcomercialid, cartacompra) VALUES('{fecha}', 1, {costo}, {session['user_id']}, {proveedor}, '{carta}') RETURNING id")).fetchone()[0]
         print(compra)
         db.execute(text(f"INSERT INTO detallecompra(compraid, ganadoid) VALUES ({compra}, {id})"))
         db.execute(text(f"UPDATE ganado SET isasignado = true WHERE ganado.id = {id}"))
@@ -1185,12 +1188,15 @@ def compraLoteFin(lista):
         fecha = request.form.get("fechaCompra")
         proveedor = request.form.get("proveedor")
         total = request.form.get("total")
-        if not fecha or not proveedor or not total:
+        carta = request.files["file"]
+        if not fecha or not proveedor or not total or not carta:
             flash("Debe ingresar todos los datos solicitados", "error")
             return redirect(url_for("compraIndividualFin", id=id))
 
         fecha = str(fecha)
-        compra = db.execute(text(f"INSERT INTO compra(fecha, cantidad, montoTotal, usuarioid, entidadcomercialid) VALUES('{fecha}', {len(ids)}, {total}, {session['user_id']}, {proveedor}) RETURNING id")).fetchone()[0]
+
+        carta = subirArchivo(carta, str(datetime.now().date()), "Compras")
+        compra = db.execute(text(f"INSERT INTO compra(fecha, cantidad, montoTotal, usuarioid, entidadcomercialid, cartacompra) VALUES('{fecha}', {len(ids)}, {total}, {session['user_id']}, {proveedor}, '{carta}') RETURNING id")).fetchone()[0]
         for i in ids:                     
             db.execute(text(f"INSERT INTO detallecompra(compraid, ganadoid) VALUES ({compra}, {i})"))
             db.execute(text(f"UPDATE ganado SET isasignado = true WHERE ganado.id = {i}"))
@@ -1201,7 +1207,7 @@ def compraLoteFin(lista):
 @app.route("/compras")
 @login_required
 def compras():
-    compras = db.execute(text("""SELECT compra.id, montototal, cantidad,
+    compras = db.execute(text("""SELECT compra.id, montototal, cartacompra, cantidad,
 	   compra.fecha, 
 	   usuario.nombre AS usuario, 
 	   entidadcomercial.nombre AS proveedor, 
@@ -1265,14 +1271,16 @@ def ventaIndividualFin():
         fecha = request.form.get("fechaVenta")
         cliente = request.form.get("cliente")
         precioKilo = request.form.get("precioKilo")
+        carta = request.files["file"]
         peso = request.form.get("peso")
         costo = float(precioKilo) * float(peso) 
-        if not fecha or not cliente or not costo:
+        if not fecha or not cliente or not costo or not carta:
             flash(f"Debe ingresar todos los datos solicitados", "error")
             return redirect(url_for("ventaIndividualFin", id=id))
 
         fecha = str(fecha)
-        venta = db.execute(text(f"INSERT INTO venta(fecha, cantidad, montoTotal, usuarioid, entidadcomercialid) VALUES('{fecha}', 1, {costo}, {session['user_id']}, {cliente}) RETURNING id")).fetchone()[0]
+        carta = subirArchivo(carta, str(datetime.now().date()), "Ventas")
+        venta = db.execute(text(f"INSERT INTO venta(fecha, cantidad, montoTotal, usuarioid, entidadcomercialid, cartaventa) VALUES('{fecha}', 1, {costo}, {session['user_id']}, {cliente}, '{carta}') RETURNING id")).fetchone()[0]
         print(venta)
         db.execute(text(f"INSERT INTO detalleventa(ventaid, ganadoid) VALUES ({venta}, {id})"))
         db.execute(text(f"UPDATE ganado SET estadoganadoid = 2 WHERE ganado.id = {id}"))
@@ -1304,12 +1312,14 @@ def ventaLoteFin(lista):
         fecha = request.form.get("fechaVenta")
         cliente = request.form.get("cliente")
         total = request.form.get("total")
-        if not fecha or not cliente or not total:
+        carta = request.files["file"]
+        if not fecha or not cliente or not total or not carta:
             flash("Debe ingresar todos los datos solicitados", "error")
             return redirect(url_for("ventaIndividualFin", id=id))
 
         fecha = str(fecha)
-        venta = db.execute(text(f"INSERT INTO venta(fecha, cantidad, montoTotal, usuarioid, entidadcomercialid) VALUES('{fecha}', {len(ids)}, {total}, {session['user_id']}, {cliente}) RETURNING id")).fetchone()[0]
+        carta = subirArchivo(carta, str(datetime.now().date()), "Ventas")
+        venta = db.execute(text(f"INSERT INTO venta(fecha, cantidad, montoTotal, usuarioid, entidadcomercialid, cartaventa) VALUES('{fecha}', {len(ids)}, {total}, {session['user_id']}, {cliente}, '{carta}') RETURNING id")).fetchone()[0]
         for i in ids:                     
             db.execute(text(f"INSERT INTO detalleventa(ventaid, ganadoid) VALUES ({venta}, {i})"))
             db.execute(text(f"UPDATE ganado SET estadoganadoid = 2 WHERE ganado.id = {i}"))
@@ -1320,7 +1330,7 @@ def ventaLoteFin(lista):
 @app.route("/ventas", methods=["GET"])
 @login_required
 def ventas():
-    ventas = db.execute(text("""SELECT venta.id, montototal, cantidad,
+    ventas = db.execute(text("""SELECT venta.id, montototal, cartaventa, cantidad,
 	   venta.fecha, 
 	   usuario.nombre AS usuario, 
 	   entidadcomercial.nombre AS cliente, 
@@ -1360,6 +1370,7 @@ def eliminarventa(id):
 def logout():
     session.clear()
     return redirect("/login")
+
 @app.route("/transaccion")
 @login_required
 def transaccion():

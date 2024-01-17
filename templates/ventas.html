@@ -93,7 +93,13 @@ Ventas
                                 {% endfor %}
                               </tbody>
                             </table>
+                            {% if venta.cartaventa %}
+                            <div class="text-center">
+                              <a href="{{venta.cartaventa}}" target="_blank"><i class="fa-solid fa-file-pdf fa-2xl" style="color: #e00606;"></i>Ver/Descargar carta PDF</a>
+                            </div>
+                            {% endif %}
                           </div>
+                          
                           <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                           </div>
