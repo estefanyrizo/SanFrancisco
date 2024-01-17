@@ -16,7 +16,7 @@ San Francisco - Ganado
       </div>
     </div>
   </div>
-  
+
 </form>
 
 <div class="content">
@@ -33,28 +33,26 @@ San Francisco - Ganado
             <div class="col-12 form-group" align="center">
 
               <a class="btn btn-primary" href="/infonovillo/{{cabeza[0]}}/edit">
-                <i class="fa-regular fa-pen-to-square"></i></a>
+                <i class="fa-regular fa-pen-to-square"></i>
+              </a>
 
-              <button class="btn btn-danger" onclick="eliminarBovino('{{cabeza[0]}}', '{{cabeza.codigochapa}}', '{{cabeza.nombre}}')"><i
+              <button class="btn btn-danger"
+                onclick="eliminarBovino('{{cabeza[0]}}', '{{cabeza.codigochapa}}', '{{cabeza.nombre}}')"><i
                   class="fa-solid fa-trash-can"></i>
               </button>
             </div>
           </div>
         </div>
       </div>
-      
+
       {% endfor %}
+
       <div class="container-fluid d-flex justify-content-center">
         <!---  {{ pagination.info }} --->
         {{ pagination.links }}
       </div>
+      
     </div>
   </div>
-
-  <!-- <div class="container-fluid d-flex justify-content-center">
-      {{ pagination.info }} 
-      {{ pagination.links }}
-  </div> -->
-
 </div>
 {% endblock%}

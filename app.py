@@ -42,7 +42,13 @@ load_dotenv()
 @app.route("/", methods=["GET", "POST"])
 @login_required
 def index():
-    return render_template("tablero.html")
+    
+    datos = {
+        "disponibilidad" : db.execute(text("select count(id) from ganado where estadoganadoid = 1")).fetchone()[0],
+        "ventas_totales" : db.execute(text("SELECT SUM(montototal) FROM venta WHERE fecha >= CURRENT_DATE-183;")).fetchone()[0]
+    }
+
+    return render_template("tablero.html", datos = datos)
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -205,7 +211,7 @@ def imagen():
 def ganado():
     
     page = request.args.get(get_page_parameter(), type=int, default=1)
-    limit=10
+    limit=15
     offset = page*limit - limit
     total = db.execute(text(f"SELECT * FROM ganado INNER JOIN raza ON ganado.razaid = raza.id WHERE estadoganadoid = 1")).rowcount
     ganado = db.execute(text(f"SELECT * FROM ganado INNER JOIN raza ON ganado.razaid = raza.id WHERE estadoganadoid = 1 ORDER BY ganado.id DESC LIMIT {limit} OFFSET {offset}"))
@@ -1375,3 +1381,13 @@ def logout():
 @login_required
 def transaccion():
     return render_template("transaccion.html")
+
+@app.route("/reportes", methods=["get"])
+def reportes():
+    disponibilidad = db.execute(text("select count(id) from ganado where estadoganadoid = 1")).fetchone()[0]
+
+    datos = {
+        "disponibilidad":disponibilidad
+    }
+
+    return jsonify(datos)
