@@ -261,8 +261,8 @@ form {
   padding-bottom: 3%;
 }
 .ganado-list .card {
-  margin-left: 0.5%;
-  margin-right: 0.5%;
+  margin-left: 0.1%;
+  margin-right: 0.1%;
 }
 .ganado-list .card .card-title {
   text-align: center;
@@ -275,7 +275,7 @@ form {
   background-color: transparent;
 }
 .ganado-list .img-top {
-  width: 550px;
+  width: 400px;
   height: 250px;
   overflow: hidden;
 }
@@ -283,8 +283,8 @@ form {
   justify-content: center;
 }
 .ganado-list .ganado-card {
-  width: 60%;
-  height: 80%;
+  width: 50%;
+  height: 60%;
 }
 
 .entidades {
@@ -318,5 +318,8 @@ form {
        object-fit: contain;
     min-width: 85vw;
     max-height: 50vw;
+  }
+  .ganadoForm {
+    padding: 0%;
   }
 }/*# sourceMappingURL=style.css.map */

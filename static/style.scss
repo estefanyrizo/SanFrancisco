@@ -286,8 +286,8 @@ $text_color : white;
 	padding-bottom: 3%;
 
 	.card {
-		margin-left: 0.5%;
-		margin-right: 0.5%;
+		margin-left: 0.1%;
+		margin-right: 0.1%;
 
 		.card-title {
 			text-align: center;
@@ -303,7 +303,7 @@ $text_color : white;
 	}
 
 	.img-top {
-		width: 550px;
+		width: 400px;
 		height: 250px;
 		overflow: hidden;
 	}
@@ -313,8 +313,8 @@ $text_color : white;
 	}
 
 	.ganado-card {
-		width: 60%;
-		height: 80%;
+		width: 50%;
+		height: 60%;
 	}
 }
 
@@ -351,4 +351,12 @@ $text_color : white;
 		min-width: 85vw;
 		max-height: 50vw;
 	}
+
+	.ganadoForm {
+	padding: 0%;
+	
+	}
+
+
+
 }
