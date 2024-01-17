@@ -45,7 +45,8 @@ def index():
     
     datos = {
         "disponibilidad" : db.execute(text("select count(id) from ganado where estadoganadoid = 1")).fetchone()[0],
-        "ventas_totales" : db.execute(text("SELECT SUM(montototal) FROM venta WHERE fecha >= CURRENT_DATE-183;")).fetchone()[0]
+        "ventas_totales" : db.execute(text("SELECT SUM(montototal) FROM venta WHERE fecha >= CURRENT_DATE-183;")).fetchone()[0],
+        "mortalidad": db.execute(text("SELECT ((select count(id) from ganado where estadoganadoid = 3)*100) / (select count(id) from ganado) as mortalidad from ganado")).fetchone()[0]
     }
 
     return render_template("tablero.html", datos = datos)
