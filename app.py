@@ -540,9 +540,27 @@ def entidadComercial():
         return redirect("/entidadesComerciales")
     
     else:
-        entidades = db.execute(text("SELECT * FROM entidadcomercial ORDER BY nombre"))
+        entidades = db.execute(text("SELECT id, nombre, apellido, identificacion, cue, telefono, tipoentidadid FROM entidadcomercial ORDER BY nombre"))
+        entidades_dict = []
+        for id, nombre, apellido, identificacion, cue, telefono, tipoentidadid in entidades.fetchall():
+            compras = db.execute(text(f"SELECT * FROM detallecompra INNER JOIN compra ON compraid = compra.id INNER JOIN ganado ON ganadoid = ganado.id WHERE entidadcomercialid = {id} ORDER BY fecha"))
+            ventas = db.execute(text(f"SELECT * FROM detalleventa INNER JOIN venta ON ventaid = venta.id INNER JOIN ganado ON ganadoid = ganado.id WHERE entidadcomercialid = {id} ORDER BY fecha"))
+            entidad_dict = {
+                'id' : id,
+                'nombre' : nombre,
+                'apellido' : apellido,
+                'identificacion' : identificacion,
+                'cue' : cue,
+                'telefono' : telefono,
+                'tipoentidadid' : tipoentidadid,
+                'compras' : compras,
+                'ventas' : ventas
+            }
+            
+            entidades_dict.append(entidad_dict)
+
         tiposentidad = db.execute(text("SELECT * FROM tipoentidad"))
-        return render_template("entidadComercial.html", entidades = entidades, tiposentidades = tiposentidad)
+        return render_template("entidadComercial.html", entidades = entidades_dict, tiposentidades = tiposentidad)
     
 
 @app.route("/entidadesComerciales/<id>/editar", methods=["POST"])

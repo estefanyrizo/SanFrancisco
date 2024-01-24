@@ -41,12 +41,124 @@ Entidades comerciales
                                         <td>{{entidad.identificacion}}</td>
                                         <td>{{entidad.cue}}</td>
                                         <td>{{entidad.telefono|default('-', true)}}</td>
+
                                         <td> <button class="btn btn-primary" data-bs-toggle="modal"
-                                                data-bs-target="#EntidadModal{{entidad.id}}"><i
-                                                    class="nc-icon nc-money-coins"></i></button></td>
+                                                data-bs-target="#ventas{{entidad.id}}"><i
+                                                    class="nc-icon nc-money-coins"></i></button>
+
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="ventas{{entidad.id}}" tabindex="-1"
+                                                aria-labelledby="ventas{{entidad.id}}" aria-hidden="true"
+                                                data-bs-backdrop="static">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h1 class="modal-title fs-5" id="ventas{{entidad.id}}">
+                                                                Ventas
+                                                            </h1>
+                                                            <button type="button" class="btn-close"
+                                                                data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="table-responsive pr-4 pl-4">
+                                                                <table class="table table-hover">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Fecha</th>
+                                                                            <th>Cantidad</th>
+                                                                            <th>Total</th>
+                                                                            <th>Carta</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+
+                                                                        {% for venta in entidad.ventas %}
+                                                                        <tr>
+                                                                            <td>{{ venta.fecha }}</td>
+                                                                            <td>{{ venta.cantidad }}</td>
+                                                                            <td>C$ {{ venta.montototal }}</td>
+                                                                            {% if venta.cartaventa %}
+                                                                            <td><a href="{{ venta.cartaventa }}"
+                                                                                    target="_blank"><i
+                                                                                        class="fa-solid fa-file-pdf fa-2xl"
+                                                                                        style="color: #e00606;"></i>
+                                                                            </td>
+                                                                            {% endif %}
+                                                                        </tr>
+                                                                        {% endfor %}
+
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary"
+                                                                    data-bs-dismiss="modal">Cerrar</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+
                                         <td> <button class="btn btn-primary" data-bs-toggle="modal"
-                                                data-bs-target="#EntidadModal{{entidad.id}}"><i
-                                                    class="nc-icon nc-bag-16"></i></button></td>
+                                                data-bs-target="#compras{{entidad.id}}"><i
+                                                    class="nc-icon nc-money-coins"></i></button>
+
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="compras{{entidad.id}}" tabindex="-1"
+                                                aria-labelledby="compras{{entidad.id}}" aria-hidden="true"
+                                                data-bs-backdrop="static">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h1 class="modal-title fs-5" id="compras{{entidad.id}}">
+                                                                Compras
+                                                            </h1>
+                                                            <button type="button" class="btn-close"
+                                                                data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="table-responsive pr-4 pl-4">
+                                                                <table class="table table-hover">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Fecha</th>
+                                                                            <th>Cantidad</th>
+                                                                            <th>Total</th>
+                                                                            <th>Carta</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+
+                                                                        {% for compra in entidad.compras %}
+                                                                        <tr>
+                                                                            <td>{{ compra.fecha }}</td>
+                                                                            <td>{{ compra.cantidad }}</td>
+                                                                            <td>C$ {{ compra.montototal }}</td>
+                                                                            {% if compra.cartacompra %}
+                                                                            <td><a href="{{ compra.cartacompra }}"
+                                                                                    target="_blank"><i
+                                                                                        class="fa-solid fa-file-pdf fa-2xl"
+                                                                                        style="color: #e00606;"></i>
+                                                                            </td>
+                                                                            {% endif %}
+                                                                        </tr>
+                                                                        {% endfor %}
+
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary"
+                                                                    data-bs-dismiss="modal">Cerrar</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+
+
                                         <td> <button class="btn btn-primary" data-bs-toggle="modal"
                                                 data-bs-target="#EntidadModal{{entidad.id}}"><i
                                                     class="fa-regular fa-pen-to-square"></i></button></td>
@@ -167,7 +279,6 @@ Entidades comerciales
                                     </script>
 
                                     {% endfor %}
-
                                 </tbody>
                             </table>
                         </div>
