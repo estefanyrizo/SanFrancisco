@@ -15,15 +15,22 @@ Ventas
           <h3 class="sign pt-2 text-center">Historial de ventas</h3>
         </div>
         <div class="form-group">
-          <div class="table-responsive pr-5 pl-5">
+          <div class="row pl-5">
+            <div class="col-6">
+              <a href="/venta" class="btn btn-primary">
+                <i class="nc-icon nc-simple-add"></i></a>
+              </button>
+            </div>
+          </div>
+          <div class="table-responsive pr-4 pl-4">
             <table class="table table-hover">
               <thead>
                 <tr>
-                  <th scope="col">Fecha</th>
-                  <th scope="col">Cliente</th>
-                  <th scope="col">Cantidad</th>
-                  <th scope="col">Total</th>
-                  <th scope="col">Acciones</th>
+                  <th>Fecha</th>
+                  <th>Cliente</th>
+                  <th>Cantidad</th>
+                  <th>Total</th>
+                  <th colspan="2" scope="rowgroup">Acciones</th>
                 </tr>
               </thead>
               <tbody>
@@ -39,9 +46,9 @@ Ventas
                         class="fa fa-eye"></i></a>
 
                     <!-- Modal -->
-                    <div class="modal fade" id="modal{{ venta.id }}" tabindex="-1"
+                    <div class="modal fade" id="modal{{ venta.id }}" data-bs-backdrop="static" tabindex="-1"
                       aria-labelledby="modalLabel{{ venta.id }}" aria-hidden="true">
-                      <div class="modal-dialog modal-dialog-centered">
+                      <div class="modal-dialog modal-lg modal-dialog-centered">
                         <div class="modal-content">
                           <div class="modal-header">
                             <h5 class="modal-title" id="modalLabel{{ venta.id }}">Detalles de la venta</h5>
@@ -50,18 +57,23 @@ Ventas
                           <div class="modal-body">
                             <!-- Contenido del modal -->
                             <div class="row m-1">
-                              <div class="col-6 p-1">
+                              <div class="col-3 p-1">
                                 Cliente: {{ venta.cliente }}
                               </div>
-                              <div class="col-6 p-1">
+                              <div class="col-3 p-1">
                                 Fecha: {{ venta.fecha }}
                               </div>
-                              <div class="col-6 p-1">
+                              <div class="col-3 p-1">
                                 Monto: C$ {{ venta.montototal }}
                               </div>
-                              <div class="col-6 p-1">
-                                Usuario: {{ venta.usuario }}
+                              {% if venta.cartaventa %}
+                              <div class="col-3">
+                                <div class="text-center">
+                                  <a href="{{venta.cartaventa}}" target="_blank"><i class="fa-solid fa-file-pdf fa-2xl"
+                                      style="color: #e00606;"></i>Ver carta</a>
+                                </div>
                               </div>
+                              {% endif %}
                             </div>
                             <br>
                             <h6 align="center">Datos del ganado</h6>
@@ -94,12 +106,6 @@ Ventas
                                 </tbody>
                               </table>
                             </div>
-                            {% if venta.cartaventa %}
-                              <div class="text-center mt-3 mb-2">
-                                <a href="{{venta.cartaventa}}" target="_blank"><i class="fa-solid fa-file-pdf fa-2xl"
-                                    style="color: #e00606;"></i>Ver/Descargar carta PDF</a>
-                              </div>
-                              {% endif %}
                           </div>
                           <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -122,7 +128,7 @@ Ventas
     </div>
   </div>
 </div>
-</div>
+
 
 
 

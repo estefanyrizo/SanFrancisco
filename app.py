@@ -263,9 +263,9 @@ def infonovillo(id):
 
     novillo = db.execute(text(f"SELECT * FROM ganado INNER JOIN raza ON ganado.razaid = raza.id WHERE ganado.id = {id}"))
     razas = db.execute(text("SELECT * FROM raza ORDER BY nombreraza"))
-    origen = db.execute(text("select * from origenganado"))
-
-    return render_template("novilloinfo.html", novillo = novillo, razas = razas, origen = origen)
+    origen = db.execute(text("SELECT * FROM origenganado"))
+    registros = db.execute(text(f"SELECT * FROM registroproduccion WHERE ganadoid = {id}"))
+    return render_template("novilloinfo.html", novillo = novillo, razas = razas, origen = origen, registros = registros)
     
 
 @app.route("/infonovillo/<id>/edit", methods=["GET", "POST"])
@@ -280,8 +280,31 @@ def infonovilloedit(id):
         #imagen_actual = db.execute(text(f"SELECT foto FROM ganado WHERE ganado.id = {id}")).fetchone().foto
 
         razas = db.execute(text("SELECT * FROM raza ORDER BY nombreraza"))
-        origen = db.execute(text("select * from origenganado"))
-        return render_template("novillo.html", novillo = novillo, razas = razas, origen = origen)
+        origen = db.execute(text("SELECT * FROM origenganado"))
+        registros = db.execute(text(f"SELECT * FROM registroproduccion WHERE ganadoid = {id}"))
+        cantEnfermedades = db.execute(text(f"SELECT count(enfermedad.nombre) FROM registromedico INNER JOIN enfermedad ON enfermedad.id = enfermedadid WHERE ganadoid = {id} group by nombre")).fetchone()
+        totalAlimento = db.execute(text(f"SELECT SUM(costo) FROM detallealimento WHERE ganadoid = {id}")).fetchone()
+        totalMedicina = db.execute(text(f"""SELECT SUM((CAST(dosis AS float)) * (precio / contenido)) FROM registromedico
+        INNER JOIN medicina ON registromedico.medicinaid = medicina.id
+        INNER JOIN detallepresentacion ON detallepresentacion.medicinaid = medicina.id
+        WHERE ganadoid = {id}""")).fetchone()
+        gastos = totalAlimento[0] + totalMedicina[0]
+        registrosMedicos = db.execute(text(f"""SELECT r.id,
+        e.nombre enfermedad,
+        r.fecha,
+        m.nombre medicina,
+        r.dosis,                                   
+        CAST(r.dosis AS float) * (precio / contenido) AS costo,
+        r.diagnostico
+        FROM registromedico  r
+        INNER JOIN ganado g ON r.ganadoid = g.id
+        INNER JOIN enfermedad e ON r.enfermedadid = e.id
+        INNER JOIN medicina m ON r.medicinaid = m.id
+        INNER JOIN detallepresentacion dp ON dp.medicinaid = m.id
+        WHERE ganadoid = {id}
+        ORDER BY fecha"""))
+        registrosAlimento = db.execute(text(f"SELECT * FROM detallealimento INNER JOIN alimento ON alimentoid = alimento.id WHERE ganadoid = {id}"))
+        return render_template("novillo.html", novillo = novillo, razas = razas, origen = origen, registros = registros, cantEnfermedades = cantEnfermedades, gastos = gastos, totalAlimento = totalAlimento, totalMedicina = totalMedicina, registrosMedicos = [registrosMedicos for registrosMedicos in registrosMedicos], registrosAlimento = registrosAlimento)
     
     if request.method == "POST":
         nombre = request.form.get("nombre") #string
@@ -429,7 +452,7 @@ def infonovilloedit(id):
                 
         
         flash("Informacion actualizada con exito", "exito")
-        return redirect("/ganado")
+        return redirect(f"/infonovillo/{id}/edit")
 
 
 @app.route("/infonovillo/<id>/muerto", methods=["GET"])
@@ -1126,11 +1149,13 @@ def alimentoGanado():
 
 @app.route("/compra", methods=["GET", "POST"])
 @login_required
+@admin_required
 def compra():
     return render_template("/compra/pri.html")
 
 @app.route("/compra/individual", methods=["GET", "POST"])
 @login_required
+@admin_required
 def compraIndividual():
     if request.method == "GET":
         ganado = db.execute(text(f"SELECT codigochapa, nombre, nombreraza, tamanio, peso, ganado.id AS id, raza FROM ganado INNER JOIN raza ON ganado.razaid = raza.id WHERE estadoganadoid = 1 AND isasignado = false ORDER BY ganado.id"))
@@ -1141,6 +1166,7 @@ def compraIndividual():
 
 @app.route("/compra/individual/fin", methods=["GET", "POST"])
 @login_required
+@admin_required
 def compraIndividualFin():
     
     if request.method == "GET":
@@ -1173,6 +1199,7 @@ def compraIndividualFin():
 
 @app.route("/compra/lote", methods=["GET", "POST"])
 @login_required
+@admin_required
 def compraLote():
     if request.method == "GET":
         ganado = db.execute(text(f"SELECT codigochapa, nombre, nombreraza, tamanio, peso, ganado.id AS id, raza FROM ganado INNER JOIN raza ON ganado.razaid = raza.id WHERE estadoganadoid = 1 AND isasignado = false ORDER BY ganado.id"))
@@ -1183,6 +1210,7 @@ def compraLote():
 
 @app.route("/compra/lote/fin/<lista>", methods=["GET", "POST"])
 @login_required
+@admin_required
 def compraLoteFin(lista):
     ids = list(map(int, lista.split(',')))
     if request.method == "GET": 
@@ -1213,6 +1241,7 @@ def compraLoteFin(lista):
     
 @app.route("/compras")
 @login_required
+@admin_required
 def compras():
     compras = db.execute(text("""SELECT compra.id, montototal, cartacompra, cantidad,
 	   compra.fecha, 
@@ -1234,6 +1263,7 @@ def compras():
 
 @app.route('/eliminarcompra/<id>', methods=["GET"])
 @login_required
+@admin_required
 def eliminarCompra(id):
     try:
         ganado = db.execute(text(f"SELECT ganadoid FROM detallecompra WHERE compraid = {id}"))
@@ -1250,6 +1280,7 @@ def eliminarCompra(id):
 
 @app.route("/venta", methods=["GET", "POST"])
 @login_required
+@admin_required
 def venta():
     return render_template("/venta/pri.html")
 
@@ -1265,6 +1296,7 @@ def ventaIndividual():
 
 @app.route("/venta/individual/fin", methods=["GET", "POST"])
 @login_required
+@admin_required
 def ventaIndividualFin():
     
     if request.method == "GET":
@@ -1297,6 +1329,7 @@ def ventaIndividualFin():
 
 @app.route("/venta/lote", methods=["GET", "POST"])
 @login_required
+@admin_required
 def ventaLote():
     if request.method == "GET":
         ganado = db.execute(text(f"SELECT codigochapa, nombre, nombreraza, tamanio, peso, ganado.id AS id, raza FROM ganado INNER JOIN raza ON ganado.razaid = raza.id WHERE estadoganadoid = 1 ORDER BY ganado.id"))
@@ -1307,6 +1340,7 @@ def ventaLote():
 
 @app.route("/venta/lote/fin/<lista>", methods=["GET", "POST"])
 @login_required
+@admin_required
 def ventaLoteFin(lista):
     ids = list(map(int, lista.split(',')))
     if request.method == "GET": 
@@ -1336,6 +1370,7 @@ def ventaLoteFin(lista):
     
 @app.route("/ventas", methods=["GET"])
 @login_required
+@admin_required
 def ventas():
     ventas = db.execute(text("""SELECT venta.id, montototal, cartaventa, cantidad,
 	   venta.fecha, 
@@ -1357,6 +1392,7 @@ def ventas():
 
 @app.route('/eliminarventa/<id>', methods=["GET"])
 @login_required
+@admin_required
 def eliminarventa(id):
     try:
         ganado = db.execute(text(f"SELECT ganadoid FROM detalleventa WHERE ventaid = {id}"))

@@ -92,20 +92,21 @@
                             <p>Control bovino</p>
                         </a>
                     </li>
-
+                    {% if session.admin %}
                     <li>
                         <a href="/ventas">
                             <i class="nc-icon nc-money-coins"></i>
                             <p>Ventas</p>
                         </a>
-                    </li>
+                    </li>                
+                
                     <li>
                         <a href="/compras">
                             <i class="nc-icon nc-bag-16"></i>
                             <p>Compras</p>
                         </a>
                     </li>
-
+                    {% endif %}
                 </ul>
             </div>
         </div>
@@ -151,7 +152,7 @@
                                     aria-haspopup="true" aria-expanded="false">
                                     <i class="fa fa-square-plus"></i>
                                     <p>
-                                        <span class="d-lg-none d-md-block">Agregar registrod</span>
+                                        <span class="d-lg-none d-md-block">Agregar registros</span>
                                     </p>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">

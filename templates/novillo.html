@@ -8,33 +8,142 @@ San Francisco - Actualizar ganado
 
 {% block main%}
 <div class="content">
-    <div class="row ganado">
-        <div class="col-md-9">
+    {%for novillo in novillo%}
+    <div class="row">
+        <div class="col-md-4">
             <div class="card card-user">
-                <div class="card-header mb-2 pb-5">
+                <div class="image">
+                    <img src="https://assets.easybroker.com/property_images/4046210/66859757/medium_EB-ON6210.jpg?version=1696443519"
+                        alt="...">
+                </div>
+                <div class="card-body">
+                    <div class="author">
+                        <img class="avatar border-gray m-0" src="{{novillo.foto}}" id="img-preview">
+                        <br>
+                        <label for="img-uploader"> Editar foto <i class="fa fa-pen-to-square"></i></label>
+                        <input type="file" id="img-uploader" name="foto" accept="image/*" hidden form="novillo">
+                        <h5 class="title m-0">{{novillo.nombre}}</h5>
+                        <p class="description">
+                            {{novillo.codigochapa}}
+                        </p>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="button-container">
+                        <div class="row">
+                            <div class="col-lg-3 col-md-6 col-6 ml-auto">
+                                2<br><small>Control</small>
+                            </div>
+                            <div class="col-lg-4 col-md-6 col-6 ml-auto mr-auto">
+                                {{cantEnfermedades[0]}}<br><small>Enfermedad</small>
+                            </div>
+                            <div class="col-lg-4 mr-auto">
+                                {{gastos}}C$<br><small>Gastos</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Gastos</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled team-members">
+                        <li>
+                            <div class="row">
+                                <div class="col-md-2 col-2">
+                                    <div class="avatar">
+                                        <img src="https://static.vecteezy.com/system/resources/previews/000/637/367/original/vector-medicine-icon-symbol-sign.jpg"
+                                            alt="Circle Image" class="img-circle img-no-padding img-responsive">
+                                    </div>
+                                </div>
+                                <div class="col-md-7 col-7">
+                                    Medicina
+                                    <br />
+                                    <span><small> C$ {{totalMedicina[0]}}</small></span>
+                                </div>
+                                <div class="col-md-3 col-3 text-right">
+                                    <btn class="btn btn-sm btn-outline-success btn-round btn-icon"
+                                        data-bs-toggle="modal" data-bs-target="#medicina"><i class="fa fa-eye"></i>
+                                    </btn>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="row">
+                                <div class="col-md-2 col-2">
+                                    <div class="avatar">
+                                        <img src="https://img.freepik.com/vector-premium/hierba-icono-vector-plantilla-logo-moda-coleccion-diseno-plano_917138-9211.jpg"
+                                            alt="Circle Image" class="img-circle img-no-padding img-responsive">
+                                    </div>
+                                </div>
+                                <div class="col-md-7 col-7">
+                                    Alimentaci&oacute;n
+                                    <br />
+                                    <span><small> C$ {{totalAlimento[0]}}</small></span>
+                                </div>
+                                <div class="col-md-3 col-3 text-right">
+                                    <btn class="btn btn-sm btn-outline-success btn-round btn-icon"data-bs-toggle="modal" data-bs-target="#alimento"><i
+                                            class="fa fa-eye"></i></btn>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Control medico</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled team-members">
+                        <li>
+                            <div class="row">
+                                <div class="col-md-2 col-2">
+                                    <div class="avatar">
+                                        <img src="https://cdn-icons-png.flaticon.com/512/6567/6567035.png"
+                                            alt="Circle Image" class="img-circle img-no-padding img-responsive">
+                                    </div>
+                                </div>
+                                <div class="col-ms-7 col-7">
+                                    Controles
+                                    <br />
+                                    <span><small>2</small></span>
+                                </div>
+                                <div class="col-md-3 col-3 text-right">
+                                    <btn class="btn btn-sm btn-outline-success btn-round btn-icon"
+                                        data-bs-toggle="modal" data-bs-target="#controlMedico"><i class="fa fa-eye"></i>
+                                    </btn>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card card-user">
+                <div class="card-header">
                     <h3 class="sign pt-2 pb-2 text-center">Editar datos del animal</h3>
                 </div>
-
-                {%for novillo in novillo%}
-                <form action="/infonovillo/{{novillo[0]}}/edit" method="post" enctype="multipart/form-data">
+                <form id="novillo" action="/infonovillo/{{novillo[0]}}/edit" method="post" enctype="multipart/form-data"
+                    onsubmit="return submitForm(this);">
                     <div class="form-group">
                         <div class="inputs">
-
-                            <div class="author">
-                                <img class="avatar" src="{{novillo.foto}}" id="img-preview">
-                                <br>
-                                <label for="img-uploader"> Editar foto</label>
-                                <input type="file" id="img-uploader" name="foto" accept="image/*" hidden>
-                                <input name="perfil" id="url" hidden form="update-my-profile">
-                                <h5 class="title">{{novillo.nombre}}</h5>
-                            </div>
-
                             <div class="card-body">
-                                <div class="row m-3">
-
+                                <div class="row">
                                     <div class="col-6 mb-3">
                                         <label for="nombre">Nombre</label>
-                                        <input type="text" class="form-control" id="nombre" name="nombre" value="{{novillo.nombre}}" required>
+                                        <input type="text" class="form-control" id="nombre" name="nombre"
+                                            value="{{novillo.nombre}}" required disabled>
+                                    </div>
+
+                                    <div class="col-6 mb-3">
+                                        <label for="codigo">Codigo de chapa</label>
+                                        <input type="text" class="form-control" id="codigo" name="codigo"
+                                            value="{{novillo.codigochapa}}" required disabled>
                                     </div>
 
                                     <div class="col-6 mb-3">
@@ -42,11 +151,8 @@ San Francisco - Actualizar ganado
                                         <select class="form-control" id="raza" name="raza">
                                             <!-- <option value={{novillo.razaid}}>{{novillo.nombreraza}}</option> -->
                                             {% for item in razas %}
-                                            <option value="{{item[0]}}"
-                                            {% if novillo.razaid == item[0] %}
-                                                selected
-                                            {% endif %}
-                                            >{{item[1]}}</option>
+                                            <option value="{{item[0]}}" {% if novillo.razaid==item[0] %} selected {%
+                                                endif %}>{{item[1]}}</option>
                                             {% endfor %}
                                         </select>
                                     </div>
@@ -57,12 +163,6 @@ San Francisco - Actualizar ganado
                                             name="fechaNacimiento" value="{{novillo.fechanacimiento}}" required>
                                     </div>
 
-                                    <div class="col-6 mb-3">
-                                        <label for="codigo">Codigo de chapa</label>
-                                        <input type="text" class="form-control" id="codigo" name="codigo"
-                                            value="{{novillo.codigochapa}}" required>
-                                    </div>
-                                    
                                     <div class="col-3 mb-3">
                                         <label for="color">Color</label>
                                         <input type="text" class="form-control" id="color" name="color"
@@ -72,26 +172,21 @@ San Francisco - Actualizar ganado
                                     <div class="col-3 mb-3">
                                         <label for="tamaño">Tamaño(mts)</label>
                                         <input type="text" class="form-control" id="tamaño" name="tamaño"
-                                            value="{{novillo.tamanio}}" required>
+                                            value="{{novillo.tamanio}}" required disabled>
                                     </div>
 
                                     <div class="col-3 mb-3">
                                         <label for="peso">Peso(kg)</label>
                                         <input type="text" class="form-control" id="peso" name="peso"
-                                            value="{{novillo.peso}}" required>
+                                            value="{{novillo.peso}}" required disabled>
                                     </div>
 
                                     <div class="col-3 mb-3">
                                         <label for="procedencia">Procedencia</label>
-                                        <select class="form-control" id="procedencia" name="procedencia" required
-                                        
-                                        >
+                                        <select class="form-control" id="procedencia" name="procedencia" required>
                                             {% for item in origen %}
-                                                <option value="{{item[0]}}"
-                                                {% if novillo.origenganadoid == item[0] %}
-                                                selected
-                                                {% endif %}
-                                                >{{item[1]}}</option>
+                                            <option value="{{item[0]}}" {% if novillo.origenganadoid==item[0] %}
+                                                selected {% endif %}>{{item[1]}}</option>
                                             {% endfor %}
                                         </select>
                                     </div>
@@ -104,55 +199,206 @@ San Francisco - Actualizar ganado
                                     </div>
 
                                     <div class="col-6 form-group mb-0" align="center">
-                                        <button type="button" class="btn btn-danger" onclick="matarBovino('{{novillo[0]}}')"
-                                        {% if novillo.estadoganadoid == 3 %}
-                                            disabled
-                                        {% endif %}
-                                        >
+                                        <button type="button" class="btn btn-danger"
+                                            onclick="matarBovino('{{novillo[0]}}')" {% if novillo.estadoganadoid==3 %}
+                                            disabled {% endif %}>
                                             Marcar muerto <i class="fa-solid fa-skull-crossbones"></i>
                                         </button>
                                     </div>
-   
+
                                     <div class="col-6 form-group mb-0" align="center">
-                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#EditarModal">
+                                        <button type="submit" class="btn btn-primary">
                                             Guardar cambios
                                         </button>
                                     </div>
-
-                                    <div class="modal fade" id="EditarModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered">
-                                          <div class="modal-content">
-                                            <div class="modal-header">
-                                              <h5 class="modal-title" id="exampleModalLabel">Editar registro</h5>
-                                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <div class="row">
-                                                  <div class="container d-flex justify-content-center mb-4 flex-wrap">
-                                                    <div class="container">
-                                                      <h5>¿Estas seguro que deseas guardar los cambios?</h5>
-                                                    </div>
-                                                  </div>
-                                                </div>
-                                                <div class="modal-footer p-0">
-                                                  <button type="button" class="btn btn-secondary mr-2" data-bs-dismiss="modal">Cancelar</button>
-                                                  <button class="btn btn-primary" type="submit">Guardar cambios</button>
-                                                </div>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
-
-
                                 </div>
+                            </div>
+                        </div>
+                    </div>
                 </form>
-                {% endfor %}
+            </div>
+            <div class="card registroProduccion">
+                <div class="card-header">
+                    <h5 class="sign pt-2 pb-2 text-center">Control del bovino</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead class=" text-primary">
+                                <tr>
+                                    <th scope="col">Fecha</th>
+                                    <th scope="col">Peso</th>
+                                    <th scope="col">Tamaño</th>
+                                    <th scope="col">Comentario</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                {% for reg in registros %}
+                                <tr>
+                                    <td>{{reg.fecha}}</td>
+                                    <td>{{reg.peso}}</td>
+                                    <td>{{reg.peso}}</td>
+                                    <td>{{reg.comentario|default('Sin comentario', true)}}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+    <!-- Modal medicina -->
+    <div class="modal fade" id="medicina" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Medicina suministrada</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead class=" text-primary">
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Enfermedad</th>
+                                    <th>Medicina</th>
+                                    <th>Dosis</th>
+                                    <th>Costo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                {% for reg in registrosMedicos %}
+                                <tr>
+                                    <td>{{reg.fecha}}</td>
+                                    <td>{{reg.enfermedad}}</td>
+                                    <td>{{reg.medicina}}</td>
+                                    <td>{{reg.dosis}}</td>
+                                    <td>C$ {{reg.costo}}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal alimento -->
+    <div class="modal fade" id="alimento" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Alimentaci&oacute;n suministrada</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead class=" text-primary">
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Alimento</th>
+                                    <th>Cantidad</th>
+                                    <th>Costo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                {% for reg in registrosAlimento %}
+                                <tr>
+                                    <td>{{reg.fecha}}</td>
+                                    <td>{{reg.nombre}}</td>
+                                    <td>{{reg.cantidadsuministrada}}</td>
+                                    <td>C$ {{reg.costo}}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal control medico -->
+    <div class="modal fade" id="controlMedico" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Controles medicos</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead class=" text-primary">
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Enfermedad</th>
+                                    <th>Medicina</th>
+                                    <th>Dosis</th>
+                                    <th>Diagnostico</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                {% for reg in registrosMedicos %}
+                                <tr>
+                                    <td>{{reg.fecha}}</td>
+                                    <td>{{reg.enfermedad}}</td>
+                                    <td>{{reg.medicina}}</td>
+                                    <td>{{reg.dosis}}</td>
+                                    <td>{{reg.diagnostico}}</td>
+
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 
+<script>
+    function submitForm(form) {
+        swal(
+            {
+                title: "Confirmar edición",
+                text: "¿Estas seguro de cambiar los datos del bovino?",
+                icon: "warning",
+                buttons: true,
+            })
+            .then((isOkay) => {
+                if (isOkay)
+                    form.submit();
+            });
+
+        return false;
+    }
+
+</script>
 
 
 {% endblock%}

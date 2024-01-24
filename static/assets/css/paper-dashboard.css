@@ -3784,7 +3784,7 @@ License - nucleoapp.com/license/
   position: relative; }
 
 .card-user .card-body {
-  min-height: 240px; }
+  min-height: 100px; }
 
 .card-user hr {
   margin: 5px 15px 15px; }

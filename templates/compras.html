@@ -15,6 +15,13 @@ Compras
           <h3 class="sign pt-2 text-center">Historial de compras</h3>
         </div>
         <div class="form-group">
+          <div class="row pl-5">
+            <div class="col-6">
+              <a href="/compra" class="btn btn-primary">
+                <i class="nc-icon nc-simple-add"></i></a>
+              </button>
+            </div>
+          </div>
           <div class="table-responsive pr-5 pl-5">
             <table class="table table-hover">
               <thead>
@@ -39,9 +46,9 @@ Compras
                         class="fa fa-eye"></i></a>
 
                     <!-- Modal -->
-                    <div class="modal fade" id="modal{{ compra.id }}" tabindex="-1"
+                    <div class="modal fade" id="modal{{ compra.id }}" tabindex="-1" data-bs-backdrop="static"
                       aria-labelledby="modalLabel{{ compra.id }}" aria-hidden="true">
-                      <div class="modal-dialog modal-dialog-centered">
+                      <div class="modal-dialog modal-lg modal-dialog-centered">
                         <div class="modal-content">
                           <div class="modal-header">
                             <h5 class="modal-title" id="modalLabel{{ compra.id }}">Detalles de la compra</h5>
@@ -50,18 +57,23 @@ Compras
                           <div class="modal-body">
                             <!-- Contenido del modal -->
                             <div class="row m-1">
-                              <div class="col-6 p-1">
+                              <div class="col-3 p-1">
                                 Proveedor: {{ compra.proveedor }}
                               </div>
-                              <div class="col-6 p-1">
+                              <div class="col-3 p-1">
                                 Fecha: {{ compra.fecha }}
                               </div>
-                              <div class="col-6 p-1">
+                              <div class="col-3 p-1">
                                 Monto: C$ {{ compra.montototal }}
                               </div>
-                              <div class="col-6 p-1">
-                                Usuario: {{ compra.usuario }}
+                              {% if compra.cartacompra %}
+                              <div class="col-3">
+                                <div class="text-center">
+                                  <a href="{{compra.cartacompra}}" target="_blank"><i class="fa-solid fa-file-pdf fa-2xl"
+                                      style="color: #e00606;"></i>Ver carta</a>
+                                </div>
                               </div>
+                              {% endif %}
                             </div>
                             <br>
                             <h6 align="center">Datos del ganado</h6>
@@ -94,17 +106,12 @@ Compras
                                 </tbody>
                               </table>
                             </div>
-                            <div class="text-center mt-3 mb-2">
-                              <a href="{{compra.cartacompra}}" target="_blank"><i class="fa-solid fa-file-pdf fa-2xl"
-                                  style="color: #e00606;"></i>Ver/Descargar carta PDF</a>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                             </div>
-                          </div>
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                           </div>
                         </div>
                       </div>
-                    </div>
                   </td>
                   <td><button class="btn btn-danger" onclick="eliminarCompra('{{compra.id}}')"><i
                         class="fa-solid fa-trash-can"></i>
