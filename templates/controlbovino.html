@@ -2,7 +2,7 @@
 
 {%block title%}
 
-San Francisco - Control bovino
+Control bovino
 
 {% endblock%}
 
@@ -52,7 +52,7 @@ San Francisco - Control bovino
                                         <!-- Modal -->
                                         <div class="modal fade" id="RegistroModal{{reg.idregistro}}" tabindex="-1"
                                             aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-dialog modal-dialog-centered modal-lg">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <h5 class="modal-title" id="exampleModalLabel">Editar registro
@@ -64,13 +64,13 @@ San Francisco - Control bovino
                                                         <form action="/editar_registro_bovino/{{reg.idregistro}}" method="post">
                                                             <div class="row">
 
-                                                                <div class="col-6 mb-3">
+                                                                <div class="col-xl-6 mb-3">
                                                                     <label for="fecha">Fecha</label>
                                                                     <input type="date" class="form-control" id="fecha"
                                                                         name="fecha" value="{{reg.fecha}}" required>
                                                                 </div>
 
-                                                                <div class="col-6 mb-3">
+                                                                <div class="col-xl-6 mb-3">
                                                                     <label for="bovino">Bovino</label>
                                                                     <select class="form-control" id="bovino"
                                                                         name="bovino" required>
@@ -85,13 +85,13 @@ San Francisco - Control bovino
                                                                     </select>
                                                                 </div>
 
-                                                                <div class="col-6 mb-3">
+                                                                <div class="col-xl-6 mb-3">
                                                                     <label for="peso">Peso (Kg)</label>
                                                                     <input type="text" class="form-control" id="peso"
                                                                         name="peso" placeholder="Peso en Kg" value="{{reg.peso}}" required>
                                                                 </div>
 
-                                                                <div class="col-6 mb-3">
+                                                                <div class="col-xl-6 mb-3">
                                                                     <label for="comentario">Comentario</label>
                                                                     <input type="text" class="form-control"
                                                                         id="comentario" name="comentario"
@@ -126,7 +126,7 @@ San Francisco - Control bovino
 </div>
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Agregar registro</h5>
@@ -136,12 +136,12 @@ San Francisco - Control bovino
                 <form action="/control_bovino" method="post">
                     <div class="row">
 
-                        <div class="col-6 mb-3">
+                        <div class="col-xl-6 mb-3">
                             <label for="fecha">Fecha</label>
                             <input type="date" class="form-control" id="fecha" name="fecha" required>
                         </div>
 
-                        <div class="col-6 mb-3">
+                        <div class="col-xl-6 mb-3">
                             <label for="bovino">Bovino</label>
                             <select class="form-control" id="bovino" name="bovino" required>
                                 <option>Seleccione un elemento</option>
@@ -151,13 +151,13 @@ San Francisco - Control bovino
                             </select>
                         </div>
 
-                        <div class="col-6 mb-3">
+                        <div class="col-xl-6 mb-3">
                             <label for="peso">Peso (Kg)</label>
                             <input type="text" class="form-control" id="peso" name="peso" placeholder="Peso en Kg"
                                 required>
                         </div>
 
-                        <div class="col-6 mb-3">
+                        <div class="col-xl-6 mb-3">
                             <label for="comentario">Comentario</label>
                             <input type="text" class="form-control" id="comentario" name="comentario"
                                 placeholder="Comentario">

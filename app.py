@@ -260,12 +260,44 @@ def buscarganado():
 @app.route("/infonovillo/<id>/", methods=["GET"])
 @login_required
 def infonovillo(id):
+        novillo = db.execute(text(f"SELECT * FROM ganado INNER JOIN raza ON ganado.razaid = raza.id WHERE ganado.id = {id}"))
+        #imagen_actual = db.execute(text(f"SELECT foto FROM ganado WHERE ganado.id = {id}")).fetchone().foto
 
-    novillo = db.execute(text(f"SELECT * FROM ganado INNER JOIN raza ON ganado.razaid = raza.id WHERE ganado.id = {id}"))
-    razas = db.execute(text("SELECT * FROM raza ORDER BY nombreraza"))
-    origen = db.execute(text("SELECT * FROM origenganado"))
-    registros = db.execute(text(f"SELECT * FROM registroproduccion WHERE ganadoid = {id}"))
-    return render_template("novilloinfo.html", novillo = novillo, razas = razas, origen = origen, registros = registros)
+        razas = db.execute(text("SELECT * FROM raza ORDER BY nombreraza"))
+        origen = db.execute(text("SELECT * FROM origenganado"))
+        registros = db.execute(text(f"SELECT * FROM registroproduccion WHERE ganadoid = {id}"))
+        cantRegistrosP = db.execute(text(f"SELECT COUNT(id) FROM registroproduccion WHERE ganadoid = {id}")).fetchone()
+        cantEnfermedades = db.execute(text(f"SELECT COUNT(DISTINCT enfermedadid) FROM registromedico WHERE ganadoid = {id}")).fetchone()
+        cantRegistrosM = db.execute(text(f"SELECT COUNT(id) FROM registromedico WHERE ganadoid = {id}")).fetchone()
+        totalAlimento = db.execute(text(f"SELECT SUM(costo) FROM detallealimento WHERE ganadoid = {id}")).fetchone()
+        totalMedicina = db.execute(text(f"""SELECT SUM((CAST(dosis AS float)) * (precio / contenido)) FROM registromedico
+        INNER JOIN medicina ON registromedico.medicinaid = medicina.id
+        INNER JOIN detallepresentacion ON detallepresentacion.medicinaid = medicina.id
+        WHERE ganadoid = {id}""")).fetchone()
+        if not totalAlimento[0]:
+            gastos = totalMedicina[0]
+        if not totalMedicina[0]: 
+            gastos = totalAlimento[0]
+        if not totalMedicina[0] or not totalAlimento[0]:
+            gastos = 0
+        else:
+            gastos = totalAlimento[0] + totalMedicina[0]
+        registrosMedicos = db.execute(text(f"""SELECT r.id,
+        e.nombre enfermedad,
+        r.fecha,
+        m.nombre medicina,
+        r.dosis,                                   
+        CAST(r.dosis AS float) * (precio / contenido) AS costo,
+        r.diagnostico
+        FROM registromedico  r
+        INNER JOIN ganado g ON r.ganadoid = g.id
+        INNER JOIN enfermedad e ON r.enfermedadid = e.id
+        INNER JOIN medicina m ON r.medicinaid = m.id
+        INNER JOIN detallepresentacion dp ON dp.medicinaid = m.id
+        WHERE ganadoid = {id}
+        ORDER BY fecha"""))
+        registrosAlimento = db.execute(text(f"SELECT * FROM detallealimento INNER JOIN alimento ON alimentoid = alimento.id WHERE ganadoid = {id}"))
+        return render_template("novilloinfo.html", novillo = novillo, razas = razas, origen = origen, registros = registros, cantEnfermedades = cantEnfermedades, gastos = gastos, totalAlimento = totalAlimento, totalMedicina = totalMedicina, registrosMedicos = [registrosMedicos for registrosMedicos in registrosMedicos], registrosAlimento = registrosAlimento, cantRegistrosP = cantRegistrosP, cantRegistrosM = cantRegistrosM, id=id)
     
 
 @app.route("/infonovillo/<id>/edit", methods=["GET", "POST"])
@@ -282,13 +314,22 @@ def infonovilloedit(id):
         razas = db.execute(text("SELECT * FROM raza ORDER BY nombreraza"))
         origen = db.execute(text("SELECT * FROM origenganado"))
         registros = db.execute(text(f"SELECT * FROM registroproduccion WHERE ganadoid = {id}"))
-        cantEnfermedades = db.execute(text(f"SELECT count(enfermedad.nombre) FROM registromedico INNER JOIN enfermedad ON enfermedad.id = enfermedadid WHERE ganadoid = {id} group by nombre")).fetchone()
+        cantRegistrosP = db.execute(text(f"SELECT COUNT(id) FROM registroproduccion WHERE ganadoid = {id}")).fetchone()
+        cantEnfermedades = db.execute(text(f"SELECT COUNT(DISTINCT enfermedadid) FROM registromedico WHERE ganadoid = {id}")).fetchone()
+        cantRegistrosM = db.execute(text(f"SELECT COUNT(id) FROM registromedico WHERE ganadoid = {id}")).fetchone()
         totalAlimento = db.execute(text(f"SELECT SUM(costo) FROM detallealimento WHERE ganadoid = {id}")).fetchone()
         totalMedicina = db.execute(text(f"""SELECT SUM((CAST(dosis AS float)) * (precio / contenido)) FROM registromedico
         INNER JOIN medicina ON registromedico.medicinaid = medicina.id
         INNER JOIN detallepresentacion ON detallepresentacion.medicinaid = medicina.id
         WHERE ganadoid = {id}""")).fetchone()
-        gastos = totalAlimento[0] + totalMedicina[0]
+        if not totalAlimento[0]:
+            gastos = totalMedicina[0]
+        if not totalMedicina[0]: 
+            gastos = totalAlimento[0]
+        if not totalMedicina[0] or not totalAlimento[0]:
+            gastos = 0
+        else:
+            gastos = totalAlimento[0] + totalMedicina[0]
         registrosMedicos = db.execute(text(f"""SELECT r.id,
         e.nombre enfermedad,
         r.fecha,
@@ -304,7 +345,7 @@ def infonovilloedit(id):
         WHERE ganadoid = {id}
         ORDER BY fecha"""))
         registrosAlimento = db.execute(text(f"SELECT * FROM detallealimento INNER JOIN alimento ON alimentoid = alimento.id WHERE ganadoid = {id}"))
-        return render_template("novillo.html", novillo = novillo, razas = razas, origen = origen, registros = registros, cantEnfermedades = cantEnfermedades, gastos = gastos, totalAlimento = totalAlimento, totalMedicina = totalMedicina, registrosMedicos = [registrosMedicos for registrosMedicos in registrosMedicos], registrosAlimento = registrosAlimento)
+        return render_template("novillo.html", novillo = novillo, razas = razas, origen = origen, registros = registros, cantEnfermedades = cantEnfermedades, gastos = gastos, totalAlimento = totalAlimento, totalMedicina = totalMedicina, registrosMedicos = [registrosMedicos for registrosMedicos in registrosMedicos], registrosAlimento = registrosAlimento, cantRegistrosP = cantRegistrosP, cantRegistrosM = cantRegistrosM)
     
     if request.method == "POST":
         nombre = request.form.get("nombre") #string
@@ -1197,11 +1238,9 @@ def compraIndividualFin():
         id = request.form.get("bovino")
         fecha = request.form.get("fechaCompra")
         proveedor = request.form.get("proveedor")
-        precioKilo = request.form.get("precioKilo")
-        peso = request.form.get("peso")
-        costo = float(precioKilo) * float(peso)
+        total = request.form.get("total")
         carta =  request.files["file"]
-        if not fecha or not proveedor or not costo or not carta:
+        if not fecha or not proveedor or not total or not carta:
             flash("Debe ingresar todos los datos solicitados", "error")
             return redirect(url_for("compraIndividualFin", id=id))
 
@@ -1209,7 +1248,7 @@ def compraIndividualFin():
         carta = subirArchivo(carta, str(datetime.now().date()), "Compras")
         compra = db.execute(text(f"INSERT INTO compra(fecha, cantidad, montoTotal, usuarioid, entidadcomercialid, cartacompra) VALUES('{fecha}', 1, {costo}, {session['user_id']}, {proveedor}, '{carta}') RETURNING id")).fetchone()[0]
         print(compra)
-        db.execute(text(f"INSERT INTO detallecompra(compraid, ganadoid) VALUES ({compra}, {id})"))
+        db.execute(text(f"INSERT INTO detallecompra(compraid, ganadoid) VALUES ({total}, {id})"))
         db.execute(text(f"UPDATE ganado SET isasignado = true WHERE ganado.id = {id}"))
         db.commit()
         flash("Compra ingresada correctamente", "exito")
@@ -1327,17 +1366,15 @@ def ventaIndividualFin():
         id = request.form.get("bovino")
         fecha = request.form.get("fechaVenta")
         cliente = request.form.get("cliente")
-        precioKilo = request.form.get("precioKilo")
+        total = request.form.get("total")
         carta = request.files["file"]
-        peso = request.form.get("peso")
-        costo = float(precioKilo) * float(peso) 
-        if not fecha or not cliente or not costo or not carta:
+        if not fecha or not cliente or not total or not carta:
             flash(f"Debe ingresar todos los datos solicitados", "error")
             return redirect(url_for("ventaIndividualFin", id=id))
 
         fecha = str(fecha)
         carta = subirArchivo(carta, str(datetime.now().date()), "Ventas")
-        venta = db.execute(text(f"INSERT INTO venta(fecha, cantidad, montoTotal, usuarioid, entidadcomercialid, cartaventa) VALUES('{fecha}', 1, {costo}, {session['user_id']}, {cliente}, '{carta}') RETURNING id")).fetchone()[0]
+        venta = db.execute(text(f"INSERT INTO venta(fecha, cantidad, montoTotal, usuarioid, entidadcomercialid, cartaventa) VALUES('{fecha}', 1, {total}, {session['user_id']}, {cliente}, '{carta}') RETURNING id")).fetchone()[0]
         print(venta)
         db.execute(text(f"INSERT INTO detalleventa(ventaid, ganadoid) VALUES ({venta}, {id})"))
         db.execute(text(f"UPDATE ganado SET estadoganadoid = 2 WHERE ganado.id = {id}"))

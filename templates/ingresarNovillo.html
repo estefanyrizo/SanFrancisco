@@ -17,14 +17,20 @@ San Francisco - Registrar ganado
                 <div class="card-body">
                     <div class="form-group">
                         <div class="inputs">
-                            <form class="ganadoForm" action="/ingresarnovillo" method="post" enctype="multipart/form-data">
+                            <form class="ganadoForm" action="/ingresarnovillo" method="post"
+                                enctype="multipart/form-data">
                                 <div class="row">
-                                    <div class="col-6 mb-3">
+                                    <div class="col-xl-6 mb-3">
                                         <label for="nombre">Nombre</label>
                                         <input type="text" class="form-control" id="nombre" name="nombre"
                                             placeholder="Nombre" required>
                                     </div>
-                                    <div class="col-6 mb-3">
+                                    <div class="col-xl-6 mb-3">
+                                        <label for="codigo">Codigo de chapa</label>
+                                        <input type="text" class="form-control" id="codigo" name="codigo"
+                                            placeholder="Codigo de chapa" required>
+                                    </div>
+                                    <div class="col-xl-6 mb-3">
                                         <label for="raza">Raza</label>
                                         <select class="form-control" id="raza" name="raza" required>
                                             <option disabled="" selected="" value="">Seleccione una raza</option>
@@ -34,37 +40,31 @@ San Francisco - Registrar ganado
                                         </select>
                                     </div>
 
-                                    <div class="col-6 mb-3">
+                                    <div class="col-xl-6 mb-3">
                                         <label for="fechaNacimiento">Fecha de Nacimiento</label>
                                         <input type="date" class="form-control" id="fechaNacimiento"
                                             name="fechaNacimiento" required>
                                     </div>
 
-                                    <div class="col-6 mb-3">
-                                        <label for="codigo">Codigo de chapa</label>
-                                        <input type="text" class="form-control" id="codigo" name="codigo"
-                                            placeholder="Codigo de chapa" required>
+                                    <div class="col-xl-2 mb-3">
+                                        <label for="tamaño">Tamaño(mts)</label>
+                                        <input type="text" class="form-control" id="tamaño" name="tamaño"
+                                            placeholder="Tamaño" required>
                                     </div>
 
-                                    <div class="col-3 mb-3">
+                                    <div class="col-xl-2 mb-3">
+                                        <label for="peso">Peso(kg)</label>
+                                        <input type="text" class="form-control" id="peso" name="peso"
+                                            placeholder="Peso" required>
+                                    </div>
+
+                                    <div class="col-xl-3 mb-3">
                                         <label for="color">Color</label>
                                         <input type="text" class="form-control" id="color" name="color"
                                             placeholder="Color" required>
                                     </div>
 
-                                    <div class="col-3 mb-3">
-                                        <label for="tamaño">Tamaño(mts)</label>
-                                        <input type="text" class="form-control" id="tamaño" name="tamaño"
-                                            placeholder="Tamaño en metros" required>
-                                    </div>
-
-                                    <div class="col-3 mb-3">
-                                        <label for="peso">Peso(kg)</label>
-                                        <input type="text" class="form-control" id="peso" name="peso"
-                                            placeholder="Peso en kilos" required>
-                                    </div>
-
-                                    <div class="col-3 mb-3">
+                                    <div class="col-xl-5 mb-3">
                                         <label for="procedencia">Procedencia</label>
                                         <select class="form-control" id="procedencia" name="procedencia" required>
                                             <option disabled="" selected="" value="">Seleccione un elemento</option>
@@ -74,7 +74,7 @@ San Francisco - Registrar ganado
                                         </select>
                                     </div>
 
-                                    <div class="col-12 mb-3">
+                                    <div class="col-xl-12 mb-3">
                                         <div class="card">
                                             <img id="img-preview">
                                             <label for="file">Selecionar foto: <i class="fa fa-upload"></i></label>
@@ -84,13 +84,13 @@ San Francisco - Registrar ganado
                                                 style="width: 100%;height: 20px;"></progress>
                                         </div>
                                     </div>
-                                    
-                                    <div class="col-12 mb-1">
+
+                                    <div class="col-xl-12 mb-1">
                                         <label for="comentario">Comentario</label>
                                         <input class="form-control mb-3" type="text" placeholder="Comentario"
                                             name="comentario">
                                     </div>
-                                    <div class="col-12 form-group" align="center">
+                                    <div class="col-xl-12 form-group" align="center">
                                         <button class="btn btn-primary" type="submit">Ingresar</button>
                                     </div>
                                 </div>

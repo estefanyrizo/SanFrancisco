@@ -2,7 +2,7 @@
 
 {%block title%}
 
-San Francisco - Registros medicos
+Registros medicos
 
 {% endblock%}
 
@@ -57,7 +57,7 @@ San Francisco - Registros medicos
                                             <!-- Modal -->
                                             <div class="modal fade" id="exampleModal{{reg.id}}" tabindex="-1"
                                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-dialog modal-dialog-centered modal-lg">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <h5 class="modal-title" id="exampleModalLabel">Editar
@@ -73,7 +73,7 @@ San Francisco - Registros medicos
                                                                     <input type="text" class="form-control" id="idreg"
                                                                         name="idreg" value="{{reg.id}}" required hidden>
 
-                                                                    <div class="col-6 mb-3">
+                                                                    <div class="col-xl-6 mb-3">
                                                                         <label for="chapa">Chapa</label>
                                                                         <input type="text" class="form-control"
                                                                             id="chapa" name="chapa"
@@ -81,7 +81,7 @@ San Francisco - Registros medicos
                                                                             value="{{reg.codigochapa}}" required>
                                                                     </div>
 
-                                                                    <div class="col-6 mb-3">
+                                                                    <div class="col-xl-6 mb-3">
                                                                         <label for="enfermedad">Enfermedad</label>
                                                                         <select class="form-control" id="enfermedad"
                                                                             name="enfermedad" required>
@@ -94,14 +94,14 @@ San Francisco - Registros medicos
                                                                         </select>
                                                                     </div>
 
-                                                                    <div class="col-6 mb-3">
+                                                                    <div class="col-xl-6 mb-3">
                                                                         <label for="fecha">Fecha</label>
                                                                         <input type="date" class="form-control"
                                                                             id="fecha" name="fecha"
                                                                             value="{{reg.fecha}}" required>
                                                                     </div>
 
-                                                                    <div class="col-6 mb-3">
+                                                                    <div class="col-xl-6 mb-3">
                                                                         <label for="medicina">Medicina</label>
                                                                         <select class="form-control" id="medicina"
                                                                             name="medicina" required>
@@ -114,7 +114,7 @@ San Francisco - Registros medicos
                                                                         </select>
                                                                     </div>
 
-                                                                    <div class="col-6 mb-3">
+                                                                    <div class="col-xl-6 mb-3">
                                                                         <label for="dosis">Dosis</label>
                                                                         <input type="text" class="form-control"
                                                                             id="dosis" name="dosis"
@@ -122,7 +122,7 @@ San Francisco - Registros medicos
                                                                             value="{{reg.dosis}}" required>
                                                                     </div>
 
-                                                                    <div class="col-6 mb-3">
+                                                                    <div class="col-xl-6 mb-3">
                                                                         <label for="diag">Diagnostico</label>
                                                                         <input type="text" class="form-control"
                                                                             id="diag" name="diagnostico"
@@ -158,7 +158,7 @@ San Francisco - Registros medicos
 </div>
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Agregar registro medico</h5>
@@ -168,13 +168,13 @@ San Francisco - Registros medicos
                 <form action="/registrosmedicos" method="post">
                     <div class="row">
 
-                        <div class="col-6 mb-3">
+                        <div class="col-xl-6 mb-3">
                             <label for="chapa">Chapa</label>
                             <input type="text" class="form-control" id="chapa" name="chapa" placeholder="Codigo chapa"
                                 required>
                         </div>
 
-                        <div class="col-6 mb-3">
+                        <div class="col-xl-6 mb-3">
                             <label for="enfermedad">Enfermedad</label>
                             <select class="form-control" id="enfermedad" name="enfermedad" required>
                                 <option>Seleccione un elemento</option>
@@ -184,12 +184,12 @@ San Francisco - Registros medicos
                             </select>
                         </div>
 
-                        <div class="col-6 mb-3">
+                        <div class="col-xl-6 mb-3">
                             <label for="fecha">Fecha</label>
                             <input type="date" class="form-control" id="fecha" name="fecha" required>
                         </div>
 
-                        <div class="col-6 mb-3">
+                        <div class="col-xl-6 mb-3">
                             <label for="medicina">Medicina</label>
                             <select class="form-control" id="medicina" name="medicina" required>
                                 <option>Seleccione un elemento</option>
@@ -199,13 +199,13 @@ San Francisco - Registros medicos
                             </select>
                         </div>
 
-                        <div class="col-6 mb-3">
+                        <div class="col-xl-6 mb-3">
                             <label for="dosis">Dosis</label>
                             <input type="text" class="form-control" id="dosis" name="dosis" placeholder="Dosis aplicada"
                                 required>
                         </div>
 
-                        <div class="col-6 mb-3">
+                        <div class="col-xl-6 mb-3">
                             <label for="diag">Diagnostico</label>
                             <input type="text" class="form-control" id="diag" name="diagnostico"
                                 placeholder="Diagnostico" required>

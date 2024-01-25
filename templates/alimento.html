@@ -2,7 +2,7 @@
 
 {%block title%}
 
-San Francisco - Alimento ganado
+Alimentación
 
 {% endblock%}
 
@@ -63,7 +63,7 @@ San Francisco - Alimento ganado
 </div>
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Agregar alimento</h5>
@@ -72,22 +72,22 @@ San Francisco - Alimento ganado
       <div class="modal-body">
         <form action="/alimento" method="post" class="form-group">
           <div class="row">
-            <div class="col-6 mb-3">
+            <div class="col-xl-6 mb-3">
               <label for="nombre">Nombre</label>
               <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre" required>
             </div>
 
-            <div class="col-6 mb-3">
+            <div class="col-xl-6 mb-3">
               <label for="cantidad">Cantidad</label>
               <input type="text" class="form-control" id="cantidad" name="cantidad" placeholder="Kg, L, Lb" required>
             </div>
 
-            <div class="col-6 mb-3">
+            <div class="col-xl-6 mb-3">
               <label for="precio">Precio</label>
               <input type="text" class="form-control" id="precio" name="precio" placeholder="Precio unitario" required>
             </div>
 
-            <div class="col-6 mb-3">
+            <div class="col-xl-6 mb-3">
               <label for="fecha">Fecha</label>
               <input type="date" class="form-control" id="fecha" name="fecha" required>
             </div>
