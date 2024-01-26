@@ -7,11 +7,9 @@ Ganado
 {% endblock%}
 
 {% block main%}
-<div class="row mb-5">
-  <div class="col-1 mr-2">
-    <a class="btn btn-primary m-0" href="/ingresarnovillo"><i class="nc-icon nc-simple-add"></i></a>
-  </div>
-  <div class="col-10">
+<div class="row">
+  
+  <div class="col mb-2">
     <form class="d-flex">
       <div class="container-fluid input-group col-sm-6 d-flex justify-items-center">
         <input type="text" value="" class="form-control" placeholder="Buscar..." id="buscarganadoinput">
@@ -21,8 +19,23 @@ Ganado
           </div>
         </div>
       </div>
-
     </form>
+  </div>
+
+</div>
+
+<div class="row mb-5 ml-1 mr-1" style="display: flex; justify-content: space-between;">
+  <div class="col-1">
+    <a class="btn btn-primary m-0" href="/ingresarnovillo"><i class="nc-icon nc-simple-add"></i></a>
+  </div>
+
+  <div class="col-4 col-xl-2 col-sm-2 col-l-2">
+    <select class="form-select btn-primary" name="filtro" id="filtro" style="border-style: none;">
+      <option class="btn-light" value="1" selected>Filtro</option>
+      <option class="btn-light" value="1">Disponibles</option>
+      <option class="btn-light" value="2">Vendidos</option>
+      <option class="btn-light" value="3">Muertos</option>
+    </select>
   </div>
 </div>
 

@@ -35,6 +35,7 @@ if (imgUploader) {
 //------------------ Seccion encargada de la funcion asincrona de la busqueda del ganado -------------------------
 
 const buscadorganado = document.getElementById('buscarganadoinput');
+const filtro = document.getElementById('filtro');
 
 /*Hace una copia temporal de los datos antes de realizar la busqueda, para no tener que volver a consultar si la 
 busqueda no es necesaria o se cancela la introduccion del parametro a buscar*/
@@ -47,9 +48,26 @@ buscadorganado.addEventListener("keypress", function(event){
 	}
 });
 
+filtro.addEventListener("change", function () {
+	fetch("/buscarganado?q="+buscadorganado.value+"&filtro="+filtro.value)
+		.then((response) => response.text())
+		.then((html) => {
+			let da = datosiniciales;
+			if (buscadorganado.value == '') {
+				document.getElementById("ganado-items").innerHTML = html;
+			}
+			else {
+				document.getElementsByClassName("ganado-list")[0].innerHTML = datosiniciales;
+			}
+		})
+		.catch((error) => {
+			console.warn(error);
+		});
+});
+
 buscadorganado.addEventListener("input", function () {
 
-	fetch("/buscarganado?q=" + buscadorganado.value)
+	fetch("/buscarganado?q="+buscadorganado.value+"&filtro="+filtro.value)
 		.then((response) => response.text())
 		.then((html) => {
 			let da = datosiniciales;

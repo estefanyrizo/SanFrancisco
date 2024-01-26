@@ -232,12 +232,14 @@ def datetimeformat(value, format='B'):
 @login_required
 def buscarganado():
     busqueda = request.args.get("q")
+    filtro = request.args.get("filtro")
 
-    if busqueda:
+    if busqueda and not busqueda.isspace() and len(busqueda) > 0:
+        
         ganado = db.execute(text(f"""SELECT * FROM ganado INNER JOIN raza ON ganado.razaid = raza.id
-                                 WHERE LOWER(nombre) LIKE '%{busqueda.lower()}%'
-                                 OR LOWER(nombreraza) LIKE '%{busqueda.lower()}%'
-                                 OR LOWER(codigochapa) LIKE '%{busqueda.lower()}%'
+                                 WHERE (LOWER(nombre) LIKE '%{busqueda.lower()}%' AND estadoganadoid = {filtro})
+                                 OR (LOWER(nombreraza) LIKE '%{busqueda.lower()}%' AND estadoganadoid = {filtro})
+                                 OR (LOWER(codigochapa) LIKE '%{busqueda.lower()}%' AND estadoganadoid = {filtro})
                                  """))
         
         if ganado.rowcount > 0:
@@ -248,7 +250,7 @@ def buscarganado():
                     </div>'''
     
     else:
-        ganado = db.execute(text(f"SELECT * FROM ganado INNER JOIN raza ON ganado.razaid = raza.id WHERE estadoganadoid = 1"))
+        ganado = db.execute(text(f"SELECT * FROM ganado INNER JOIN raza ON ganado.razaid = raza.id WHERE estadoganadoid = {int(filtro)}"))
         
         if ganado.rowcount > 0:
             return render_template('ganadoresultados.html', ganado = ganado)
