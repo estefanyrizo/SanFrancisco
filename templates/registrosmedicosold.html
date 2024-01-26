@@ -151,7 +151,6 @@ San Francisco - Registros medicos
                         </div>
                     </div>
                 </div>
-                <form action=""></form>
             </div>
         </div>
     </div>
@@ -165,13 +164,13 @@ San Francisco - Registros medicos
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="/registrosmedicos" method="post">
+                <form action="/registrosmedicos/{{id}}" method="post">
                     <div class="row">
 
                         <div class="col-6 mb-3">
                             <label for="chapa">Chapa</label>
-                            <input type="text" class="form-control" id="chapa" name="chapa" placeholder="Codigo chapa"
-                                required>
+                            <input type="text" class="form-control" id="chapa" name="chapa" placeholder="Codigo chapa" value="{{chapa}}"
+                               readonly="readonly" required>
                         </div>
 
                         <div class="col-6 mb-3">

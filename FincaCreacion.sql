@@ -42,6 +42,7 @@ CREATE TABLE IF NOT EXISTS registroProduccion
 (
     id serial NOT NULL,
     fecha date NOT NULL,
+    tamanio real NOT NULL,
     peso real NOT NULL,
     comentario varchar(255),
     ganadoId integer NOT NULL,

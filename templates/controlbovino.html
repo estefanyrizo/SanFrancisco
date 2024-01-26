@@ -25,97 +25,112 @@ San Francisco - Control bovino
                             </div>
                             <div class="col-12">
                                 <div class="table-responsive">
-                                <table class="table">
-                                    <thead class=" text-primary">
-                                        <tr>
-                                            <th scope="col">Chapa</th>
-                                            <th scope="col"> Fecha</th>
-                                            <th scope="col"> Peso</th>
-                                            <th scope="col"> Comentario</th>
-                                            <th scope="col">Editar</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
+                                    <table class="table">
+                                        <thead class=" text-primary">
+                                            <tr>
+                                                <th scope="col">Chapa</th>
+                                                <th scope="col">Fecha</th>
+                                                <th scope="col">Tamaño</th>
+                                                <th scope="col">Peso</th>
+                                                <th scope="col">Comentario</th>
+                                                <th scope="col">Editar</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
 
-                                        {% for reg in registros %}
-                                        <tr>
-                                            <td>{{reg.codigochapa}}</td>
-                                            <td>{{reg.fecha}}</td>
-                                            <td>{{reg.peso}}</td>
-                                            <td>{{reg.comentario|default('', true)}}</td>
-                                            <td><button class="btn btn-primary" data-bs-toggle="modal"
-                                                    data-bs-target="#RegistroModal{{reg.idregistro}}"><i
-                                                        class="fa-regular fa-pen-to-square"></i></button></td>
-                                        </tr>
+                                            {% for reg in registros %}
+                                            <tr>
+                                                <td>{{reg.codigochapa}}</td>
+                                                <td>{{reg.fecha}}</td>
+                                                <td>{{reg.tamanio}} mts</td>
+                                                <td>{{reg.peso}} kg</td>
+                                                <td>{{reg.comentario|default('', true)}}</td>
+                                                <td><button class="btn btn-primary" data-bs-toggle="modal"
+                                                        data-bs-target="#RegistroModal{{reg.idregistro}}"><i
+                                                            class="fa-regular fa-pen-to-square"></i></button></td>
+                                            </tr>
 
 
-                                        <!-- Modal -->
-                                        <div class="modal fade" id="RegistroModal{{reg.idregistro}}" tabindex="-1"
-                                            aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-centered">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleModalLabel">Editar registro
-                                                        </h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                            aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <form action="/editar_registro_bovino/{{reg.idregistro}}" method="post">
-                                                            <div class="row">
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="RegistroModal{{reg.idregistro}}" tabindex="-1"
+                                                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel">Editar
+                                                                registro
+                                                            </h5>
+                                                            <button type="button" class="btn-close"
+                                                                data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <form action="/editar_registro_bovino/{{reg.idregistro}}"
+                                                                method="post">
+                                                                <div class="row">
 
-                                                                <div class="col-6 mb-3">
-                                                                    <label for="fecha">Fecha</label>
-                                                                    <input type="date" class="form-control" id="fecha"
-                                                                        name="fecha" value="{{reg.fecha}}" required>
+                                                                    <div class="col-6 mb-3">
+                                                                        <label for="fecha">Fecha</label>
+                                                                        <input type="date" class="form-control"
+                                                                            id="fecha" name="fecha"
+                                                                            value="{{reg.fecha}}" required>
+                                                                    </div>
+
+                                                                    <div class="col-6 mb-3">
+                                                                        <label for="bovino">Bovino</label>
+                                                                        <select class="form-control" id="bovino"
+                                                                            name="bovino" required>
+                                                                            <option>Seleccione un </option>
+                                                                            {% for gan in ganado %}
+                                                                            <option value="{{gan.id}}" {% if
+                                                                                gan.codigochapa==reg.codigochapa %}
+                                                                                selected {% endif %}>{{gan.codigochapa}}
+                                                                                - {{gan.nombre}}</option>
+                                                                            {% endfor %}
+                                                                        </select>
+                                                                    </div>
+
+                                                                    <div class="col-6 mb-3">
+                                                                        <label for="tamanio">Tamaño (mts)</label>
+                                                                        <input type="text" class="form-control"
+                                                                            id="tamanio" name="tamanio"
+                                                                            placeholder="Tamaño en mts"
+                                                                            value="{{reg.tamanio}}" required>
+                                                                    </div>
+
+                                                                    <div class="col-6 mb-3">
+                                                                        <label for="peso">Peso (Kg)</label>
+                                                                        <input type="text" class="form-control"
+                                                                            id="peso" name="peso"
+                                                                            placeholder="Peso en Kg"
+                                                                            value="{{reg.peso}}" required>
+                                                                    </div>
+
+                                                                    <div class="col-6 mb-3">
+                                                                        <label for="comentario">Comentario</label>
+                                                                        <input type="text" class="form-control"
+                                                                            id="comentario" name="comentario"
+                                                                            placeholder="Comentario"
+                                                                            value="{{reg.comentario|default('', true)}}">
+                                                                    </div>
                                                                 </div>
 
-                                                                <div class="col-6 mb-3">
-                                                                    <label for="bovino">Bovino</label>
-                                                                    <select class="form-control" id="bovino"
-                                                                        name="bovino" required>
-                                                                        <option>Seleccione un </option>
-                                                                        {% for gan in ganado %}
-                                                                        <option value="{{gan.id}}"
-                                                                        {% if gan.codigochapa == reg.codigochapa %}
-                                                                            selected
-                                                                        {% endif %}
-                                                                        >{{gan.codigochapa}} - {{gan.nombre}}</option>
-                                                                        {% endfor %}
-                                                                    </select>
+
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary"
+                                                                        data-bs-dismiss="modal">Cancelar</button>
+                                                                    <button type="submit"
+                                                                        class="btn btn-primary">Guardar</button>
                                                                 </div>
-
-                                                                <div class="col-6 mb-3">
-                                                                    <label for="peso">Peso (Kg)</label>
-                                                                    <input type="text" class="form-control" id="peso"
-                                                                        name="peso" placeholder="Peso en Kg" value="{{reg.peso}}" required>
-                                                                </div>
-
-                                                                <div class="col-6 mb-3">
-                                                                    <label for="comentario">Comentario</label>
-                                                                    <input type="text" class="form-control"
-                                                                        id="comentario" name="comentario"
-                                                                        placeholder="Comentario" value="{{reg.comentario|default('', true)}}">
-                                                                </div>
-                                                            </div>
-
-
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary"
-                                                                    data-bs-dismiss="modal">Cancelar</button>
-                                                                <button type="submit"
-                                                                    class="btn btn-primary">Guardar</button>
-                                                            </div>
-                                                        </form>
+                                                            </form>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
 
-                                            {% endfor %}
+                                                {% endfor %}
 
-                                    </tbody>
-                                </table>
-                            </div>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -133,7 +148,7 @@ San Francisco - Control bovino
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="/control_bovino" method="post">
+                <form action="/control_bovino/{{id}}" method="post">
                     <div class="row">
 
                         <div class="col-6 mb-3">
@@ -144,11 +159,20 @@ San Francisco - Control bovino
                         <div class="col-6 mb-3">
                             <label for="bovino">Bovino</label>
                             <select class="form-control" id="bovino" name="bovino" required>
-                                <option>Seleccione un elemento</option>
                                 {% for gan in ganado %}
-                                <option value="{{gan.id}}">{{gan.codigochapa}} - {{gan.nombre}}</option>
+
+                                    {% if gan.codigochapa==registros[0].codigochapa %}
+                                        <option value="{{gan.id}}" selected>{{gan.codigochapa}} - {{gan.nombre}}</option>
+                                    {% endif %}>
+                                    
                                 {% endfor %}
                             </select>
+                        </div>
+
+                        <div class="col-6 mb-3">
+                            <label for="tamanio">Tamaño (mts)</label>
+                            <input type="text" class="form-control" id="tamanio" name="tamanio"
+                                placeholder="Tamaño en mts" required>
                         </div>
 
                         <div class="col-6 mb-3">

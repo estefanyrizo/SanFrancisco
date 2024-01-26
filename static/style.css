@@ -132,6 +132,12 @@ form {
   color: #fff;
 }
 
+.table>:not(caption)>*>*{
+  background-color: unset;
+}
+.table-datos:hover{
+  background-color: #34b5b8 !important;
+}
 
 /* Fin login */
 .datos_ganado {

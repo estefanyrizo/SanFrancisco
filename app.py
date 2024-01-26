@@ -939,14 +939,25 @@ def mededit():
         return redirect("/medicina")
 
 
-@app.route('/registrosmedicos', methods=["GET", "POST"])
+@app.route('/registrosmedicos', methods=["GET"])
 @login_required
-def registrosmedicos():
+def regmed():
+    chapa = db.execute(text("SELECT codigochapa FROM ganado WHERE estadoganadoid = 1")).fetchone()[0]
+    registros = db.execute(text("SELECT g.id, g.codigochapa, g.nombre FROM ganado g WHERE g.estadoganadoid = 1 ORDER BY g.codigochapa"))
+    
+    return render_template("registrosmedicosnew.html", registros = [r for r in registros], chapa = chapa)
+
+
+@app.route('/registrosmedicos/<id>', methods=["GET", "POST"])
+@login_required
+def registrosmedicos(id):
     if request.method == "GET":
         enfermedades = db.execute(text("SELECT * FROM enfermedad ORDER BY nombre"))
         medicinas =  db.execute(text("SELECT * FROM medicina ORDER BY nombre"))
-        registros = db.execute(text("""SELECT r.id,
+        chapa = db.execute(text(f"SELECT codigochapa FROM ganado WHERE id = {id} and estadoganadoid = 1")).fetchone()[0]
+        registros = db.execute(text(f"""SELECT r.id,
                                     g.codigochapa,
+                                    g.nombre,
                                     e.nombre enfermedad,
                                     r.fecha,
                                     m.nombre medicina,
@@ -956,9 +967,10 @@ def registrosmedicos():
                                     INNER JOIN ganado g on r.ganadoid = g.id
                                     INNER JOIN enfermedad e on r.enfermedadid = e.id
                                     INNER JOIN medicina m on r.medicinaid = m.id
+                                    WHERE g.id = {id}
                                     ORDER BY fecha"""))
 
-        return render_template("registrosmedicos.html", enfermedades = [e for e in enfermedades], medicinas = [m for m in medicinas], registros = [r for r in registros])
+        return render_template("registrosmedicosold.html", id = id, chapa = chapa, enfermedades = [e for e in enfermedades], medicinas = [m for m in medicinas], registros = [r for r in registros])
     else:
         chapa = request.form.get("chapa")
         enfermedad = int(request.form.get("enfermedad"))
@@ -1001,7 +1013,7 @@ def registrosmedicos():
             return redirect("/registrosmedicos")
         
         flash("Registro agregado exitosamente", "exito")
-        return redirect("/registrosmedicos")
+        return redirect(f"/registrosmedicos/{id}")
     
 
 @app.route('/registrosmedicos/editar', methods=["POST"])
@@ -1055,15 +1067,25 @@ def editarregistrosmedicos():
     return redirect("/registrosmedicos")
 
 
-@app.route("/control_bovino", methods=["GET","POST"])
+@app.route("/control_bovino", methods=["GET"])
 @login_required
-def controlbovino():
+def cb():
+    chapa = db.execute(text("SELECT codigochapa FROM ganado WHERE estadoganadoid = 1")).fetchone()[0]
+    registros = db.execute(text("SELECT g.id, g.codigochapa, g.nombre FROM ganado g WHERE g.estadoganadoid = 1 ORDER BY g.codigochapa"))
+    
+    return render_template("controlbovinoindex.html", registros = [r for r in registros], chapa = chapa)
+
+
+@app.route("/control_bovino/<id>", methods=["GET","POST"])
+@login_required
+def controlbovino(id):
     if request.method == "GET":
         ganado = db.execute(text("SELECT id, codigochapa, nombre FROM ganado WHERE estadoganadoid = 1"))
-        registros = db.execute(text("""SELECT g.id ganadoid,
+        registros = db.execute(text(f"""SELECT g.id ganadoid,
                                     rp.id idregistro,
                                     g.codigochapa codigochapa,
                                     rp.fecha fecha,
+                                    rp.tamanio tamanio,
                                     rp.peso peso,
                                     rp.comentario comentario
                                     FROM public.registroproduccion rp
@@ -1071,15 +1093,16 @@ def controlbovino():
                                     on rp.ganadoid = g.id
                                     inner join usuario u
                                     on rp.usuarioid = u.id
-                                    WHERE estadoganadoid = 1
+                                    WHERE g.id = {id}
                                     order by codigochapa, fecha"""))
         
-        return render_template("controlbovino.html", registros = [r for r in registros], ganado = [g for g in ganado])
+        return render_template("controlbovino.html", id = id, registros = [r for r in registros], ganado = [g for g in ganado])
     
     else:
         fecha = str(request.form.get("fecha"))
         ganadoid = int(request.form.get("bovino"))
         peso = float(request.form.get("peso"))
+        tamanio = float(request.form.get("tamanio"))
         comentario = request.form.get("comentario")
 
         if not fecha:
@@ -1088,16 +1111,19 @@ def controlbovino():
         if not ganadoid or ganadoid < 1:
             flash("Debe seleccionar el bovino", "error")
             return redirect("/control_bovino")
+        if not tamanio or tamanio < 1:
+            flash("Debe ingresar el tamaño del bovino", "error")
+            return redirect("/control_bovino")
         if not peso or peso < 1:
             flash("Debe ingresar el peso del bovino", "error")
             return redirect("/control_bovino")
         
         if comentario:
             try:
-                db.execute(text(f"""INSERT INTO registroproduccion(fecha, ganadoid, peso, comentario, usuarioid) 
-                                VALUES('{fecha}', {ganadoid}, {peso}, '{comentario}', {session["user_id"]})"""))
+                db.execute(text(f"""INSERT INTO registroproduccion(fecha, ganadoid, tamanio, peso, comentario, usuarioid) 
+                                VALUES('{fecha}', {ganadoid}, {tamanio}, {peso}, '{comentario}', {session["user_id"]})"""))
                 
-                db.execute(text(f"UPDATE ganado SET peso = {peso} WHERE id = {ganadoid}"))
+                db.execute(text(f"UPDATE ganado SET tamanio = {tamanio}, peso = {peso} WHERE id = {ganadoid}"))
 
                 db.commit()
             except:
@@ -1105,10 +1131,10 @@ def controlbovino():
                 return redirect("/control_bovino")
         else:
             try:
-                db.execute(text(f"""INSERT INTO registroproduccion(fecha, ganadoid, peso, usuarioid) 
-                                VALUES('{fecha}', {ganadoid}, {peso}, {session["user_id"]})"""))
+                db.execute(text(f"""INSERT INTO registroproduccion(fecha, ganadoid, tamanio, peso, usuarioid) 
+                                VALUES('{fecha}', {ganadoid}, {tamanio}, {peso}, {session["user_id"]})"""))
                 
-                db.execute(text(f"UPDATE ganado SET peso = {peso} WHERE id = {ganadoid}"))
+                db.execute(text(f"UPDATE ganado SET tamanio = {tamanio}, peso = {peso} WHERE id = {ganadoid}"))
 
                 db.commit()
             except:
@@ -1116,7 +1142,7 @@ def controlbovino():
                 return redirect("/control_bovino")
             
         flash("Registro creado exitosamente", "exito")
-        return redirect("/control_bovino")
+        return redirect(f"/control_bovino/{id}")
     
 
 @app.route("/editar_registro_bovino/<id>", methods=["POST"])
