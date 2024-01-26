@@ -44,22 +44,31 @@
             </div>
             <div class="sidebar-wrapper">
                 <ul class="nav">
-                    <li>
+                    <li {% if request.path  == "/" %}
+                    class="active "
+                    {% endif %}
+                    >
                         <a href="/">
                             <i class="nc-icon nc-bank"></i>
                             <p>Tablero</p>
                         </a>
                     </li>
 
-                    {% if session.admin %}
-                    <li>
+                    <li {% if request.path  == "/entidadesComerciales" %}
+                    class="active "
+                    {% endif %}
+                    >
                         <a href="/entidadesComerciales">
                             <i class="nc-icon nc-satisfied"></i>
                             <p>Entidades comerciales</p>
                         </a>
                     </li>
 
-                    <li>
+                    {% if session.admin %}
+                    <li {% if request.path  == "/usuarios" %}
+                    class="active "
+                    {% endif %}
+                    >
                         <a href="/usuarios">
                             <i class="nc-icon nc-single-02"></i>
                             <p>Usuarios</p>
@@ -67,39 +76,57 @@
                     </li>
                     {% endif %}
 
-                    <li>
+                    <li {% if request.path  == "/ganado" %}
+                    class="active "
+                    {% endif %}
+                    >
                         <a href="/ganado">
                             <i class="fa fa-cow"></i>
                             <p>Ganado</p>
                         </a>
                     </li>
-                    <li>
+                    <li {% if request.path  == "/medicina" %}
+                    class="active "
+                    {% endif %}
+                    >
                         <a href="/medicina">
                             <i class="fa fa-syringe"></i>
                             <p>Medicina</p>
                         </a>
                     </li>
-                    <li>
+                    <li {% if request.path  == "/alimento" %}
+                    class="active "
+                    {% endif %}
+                    >
                         <a href="/alimento">
                             <i class="fa fa-seedling"></i>
                             <p>Alimentaci&oacute;n</p>
                         </a>
                     </li>
-                    <li>
+                    <li {% if request.path  == "/control_bovino" %}
+                    class="active "
+                    {% endif %}
+                    >
                         <a href="/control_bovino">
                             <i class="fa-solid fa-hands-holding-circle"></i>
                             <p>Control bovino</p>
                         </a>
                     </li>
                     {% if session.admin %}
-                    <li>
+                    <li {% if request.path  == "/ventas" %}
+                    class="active "
+                    {% endif %}
+                    >
                         <a href="/ventas">
                             <i class="nc-icon nc-money-coins"></i>
                             <p>Ventas</p>
                         </a>
                     </li>                
                 
-                    <li>
+                    <li {% if request.path  == "/compras" %}
+                    class="active "
+                    {% endif %}
+                    >
                         <a href="/compras">
                             <i class="nc-icon nc-bag-16"></i>
                             <p>Compras</p>
@@ -138,7 +165,6 @@
                     </div>
 
                     <div class="collapse navbar-collapse justify-content-end bg-light" id="navigation">
-
                         <ul class="navbar-nav">
                             <li class="nav-item">
                                 <a class="nav-link btn-rotate" href="/logout">

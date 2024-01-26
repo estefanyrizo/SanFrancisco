@@ -87,7 +87,7 @@ Venta lote
 
                         });
 
-                        if (checkboxes.length != 0) {
+                        if (checkboxes.length >= 2) {
                             swal(
                                 {
                                     title: "Confirmar selección",
@@ -103,7 +103,7 @@ Venta lote
                         else {
                             swal(
                                 {
-                                    text: "Debes seleccionar un bovino",
+                                    text: "Debes seleccionar 2 o más bovinos",
                                     icon: "warning",
                                 })
                         }

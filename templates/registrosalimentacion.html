@@ -2,7 +2,7 @@
 
 {%block title%}
 
-San Francisco - Registros de alimentación
+Registros de alimentación
 
 {% endblock%}
 
@@ -69,7 +69,7 @@ San Francisco - Registros de alimentación
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Agregar registro de alimentacion</h5>
@@ -78,12 +78,12 @@ San Francisco - Registros de alimentación
             <div class="modal-body">
                 <form action="/registrosalimentacion" method="post" class="form-group">
                     <div class="row">
-                        <div class="col-6 mb-3">
+                        <div class="col-xl-6 mb-3">
                             <label for="fecha">Fecha</label>
                             <input type="date" class="form-control" id="fecha" name="fecha" required>
                         </div>
 
-                        <div class="col-6 mb-3">
+                        <div class="col-xl-6 mb-3">
                             <label for="alimento">Alimento</label>
                             <select class="form-control" id="alimento" name="alimento" required>
                                 <option selected disabled>Seleccione una opción</option>
@@ -93,13 +93,13 @@ San Francisco - Registros de alimentación
                             </select>
                         </div>
 
-                        <div class="col-6 mb-3">
+                        <div class="col-xl-6 mb-3">
                             <label for="cantidad">Cantidad</label>
                             <input type="text" class="form-control" id="cantidad" name="cantidad"
                                 placeholder="Kg, L, Lb" required>
                         </div>
 
-                        <div class="col-6 mb-3">
+                        <div class="col-xl-6 mb-3">
                             <label for="costo">Costo</label>
                             <input type="text" class="form-control" id="costo" name="costo"
                                 placeholder="Costo total" required>

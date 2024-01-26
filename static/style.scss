@@ -103,24 +103,24 @@ $text_color : white;
 }
 
 /*# sourceMappingURL=style.css.map */
-  
-  .row > h2 {
+
+.row>h2 {
 	color: #008080;
-  }
-  
-  .login_form {
+}
+
+.login_form {
 	background-color: #fff;
 	border-top-right-radius: 20px;
 	border-bottom-right-radius: 20px;
 	border-top: 1px solid #ccc;
 	border-right: 1px solid #ccc;
-  }
-  
-  form {
+}
+
+form {
 	padding: 0 2em;
-  }
-  
-  .form__input {
+}
+
+.form__input {
 	width: 100%;
 	border: 0px solid transparent;
 	border-radius: 10px;
@@ -130,15 +130,15 @@ $text_color : white;
 	outline: none;
 	margin: 1.5em auto;
 	transition: all 0.5s ease;
-  }
-  
-  .form__input:focus {
+}
+
+.form__input:focus {
 	border-bottom-color: #008080;
 	box-shadow: 0 0 5px rgba(0, 80, 80, 0.4);
 	border-radius: 4px;
-  }
-  
-  .btnl {
+}
+
+.btnl {
 	transition: all 0.5s ease;
 	width: 60%;
 	border-radius: 30px;
@@ -148,14 +148,15 @@ $text_color : white;
 	border: 1px solid #008080;
 	margin-top: 1.5em;
 	margin-bottom: 1em;
-  }
-  
-  .btnl:hover, .btnl:focus {
+}
+
+.btnl:hover,
+.btnl:focus {
 	background-color: #008080;
 	color: #fff;
-  }
-  
- /*# sourceMappingURL=style.css.map */
+}
+
+/*# sourceMappingURL=style.css.map */
 /* Fin login */
 
 .datos_ganado {
@@ -278,16 +279,7 @@ $text_color : white;
 }
 
 .ganado-list {
-	padding-left: 0;
-	margin-left: 0;
-	padding-right: 0;
-	margin-right: 0;
-	padding-top: 1.5%;
-	padding-bottom: 3%;
-
 	.card {
-		margin-left: 0.1%;
-		margin-right: 0.1%;
 
 		.card-title {
 			text-align: center;
@@ -303,19 +295,21 @@ $text_color : white;
 	}
 
 	.img-top {
-		width: 400px;
-		height: 250px;
-		overflow: hidden;
-	}
-
-	.ganado-box {
+		width: 350px;
+		height: 240px;
+		display: flex;
 		justify-content: center;
 	}
 
-	.ganado-card {
-		width: 50%;
-		height: 60%;
+	.ganado-box, .ganado-card {
+		display: flex;
+		justify-content: center;
 	}
+
+	.card{
+		max-width: max-content;
+	}
+
 }
 
 .entidades {
@@ -324,6 +318,7 @@ $text_color : white;
 	overflow-y: scroll;
 	scroll-behavior: smooth;
 }
+
 .registroProduccion {
 	height: 230px;
 	overflow-y: scroll;
@@ -340,8 +335,9 @@ $text_color : white;
 		width: 90px;
 		height: 90px;
 	}
+
 	.box {
-		width: 250px;	
+		width: 250px;
 		height: 350px;
 		background: #ffffff;
 		border-radius: 10px;
@@ -349,7 +345,7 @@ $text_color : white;
 	}
 }
 
-@media only screen and (max-width: 800px) {
+@media only screen and (max-width: 1000px) {
 
 	video {
 		object-fit: contain;
@@ -357,11 +353,18 @@ $text_color : white;
 		max-height: 50vw;
 	}
 
-	.ganadoForm {
-	padding: 0%;
-	
+	form {
+		padding: 0%;
 	}
 
 
+}
+
+@media (max-width: 500px) {
+	.img-top {
+		width: 40085vw;
+		height: 28085vw;
+	}
 
 }
+

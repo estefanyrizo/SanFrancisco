@@ -2,7 +2,7 @@
 
 {%block title%}
 
-San Francisco - Actualizar ganado
+Editar novillo
 
 {% endblock%}
 
@@ -32,13 +32,13 @@ San Francisco - Actualizar ganado
                     <div class="button-container">
                         <div class="row">
                             <div class="col-lg-3 col-md-6 col-6 ml-auto">
-                                2<br><small>Control</small>
+                                {{cantRegistrosP[0]}}<br><small>Control</small>
                             </div>
                             <div class="col-lg-4 col-md-6 col-6 ml-auto mr-auto">
-                                {{cantEnfermedades[0]}}<br><small>Enfermedad</small>
+                                {{cantEnfermedades[0] | default('0', true)}}<br><small>Enfermedad</small>
                             </div>
                             <div class="col-lg-4 mr-auto">
-                                {{gastos}}C$<br><small>Gastos</small>
+                                C$ {{gastos}}<br><small>Gastos</small>
                             </div>
                         </div>
                     </div>
@@ -61,7 +61,7 @@ San Francisco - Actualizar ganado
                                 <div class="col-md-7 col-7">
                                     Medicina
                                     <br />
-                                    <span><small> C$ {{totalMedicina[0]}}</small></span>
+                                    <span><small> C$ {{totalMedicina[0] | default('0', true)}}</small></span>
                                 </div>
                                 <div class="col-md-3 col-3 text-right">
                                     <btn class="btn btn-sm btn-outline-success btn-round btn-icon"
@@ -81,7 +81,7 @@ San Francisco - Actualizar ganado
                                 <div class="col-md-7 col-7">
                                     Alimentaci&oacute;n
                                     <br />
-                                    <span><small> C$ {{totalAlimento[0]}}</small></span>
+                                    <span><small> C$ {{totalAlimento[0] | default('0', true)}}</small></span>
                                 </div>
                                 <div class="col-md-3 col-3 text-right">
                                     <btn class="btn btn-sm btn-outline-success btn-round btn-icon"data-bs-toggle="modal" data-bs-target="#alimento"><i
@@ -110,7 +110,7 @@ San Francisco - Actualizar ganado
                                 <div class="col-ms-7 col-7">
                                     Controles
                                     <br />
-                                    <span><small>2</small></span>
+                                    <span><small>{{cantRegistrosM[0]}}</small></span>
                                 </div>
                                 <div class="col-md-3 col-3 text-right">
                                     <btn class="btn btn-sm btn-outline-success btn-round btn-icon"

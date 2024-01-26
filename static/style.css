@@ -127,7 +127,8 @@ form {
   margin-bottom: 1em;
 }
 
-.btnl:hover, .btnl:focus {
+.btnl:hover,
+.btnl:focus {
   background-color: #008080;
   color: #fff;
 }
@@ -258,18 +259,6 @@ form {
   width: 100%;
 }
 
-.ganado-list {
-  padding-left: 0;
-  margin-left: 0;
-  padding-right: 0;
-  margin-right: 0;
-  padding-top: 1.5%;
-  padding-bottom: 3%;
-}
-.ganado-list .card {
-  margin-left: 0.1%;
-  margin-right: 0.1%;
-}
 .ganado-list .card .card-title {
   text-align: center;
   margin-top: 10%;
@@ -281,16 +270,18 @@ form {
   background-color: transparent;
 }
 .ganado-list .img-top {
-  width: 400px;
-  height: 250px;
-  overflow: hidden;
-}
-.ganado-list .ganado-box {
+  width: 350px;
+  height: 240px;
+  display: flex;
   justify-content: center;
 }
-.ganado-list .ganado-card {
-  width: 50%;
-  height: 60%;
+.ganado-list .ganado-box, .ganado-list .ganado-card {
+  display: flex;
+  justify-content: center;
+}
+.ganado-list .card {
+  max-width: -moz-max-content;
+  max-width: max-content;
 }
 
 .entidades {
@@ -324,14 +315,20 @@ form {
   box-shadow: 0px 0px 3px rgb(200, 200, 200);
 }
 
-@media only screen and (max-width: 800px) {
+@media only screen and (max-width: 1000px) {
   video {
     -o-object-fit: contain;
        object-fit: contain;
     min-width: 85vw;
     max-height: 50vw;
   }
-  .ganadoForm {
+  form {
     padding: 0%;
+  }
+}
+@media (max-width: 500px) {
+  .img-top {
+    width: 40085vw;
+    height: 28085vw;
   }
 }/*# sourceMappingURL=style.css.map */

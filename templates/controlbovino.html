@@ -2,7 +2,7 @@
 
 {%block title%}
 
-San Francisco - Control bovino
+Control bovino
 
 {% endblock%}
 
@@ -141,7 +141,7 @@ San Francisco - Control bovino
 </div>
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Agregar registro</h5>
@@ -151,12 +151,12 @@ San Francisco - Control bovino
                 <form action="/control_bovino/{{id}}" method="post">
                     <div class="row">
 
-                        <div class="col-6 mb-3">
+                        <div class="col-xl-6 mb-3">
                             <label for="fecha">Fecha</label>
                             <input type="date" class="form-control" id="fecha" name="fecha" required>
                         </div>
 
-                        <div class="col-6 mb-3">
+                        <div class="col-xl-6 mb-3">
                             <label for="bovino">Bovino</label>
                             <select class="form-control" id="bovino" name="bovino" required>
                                 {% for gan in ganado %}
@@ -181,7 +181,7 @@ San Francisco - Control bovino
                                 required>
                         </div>
 
-                        <div class="col-6 mb-3">
+                        <div class="col-xl-6 mb-3">
                             <label for="comentario">Comentario</label>
                             <input type="text" class="form-control" id="comentario" name="comentario"
                                 placeholder="Comentario">
