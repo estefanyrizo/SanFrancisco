@@ -30,8 +30,8 @@ San Francisco - Control bovino
 
                                             {% for reg in registros %}
                                                 <tr onclick="window.location.assign('/control_bovino/'+{{reg.id}})" class="table-datos">
-                                                    <td>{{reg.codigochapa}}</td>
-                                                    <td>{{reg.nombre}}</td>
+                                                    <td style="border-radius: 15px 0px 0px 15px;">{{reg.codigochapa}}</td>
+                                                    <td style="border-radius: 0px 15px 15px 0px;">{{reg.nombre}}</td>
                                                 </tr>
                                             {% endfor %}
                                         </tbody>

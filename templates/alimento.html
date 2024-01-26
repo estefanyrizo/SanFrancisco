@@ -25,9 +25,9 @@ Alimentación
 
               <div class="col-6 mb-3 d-flex justify-content-end">
                 <a type="button" class="btn btn-primary" href="/registrosalimentacion">
-                    Registros de alimentación
+                  Registros de alimentación
                 </a>
-            </div>
+              </div>
 
               <div class="teble_responsive"></div>
               <div class="col-12">
@@ -48,7 +48,61 @@ Alimentación
                       <td>{{alimento.cantidadcomprada}} Kg</td>
                       <td>{{alimento.fechacompra}}</td>
                       <td>C$ {{alimento.preciocompra}}</td>
-                      <td> <button class="btn btn-primary"><i class="fa-regular fa-pen-to-square"></i></button></td>
+                      <td>
+                        <button class="btn btn-primary editar" data-bs-toggle="modal"
+                          data-bs-target="#modalalimento{{alimento.id}}">
+                          <i class="fa-regular fa-pen-to-square"></i>
+                        </button>
+                      </td>
+
+                      <!-- Modal -->
+                      <div class="modal fade" id="modalalimento{{alimento.id}}" tabindex="-1" aria-labelledby="exampleModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="exampleModalLabel">Editar alimento</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                              <form action="/alimento/editar/{{alimento.id}}" method="post" class="form-group">
+                                <div class="row">
+                                  <div class="col-xl-6 mb-3">
+                                    <label for="nombre">Nombre</label>
+                                    <input type="text" class="form-control" id="nombre" name="nombre"
+                                      placeholder="Nombre" value="{{alimento.nombre}}" required>
+                                  </div>
+
+                                  <div class="col-xl-6 mb-3">
+                                    <label for="cantidad">Cantidad</label>
+                                    <input type="text" class="form-control" id="cantidad" name="cantidad"
+                                      placeholder="Kg, L, Lb" value="{{alimento.cantidadcomprada}}" required>
+                                  </div>
+
+                                  <div class="col-xl-6 mb-3">
+                                    <label for="precio">Precio</label>
+                                    <input type="text" class="form-control" id="precio" name="precio"
+                                      placeholder="Precio unitario" value="{{alimento.preciocompra}}" required>
+                                  </div>
+
+                                  <div class="col-xl-6 mb-3">
+                                    <label for="fecha">Fecha</label>
+                                    <input type="date" class="form-control" value="{{alimento.fechacompra}}" name="fecha" required>
+                                  </div>
+                                </div>
+
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary"
+                                    data-bs-dismiss="modal">Cancelar</button>
+                                  <button type="submit" class="btn btn-primary">Guardar</button>
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
                     </tr>
                     {% endfor %}
                   </tbody>
@@ -101,5 +155,5 @@ Alimentación
       </div>
     </div>
   </div>
-
-  {% endblock%}
+</div>
+{% endblock%}

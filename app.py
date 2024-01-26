@@ -270,7 +270,7 @@ def infonovillo(id):
         cantEnfermedades = db.execute(text(f"SELECT COUNT(DISTINCT enfermedadid) FROM registromedico WHERE ganadoid = {id}")).fetchone()
         cantRegistrosM = db.execute(text(f"SELECT COUNT(id) FROM registromedico WHERE ganadoid = {id}")).fetchone()
         totalAlimento = db.execute(text(f"SELECT SUM(costo) FROM detallealimento WHERE ganadoid = {id}")).fetchone()
-        totalMedicina = db.execute(text(f"""SELECT SUM((CAST(dosis AS float)) * (precio / contenido)) FROM registromedico
+        totalMedicina = db.execute(text(f"""SELECT SUM((CAST(SPLIT_PART(dosis, ' ', 1) AS float)) * (precio / contenido)) FROM registromedico
         INNER JOIN medicina ON registromedico.medicinaid = medicina.id
         INNER JOIN detallepresentacion ON detallepresentacion.medicinaid = medicina.id
         WHERE ganadoid = {id}""")).fetchone()
@@ -287,7 +287,7 @@ def infonovillo(id):
         r.fecha,
         m.nombre medicina,
         r.dosis,                                   
-        CAST(r.dosis AS float) * (precio / contenido) AS costo,
+        CAST(SPLIT_PART(r.dosis, ' ',1) AS float) * (precio / contenido) AS costo,
         r.diagnostico
         FROM registromedico  r
         INNER JOIN ganado g ON r.ganadoid = g.id
@@ -780,6 +780,39 @@ def alimento():
         return redirect("/alimento")
 
 
+@app.route("/alimento/editar/<id>", methods=["POST"])
+@login_required
+def editaralimento(id):
+        
+    nombre = request.form.get("nombre")
+    cantidad = request.form.get("cantidad")
+    precio = request.form.get("precio")
+    fecha = request.form.get("fecha")
+
+    if not nombre or nombre.isspace():
+        flash("Debe ingresar un nombre valido", "error")
+        return redirect("/alimento")
+    if not cantidad or float(cantidad) < 0:
+        flash("Debe ingresar una cantidad valida", "error")
+        return redirect("/alimento")
+    if not precio or float(precio) < 0:
+        flash("Debe ingresar un precio valido", "error")
+        return redirect("/alimento")
+    if not fecha:
+        flash("Debe ingresar una fecha valida", "error")
+        return redirect("/alimento")
+    
+    try:
+        db.execute(text(f"UPDATE alimento SET nombre = '{nombre}', preciocompra = {float(precio)}, cantidadcomprada = {float(cantidad)}, fechacompra = '{str(fecha)}' WHERE id = {id}"))
+        db.commit()
+    except:
+        flash("Ocurrió un error inesperado", "error")
+        return redirect("/alimento")
+    
+    flash("Alimento registrado exitosamente", "exito")
+    return redirect("/alimento")
+
+
 @app.route("/registrosalimentacion", methods=["GET", "POST"])
 @login_required
 def registrosalimentacion():
@@ -810,14 +843,18 @@ def registrosalimentacion():
             print(gan[0]) """
 
         fecha = request.form.get("fecha")
-        nombrealimento = request.form.get("alimento")
+        alimento = request.form.get("alimento")
         cantidad = request.form.get("cantidad")
         costo = request.form.get("costo")
+
+        if db.execute(text(f"SELECT * FROM detallealimento WHERE fecha = '{fecha}' AND alimentoid = {int(alimento)}")):
+            flash("Ya existe un registro para este alimento en la misma fecha, debes anular el registro anterior antes de registrar uno nuevo", "error")
+            return redirect("/registrosalimentacion")
 
         if not fecha:
             flash("Debe ingresar una fecha valida", "error")
             return redirect("/registrosalimentacion")
-        if not nombrealimento or int(nombrealimento) < 1:
+        if not alimento or int(alimento) < 1:
             flash("Debe seleccionar el alimento suministrado", "error")
             return redirect("/registrosalimentacion")
         if not cantidad or cantidad.isspace():
@@ -830,7 +867,7 @@ def registrosalimentacion():
         try:
             for gan in ganado:
                 db.execute(text(f"""INSERT INTO detallealimento(fecha, alimentoid, cantidadsuministrada, costo, ganadoid) 
-                                VALUES('{str(fecha)}', {nombrealimento}, {float(cantidad)/float(ganado.rowcount)}, {float(costo)/float(ganado.rowcount)}, {gan[0]})"""))
+                                VALUES('{str(fecha)}', {alimento}, {float(cantidad)/float(ganado.rowcount)}, {float(costo)/float(ganado.rowcount)}, {gan[0]})"""))
             db.commit()
 
         except:
@@ -1272,9 +1309,9 @@ def compraIndividualFin():
 
         fecha = str(fecha)
         carta = subirArchivo(carta, str(datetime.now().date()), "Compras")
-        compra = db.execute(text(f"INSERT INTO compra(fecha, cantidad, montoTotal, usuarioid, entidadcomercialid, cartacompra) VALUES('{fecha}', 1, {costo}, {session['user_id']}, {proveedor}, '{carta}') RETURNING id")).fetchone()[0]
+        compra = db.execute(text(f"INSERT INTO compra(fecha, cantidad, montoTotal, usuarioid, entidadcomercialid, cartacompra) VALUES('{fecha}', 1, {total}, {session['user_id']}, {proveedor}, '{carta}') RETURNING id")).fetchone()[0]
         print(compra)
-        db.execute(text(f"INSERT INTO detallecompra(compraid, ganadoid) VALUES ({total}, {id})"))
+        db.execute(text(f"INSERT INTO detallecompra(compraid, ganadoid) VALUES ({compra}, {id})"))
         db.execute(text(f"UPDATE ganado SET isasignado = true WHERE ganado.id = {id}"))
         db.commit()
         flash("Compra ingresada correctamente", "exito")
