@@ -526,6 +526,9 @@ def func_name(id):
 @login_required
 def borrar_novillo(id):
     try:
+        db.execute(text(f"DELETE FROM registromedico WHERE ganadoid = {id}"))
+        db.execute(text(f"DELETE FROM detallealimento WHERE ganadoid = {id}"))
+        db.execute(text(f"DELETE FROM registroproduccion WHERE ganadoid = {id}"))
         db.execute(text(f"DELETE FROM ganado WHERE id = {id}"))
         db.commit()
     except:
@@ -1078,7 +1081,7 @@ def registrosmedicos(id):
         if not dosis or dosis.isspace():
             flash("Debe ingresar una dosis valida", "error")
             return redirect("/registrosmedicos")
-        if not validarString(diagnostico):
+        if not diagnostico:
             flash("Debe ingresar un diagnostico valido", "error")
             return redirect("/registrosmedicos")
         if not enfermedad or enfermedad < 1:
@@ -1127,7 +1130,7 @@ def editarregistrosmedicos():
     if not dosis or dosis.isspace():
         flash("Debe ingresar una dosis valida", "error")
         return redirect("/registrosmedicos")
-    if not validarString(diagnostico):
+    if not diagnostico:
         flash("Debe ingresar un diagnostico valido", "error")
         return redirect("/registrosmedicos")
     if not enfermedad or enfermedad < 1:
