@@ -259,6 +259,7 @@ def buscarganado():
                         <h3>Ningun resultado para los parametros de busqueda</h3>
                     </div>'''
         
+
 @app.route("/infonovillo/<id>/", methods=["GET"])
 @login_required
 def infonovillo(id):
@@ -299,8 +300,18 @@ def infonovillo(id):
         WHERE ganadoid = {id}
         ORDER BY fecha"""))
         registrosAlimento = db.execute(text(f"SELECT * FROM detallealimento INNER JOIN alimento ON alimentoid = alimento.id WHERE ganadoid = {id}"))
-        return render_template("novilloinfo.html", novillo = novillo, razas = razas, origen = origen, registros = registros, cantEnfermedades = cantEnfermedades, gastos = gastos, totalAlimento = totalAlimento, totalMedicina = totalMedicina, registrosMedicos = [registrosMedicos for registrosMedicos in registrosMedicos], registrosAlimento = registrosAlimento, cantRegistrosP = cantRegistrosP, cantRegistrosM = cantRegistrosM, id=id)
-    
+        return render_template("novilloinfo.html", novillo = [n for n in novillo], razas = razas, origen = origen, registros = registros, cantEnfermedades = cantEnfermedades, gastos = gastos, totalAlimento = totalAlimento, totalMedicina = totalMedicina, registrosMedicos = [registrosMedicos for registrosMedicos in registrosMedicos], registrosAlimento = registrosAlimento, cantRegistrosP = cantRegistrosP, cantRegistrosM = cantRegistrosM, id=id)
+
+
+@app.route("/reporte/ganado/<id>/", methods=["GET"])
+@login_required
+def reportenobillo(id):
+        #requests.session
+        texto = infonovillo(id)
+        print(texto)
+
+        return texto
+
 
 @app.route("/infonovillo/<id>/edit", methods=["GET", "POST"])
 @login_required
@@ -320,7 +331,7 @@ def infonovilloedit(id):
         cantEnfermedades = db.execute(text(f"SELECT COUNT(DISTINCT enfermedadid) FROM registromedico WHERE ganadoid = {id}")).fetchone()
         cantRegistrosM = db.execute(text(f"SELECT COUNT(id) FROM registromedico WHERE ganadoid = {id}")).fetchone()
         totalAlimento = db.execute(text(f"SELECT SUM(costo) FROM detallealimento WHERE ganadoid = {id}")).fetchone()
-        totalMedicina = db.execute(text(f"""SELECT SUM((CAST(dosis AS float)) * (precio / contenido)) FROM registromedico
+        totalMedicina = db.execute(text(f"""SELECT SUM((CAST(SPLIT_PART(dosis, ' ', 1) AS float)) * (precio / contenido)) FROM registromedico
         INNER JOIN medicina ON registromedico.medicinaid = medicina.id
         INNER JOIN detallepresentacion ON detallepresentacion.medicinaid = medicina.id
         WHERE ganadoid = {id}""")).fetchone()
@@ -337,7 +348,7 @@ def infonovilloedit(id):
         r.fecha,
         m.nombre medicina,
         r.dosis,                                   
-        CAST(r.dosis AS float) * (precio / contenido) AS costo,
+        SUM((CAST(SPLIT_PART(dosis, ' ', 1) AS float)) * (precio / contenido)) AS costo,
         r.diagnostico
         FROM registromedico  r
         INNER JOIN ganado g ON r.ganadoid = g.id
@@ -345,7 +356,9 @@ def infonovilloedit(id):
         INNER JOIN medicina m ON r.medicinaid = m.id
         INNER JOIN detallepresentacion dp ON dp.medicinaid = m.id
         WHERE ganadoid = {id}
-        ORDER BY fecha"""))
+        group by r.id, e.nombre, m.nombre, r.dosis, r.diagnostico
+        ORDER BY fecha
+        """))
         registrosAlimento = db.execute(text(f"SELECT * FROM detallealimento INNER JOIN alimento ON alimentoid = alimento.id WHERE ganadoid = {id}"))
         return render_template("novillo.html", novillo = novillo, razas = razas, origen = origen, registros = registros, cantEnfermedades = cantEnfermedades, gastos = gastos, totalAlimento = totalAlimento, totalMedicina = totalMedicina, registrosMedicos = [registrosMedicos for registrosMedicos in registrosMedicos], registrosAlimento = registrosAlimento, cantRegistrosP = cantRegistrosP, cantRegistrosM = cantRegistrosM)
     
@@ -1203,7 +1216,7 @@ def controlbovino(id):
                 db.execute(text(f"""INSERT INTO registroproduccion(fecha, ganadoid, tamanio, peso, comentario, usuarioid) 
                                 VALUES('{fecha}', {ganadoid}, {tamanio}, {peso}, '{comentario}', {session["user_id"]})"""))
                 
-                db.execute(text(f"UPDATE ganado SET tamanio = {tamanio}, peso = {peso} WHERE id = {ganadoid}"))
+                db.execute(text(f"UPDATE ganado SET tamanio = {tamanio}, peso = {peso}, comentario = '{comentario}' WHERE id = {ganadoid}"))
 
                 db.commit()
             except:

@@ -29,7 +29,7 @@ Informaci&oacute;n del novillo
                 <div class="card-footer">
                     <div class="button-container">
                         <div class="row">
-                            <div class="col-lg-3 col-md-6 col-6 ml-auto">
+                            <div class="col-lg-4 col-md-6 col-6 ml-auto">
                                 {{cantRegistrosP[0]}}<br><small>Control</small>
                             </div>
                             <div class="col-lg-4 col-md-6 col-6 ml-auto mr-auto">
@@ -40,14 +40,18 @@ Informaci&oacute;n del novillo
                             </div>
                         </div>
                     </div>
+                    <div class="button-container pt-3">
+                        <a href="/reporte/ganado/{{id}}" target="_blank"><i class="fa-solid fa-file-pdf fa-xl"
+                            style="color: #e00606;"></i> Descargar reporte</a>
+                    </div>
                 </div>
             </div>
             <div class="card">
-                <div class="card-header">
+                <div class="card-header pt-0">
                     <h4 class="card-title">Gastos</h4>
                 </div>
                 <div class="card-body">
-                    <ul class="list-unstyled team-members">
+                    <ul class="list-unstyled team-members mb-0">
                         <li>
                             <div class="row">
                                 <div class="col-md-2 col-2">
@@ -77,7 +81,7 @@ Informaci&oacute;n del novillo
                                     </div>
                                 </div>
                                 <div class="col-md-7 col-7">
-                                    Alimentaci&oacute;n
+                                    Alimentación
                                     <br />
                                     <span><small> C$ {{totalAlimento[0] | default('0', true)}}</small></span>
                                 </div>
@@ -92,11 +96,11 @@ Informaci&oacute;n del novillo
             </div>
 
             <div class="card">
-                <div class="card-header">
+                <div class="card-header pt-0">
                     <h4 class="card-title">Control medico</h4>
                 </div>
                 <div class="card-body">
-                    <ul class="list-unstyled team-members">
+                    <ul class="list-unstyled team-members mb-0">
                         <li>
                             <div class="row">
                                 <div class="col-md-2 col-2">
@@ -130,19 +134,19 @@ Informaci&oacute;n del novillo
                         <div class="inputs">
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-6 mb-3">
+                                    <div class="col-lg-6 mb-3">
                                         <label for="nombre">Nombre</label>
                                         <input type="text" class="form-control" id="nombre" name="nombre"
                                             value="{{novillo.nombre}}" required disabled>
                                     </div>
 
-                                    <div class="col-6 mb-3">
+                                    <div class="col-lg-6 mb-3">
                                         <label for="codigo">Codigo de chapa</label>
                                         <input type="text" class="form-control" id="codigo" name="codigo"
                                             value="{{novillo.codigochapa}}" required disabled>
                                     </div>
 
-                                    <div class="col-6 mb-3">
+                                    <div class="col-lg-6 mb-3">
                                         <label for="raza">Raza</label>
                                         <select class="form-control" id="raza" name="raza" disabled>
                                             <!-- <option value={{novillo.razaid}}>{{novillo.nombreraza}}</option> -->
@@ -153,31 +157,31 @@ Informaci&oacute;n del novillo
                                         </select>
                                     </div>
 
-                                    <div class="col-6 mb-3">
+                                    <div class="col-lg-6 mb-3">
                                         <label for="fechaNacimiento">Fecha de Nacimiento</label>
                                         <input type="date" class="form-control" id="fechaNacimiento"
                                             name="fechaNacimiento" value="{{novillo.fechanacimiento}}" disabled required>
                                     </div>
 
-                                    <div class="col-3 mb-3">
+                                    <div class="col-lg-3 mb-3">
                                         <label for="color">Color</label>
                                         <input type="text" class="form-control" id="color" name="color"
                                             value="{{novillo.color}}" disabled required>
                                     </div>
 
-                                    <div class="col-3 mb-3">
+                                    <div class="col-lg-3 mb-3">
                                         <label for="tamaño">Tamaño(mts)</label>
                                         <input type="text" class="form-control" id="tamaño" name="tamaño"
                                             value="{{novillo.tamanio}}" required disabled>
                                     </div>
 
-                                    <div class="col-3 mb-3">
+                                    <div class="col-lg-3 mb-3">
                                         <label for="peso">Peso(kg)</label>
                                         <input type="text" class="form-control" id="peso" name="peso"
                                             value="{{novillo.peso}}" required disabled>
                                     </div>
 
-                                    <div class="col-3 mb-3">
+                                    <div class="col-lg-3 mb-3">
                                         <label for="procedencia">Procedencia</label>
                                         <select class="form-control" id="procedencia" name="procedencia" disabled required>
                                             {% for item in origen %}
@@ -187,7 +191,7 @@ Informaci&oacute;n del novillo
                                         </select>
                                     </div>
 
-                                    <div class="col-12 mb-1">
+                                    <div class="col-lg-12 mb-1">
                                         <label for="comentario">Comentario</label>
                                         <input class="form-control mb-3" type="text" name="comentario" id="comentario"
                                             placeholder="Comentario" {% if novillo.comentario %}

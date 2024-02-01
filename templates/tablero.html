@@ -47,7 +47,7 @@ San Francisco - Tablero
             <div class="col-7 col-md-8">
               <div class="numbers">
                 <p class="card-category">Ventas totales</p>
-                <p class="card-title" style="font-size:large;">C$ {{datos["ventas_totales"]}}
+                <p class="card-title" style="font-size:large;">{{"C$ {:,.2f}".format(datos["ventas_totales"])}}
                 </p>
               </div>
             </div>
@@ -94,13 +94,13 @@ San Francisco - Tablero
           <div class="row">
             <div class="col-5 col-md-4">
               <div class="icon-big text-center icon-warning">
-                <i class="nc-icon nc-favourite-28 text-primary"></i>
+                <i class="fa-solid fa-money-check-dollar" style="color: #12b559;"></i>
               </div>
             </div>
             <div class="col-7 col-md-8">
               <div class="numbers">
-                <p class="card-category">Followers</p>
-                <p class="card-title">+45K
+                <p class="card-category">Ganancias</p>
+                <p class="card-title" style="font-size:large;">{{"C$ {:,.2f}".format(480000)}}
                 <p>
               </div>
             </div>
@@ -110,7 +110,7 @@ San Francisco - Tablero
           <hr>
           <div class="stats">
             <i class="fa fa-refresh"></i>
-            Update now
+            Ultimo año
           </div>
         </div>
       </div>
@@ -120,8 +120,7 @@ San Francisco - Tablero
     <div class="col-md-12">
       <div class="card ">
         <div class="card-header ">
-          <h5 class="card-title">Users Behavior</h5>
-          <p class="card-category">24 Hours performance</p>
+          <h5 class="card-title">Gastos totales</h5>
         </div>
         <div class="card-body ">
           <canvas id=chartHours width="400" height="100"></canvas>
@@ -129,7 +128,7 @@ San Francisco - Tablero
         <div class="card-footer ">
           <hr>
           <div class="stats">
-            <i class="fa fa-history"></i> Updated 3 minutes ago
+            <i class="fa fa-history"></i> Actualizado ahora
           </div>
         </div>
       </div>

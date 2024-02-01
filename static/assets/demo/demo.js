@@ -22,7 +22,7 @@ demo = {
       type: 'line',
 
       data: {
-        labels: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre"],
+        labels: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
         datasets: [{
             borderColor: "#6bd098",
             backgroundColor: "#6bd098",
@@ -103,36 +103,32 @@ demo = {
       type: 'line',
 
       data: {
-        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct"],
+        labels: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
         datasets: [{
-            borderColor: "#6bd098",
-            backgroundColor: "#6bd098",
+            label: "Alimentación",
+            borderColor: "#6bd0988a",
+            backgroundColor: "#6bd0988a",
             pointRadius: 0,
             pointHoverRadius: 0,
             borderWidth: 3,
-            data: [310, 310, 310, 310, 330, 326, 333, 345, 338, 354]
+            data: [310, 310, 310, 310, 330, 326, 333, 345, 338, 700, 500, 400, 700]
           },
           {
-            borderColor: "#f17e5d",
-            backgroundColor: "#f17e5d",
+            label: "Medicina",
+            borderColor: "#f17e5d7d",
+            backgroundColor: "#f17e5d7d",
             pointRadius: 0,
             pointHoverRadius: 0,
             borderWidth: 3,
-            data: [320, 340, 365, 360, 370, 385, 390, 384, 408, 420]
-          },
-          {
-            borderColor: "#fcc468",
-            backgroundColor: "#fcc468",
-            pointRadius: 0,
-            pointHoverRadius: 0,
-            borderWidth: 3,
-            data: [370, 394, 415, 409, 425, 445, 460, 450, 478, 484]
+            data: [320, 340, 365, 360, 370, 385, 390, 384, 408, 420, 400, 350, 600]
           }
         ]
       },
       options: {
         legend: {
-          display: false
+          display: true,
+          position: "bottom",
+          align: "center",
         },
 
         tooltips: {

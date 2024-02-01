@@ -3,7 +3,7 @@
 {% for cabeza in ganado %}
       <div class="col-md-4 ganado-card">
         <div class="card">
-          <img class="img-top" src="{{cabeza.foto}}">
+          <img class="img-top" src="{{cabeza.foto}}" style="object-fit: cover;">
           <h5 class="card-title">{{cabeza.nombre}}</h5>
           <ul class="list-group datos_ganado">
             <li class="list-group-item">Codigo: {{cabeza.codigochapa}}</li>
