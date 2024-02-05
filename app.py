@@ -1072,6 +1072,30 @@ def editaralimento(id):
     return redirect("/alimento")
 
 
+@app.route('/reportealimentos', methods=["GET"])
+def reportealimentos():
+    registros = db.execute(text(f"""SELECT ganado.codigochapa chapa,
+                            detallealimento.fecha fecha,
+                            detallealimento.cantidadsuministrada cantidad,
+                            cast(detallealimento.costo as decimal(18,2)) costo,
+                            alimento.nombre nombre
+                            FROM detallealimento
+                            inner join alimento 
+                            on alimento.id = detallealimento.alimentoid
+                            inner join ganado
+                            on ganado.id = detallealimento.ganadoid
+                            order by fecha, alimento.nombre"""))
+
+    locale.setlocale(locale.LC_ALL,'es_ES.UTF-8')
+
+    with open('ReporteAlimentacion.pdf', 'w+b') as f:
+            binary_formatted_response = bytearray(crearpdf(render_template("reportealimentacion.html",fecha = date.today().strftime("%d de %B %Y"), registros = [reg for reg in registros])))
+            f.write(binary_formatted_response)
+            f.close()
+
+    return send_file("ReporteAlimentacion.pdf")
+
+
 @app.route("/registrosalimentacion", methods=["GET", "POST"])
 @login_required
 def registrosalimentacion():
@@ -1288,6 +1312,36 @@ def regmed():
     registros = db.execute(text("SELECT g.id, g.codigochapa, g.nombre FROM ganado g WHERE g.estadoganadoid = 1 ORDER BY g.codigochapa"))
     
     return render_template("registrosmedicosnew.html", registros = [r for r in registros], chapa = chapa)
+
+
+@app.route("/reportemedicos", methods=["GET"])
+@login_required
+def pdfmedicos():
+    enfermedades = db.execute(text("SELECT * FROM enfermedad ORDER BY nombre"))
+    medicinas =  db.execute(text("SELECT * FROM medicina ORDER BY nombre"))
+    registros = db.execute(text(f"""SELECT r.id,
+                                g.codigochapa,
+                                g.nombre,
+                                e.nombre enfermedad,
+                                r.fecha,
+                                m.nombre medicina,
+                                r.dosis,
+                                r.diagnostico
+                                FROM registromedico  r
+                                INNER JOIN ganado g on r.ganadoid = g.id
+                                INNER JOIN enfermedad e on r.enfermedadid = e.id
+                                INNER JOIN medicina m on r.medicinaid = m.id
+                                ORDER BY fecha"""))
+
+
+    locale.setlocale(locale.LC_ALL,'es_ES.UTF-8')
+
+    with open('ReporteMedico.pdf', 'w+b') as f:
+            binary_formatted_response = bytearray(crearpdf(render_template("reportemedicos.html",fecha = date.today().strftime("%d de %B %Y"), enfermedades = [e for e in enfermedades], medicinas = [m for m in medicinas], registros = [r for r in registros])))
+            f.write(binary_formatted_response)
+            f.close()
+
+    return send_file("ReporteMedico.pdf")
 
 
 @app.route('/registrosmedicos/<id>', methods=["GET", "POST"])
@@ -1527,11 +1581,6 @@ def editar_registro_bovino(id):
     flash("Se actualizó el registro", "exito")
     return redirect("/control_bovino")
 
-
-@app.route("/alimentoGanado", methods=["GET", "POST"])
-@login_required
-def alimentoGanado():
-    return render_template("alimentoGanado.html")
 
 @app.route("/compra", methods=["GET", "POST"])
 @login_required
