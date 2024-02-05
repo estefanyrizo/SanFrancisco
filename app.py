@@ -42,15 +42,143 @@ load_dotenv()
 @app.route("/", methods=["GET", "POST"])
 @login_required
 def index():
+    #6 meses
+    gastototalalimentacion = db.execute(text("SELECT SUM(costo) FROM detallealimento WHERE fecha >= CURRENT_DATE-182")).fetchone()[0]
+    gastototalmedicinas = db.execute(text("""
+                            SELECT SUM((CAST(SPLIT_PART(r.dosis, ' ', 1) AS float)) * (dp.precio / dp.contenido)) AS gastototalmedicina
+                            FROM registromedico r
+                            INNER JOIN medicina m on m.id = r.medicinaid
+                            INNER JOIN detallepresentacion dp on dp.medicinaid = m.id
+                            WHERE fecha >= CURRENT_DATE-182""")).fetchone()[0]
+    estados = db.execute(text("SELECT estado, COUNT(estadoganadoid) from ganado inner join estadoganado on ganado.estadoganadoid = estadoganado.id group by estado"))
     
+    alimentacion = gastosalimentacion()
+    medicinas = gastosveterinarios()
+    totalcompra_venta = totalcompras_ventas()
+
     datos = {
         "disponibilidad" : db.execute(text("select count(id) from ganado where estadoganadoid = 1")).fetchone()[0],
-        "ventas_totales" : db.execute(text("SELECT SUM(montototal) FROM venta WHERE fecha >= CURRENT_DATE-183;")).fetchone()[0],
-        "mortalidad": db.execute(text("SELECT ((select count(id) from ganado where estadoganadoid = 3)*100) / (select count(id) from ganado) as mortalidad from ganado")).fetchone()[0]
+        "ventas_totales" : db.execute(text("SELECT SUM(montototal) FROM venta WHERE fecha >= CURRENT_DATE-183")).fetchone()[0],
+        "mortalidad" : db.execute(text("SELECT ((select count(id) from ganado where estadoganadoid = 3)*100) / (select count(id) from ganado) as mortalidad from ganado")).fetchone()[0],
+        "gastostotales" : gastototalalimentacion + gastototalmedicinas,
+        "alimentacion" : alimentacion,
+        "medicinas" : medicinas,
+        "totalcompra_venta" : totalcompra_venta
     }
 
+    for clave, num in estados:
+        datos[clave] = num
+        
     return render_template("tablero.html", datos = datos)
 
+
+def totalcompras_ventas():
+    datos = {
+        "ventas" : {
+            "1":0,
+            "2":0,
+            "3":0,
+            "4":0,
+            "5":0,
+            "6":0,
+            "7":0,
+            "8":0,
+            "9":0,
+            "10":0,
+            "11":0,
+            "12":0
+    },
+        "compras" : {
+            "1":0,
+            "2":0,
+            "3":0,
+            "4":0,
+            "5":0,
+            "6":0,
+            "7":0,
+            "8":0,
+            "9":0,
+            "10":0,
+            "11":0,
+            "12":0
+        }
+    }
+
+    ventas = db.execute(text("""select to_char(date_trunc('month',fecha), 'mm') mes,
+                        SUM(montototal) as total
+                        from venta
+                        WHERE fecha >= CURRENT_DATE-365
+                        group by to_char(date_trunc('month',fecha), 'mm')"""))
+    
+    for key, dato in ventas:
+        datos["ventas"][key.strip("0")] = dato
+
+    compras = db.execute(text("""select to_char(date_trunc('month',fecha), 'mm') mes,
+                        SUM(montototal) as total
+                        from compra
+                        WHERE fecha >= CURRENT_DATE-365
+                        group by to_char(date_trunc('month',fecha), 'mm')"""))
+    
+    for key, dato in compras:
+        datos["compras"][key.strip("0")] = dato
+
+    return datos
+
+
+def gastosalimentacion():
+    alimentacion = {
+        "1":0,
+        "2":0,
+        "3":0,
+        "4":0,
+        "5":0,
+        "6":0,
+        "7":0,
+        "8":0,
+        "9":0,
+        "10":0,
+        "11":0,
+        "12":0
+    }
+
+    datos = db.execute(text("""SELECT to_char(date_trunc('month',fecha), 'mm') mes, 
+                            cast(sum(costo)as decimal(18,2)) total FROM detallealimento WHERE fecha >= CURRENT_DATE-365
+                            group by date_trunc('month',fecha)"""))
+    
+    for key, dato in datos:
+        alimentacion[key.strip("0")] = dato
+
+    return alimentacion
+
+
+def gastosveterinarios():
+    medicinas = {
+        "1":0,
+        "2":0,
+        "3":0,
+        "4":0,
+        "5":0,
+        "6":0,
+        "7":0,
+        "8":0,
+        "9":0,
+        "10":0,
+        "11":0,
+        "12":0
+    }
+
+    datos = db.execute(text("""select to_char(date_trunc('month',fecha), 'mm') mes,
+                            SUM((CAST(SPLIT_PART(r.dosis, ' ', 1) AS float)) * (dp.precio / dp.contenido)) as gastototalmedicina
+                            from registromedico r
+                            inner join medicina m on m.id = r.medicinaid
+                            inner join detallepresentacion dp on dp.medicinaid = m.id
+                            WHERE fecha >= CURRENT_DATE-365
+                            group by to_char(date_trunc('month',fecha), 'mm')"""))
+    
+    for key, dato in datos:
+        medicinas[key.strip("0")] = dato
+
+    return medicinas
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -304,6 +432,8 @@ def infonovillo(id):
 
 
 @app.route("/reporte/ventas", methods=["GET"])
+@login_required
+@admin_required
 def reporteventas():
 
     ventas = db.execute(text("""SELECT venta.id, montototal, cartaventa, cantidad,
@@ -334,6 +464,8 @@ def reporteventas():
 
 
 @app.route("/reporte/compras", methods=["GET"])
+@login_required
+@admin_required
 def reportecompras():
 
     compras = db.execute(text("""SELECT compra.id, montototal, cartacompra, cantidad,
@@ -615,6 +747,7 @@ def infonovilloedit(id):
 
 @app.route("/infonovillo/<id>/muerto", methods=["GET"])
 @login_required
+@admin_required
 def func_name(id):
     db.execute(text(f"UPDATE ganado SET estadoganadoid = 3 WHERE id = {id}"))
     db.commit()
@@ -1537,6 +1670,7 @@ def venta():
 
 @app.route("/venta/individual", methods=["GET", "POST"])
 @login_required
+@admin_required
 def ventaIndividual():
     if request.method == "GET":
         ganado = db.execute(text(f"SELECT codigochapa, nombre, nombreraza, tamanio, peso, ganado.id AS id, raza FROM ganado INNER JOIN raza ON ganado.razaid = raza.id WHERE estadoganadoid = 1 ORDER BY ganado.id"))
@@ -1663,10 +1797,6 @@ def logout():
     session.clear()
     return redirect("/login")
 
-@app.route("/transaccion")
-@login_required
-def transaccion():
-    return render_template("transaccion.html")
 
 @app.route("/reportes", methods=["get"])
 def reportes():

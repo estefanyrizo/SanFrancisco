@@ -1,6 +1,6 @@
 demo = {
-  initPickColor: function() {
-    $('.pick-class-label').click(function() {
+  initPickColor: function () {
+    $('.pick-class-label').click(function () {
       var new_class = $(this).attr('new-class');
       var old_class = $('#display-buttons').attr('data-class');
       var display_div = $('#display-buttons');
@@ -13,7 +13,7 @@ demo = {
     });
   },
 
-  initDocChart: function() {
+  initDocChart: function () {
     chartColor = "#FFFFFF";
 
     ctx = document.getElementById('chartHours').getContext("2d");
@@ -24,29 +24,29 @@ demo = {
       data: {
         labels: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
         datasets: [{
-            borderColor: "#6bd098",
-            backgroundColor: "#6bd098",
-            pointRadius: 0,
-            pointHoverRadius: 0,
-            borderWidth: 3,
-            data: [300, 310, 316, 322, 330, 326, 333, 345, 338, 354]
-          },
-          {
-            borderColor: "#f17e5d",
-            backgroundColor: "#f17e5d",
-            pointRadius: 0,
-            pointHoverRadius: 0,
-            borderWidth: 3,
-            data: [320, 340, 365, 360, 370, 385, 390, 384, 408, 420]
-          },
-          {
-            borderColor: "#fcc468",
-            backgroundColor: "#fcc468",
-            pointRadius: 0,
-            pointHoverRadius: 0,
-            borderWidth: 3,
-            data: [370, 394, 415, 409, 425, 445, 460, 450, 478, 484]
-          }
+          borderColor: "#6bd098",
+          backgroundColor: "#6bd098",
+          pointRadius: 0,
+          pointHoverRadius: 0,
+          borderWidth: 3,
+          data: [300, 310, 316, 322, 330, 326, 333, 345, 338, 354]
+        },
+        {
+          borderColor: "#f17e5d",
+          backgroundColor: "#f17e5d",
+          pointRadius: 0,
+          pointHoverRadius: 0,
+          borderWidth: 3,
+          data: [320, 340, 365, 360, 370, 385, 390, 384, 408, 420]
+        },
+        {
+          borderColor: "#fcc468",
+          backgroundColor: "#fcc468",
+          pointRadius: 0,
+          pointHoverRadius: 0,
+          borderWidth: 3,
+          data: [370, 394, 415, 409, 425, 445, 460, 450, 478, 484]
+        }
         ]
       },
       options: {
@@ -94,10 +94,24 @@ demo = {
 
   },
 
-  initChartsPages: function() {
+  initChartsPages: function () {
     chartColor = "#FFFFFF";
 
     ctx = document.getElementById('chartHours').getContext("2d");
+
+    let valoresalimentacion = [];
+    let valoresmedicacion = [];
+
+    let xd = document.getElementsByClassName("datosalimentacion");
+    let xds = document.getElementsByClassName("datosmedicos");
+
+    for(let i = 0; i < xd.length; i++){
+      valoresalimentacion.push(xd[i].innerHTML);
+    }
+
+    for(let i = 0; i < xds.length; i++){
+      valoresmedicacion.push(xds[i].innerHTML);
+    }
 
     myChart = new Chart(ctx, {
       type: 'line',
@@ -105,23 +119,23 @@ demo = {
       data: {
         labels: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
         datasets: [{
-            label: "Alimentación",
-            borderColor: "#6bd0988a",
-            backgroundColor: "#6bd0988a",
-            pointRadius: 0,
-            pointHoverRadius: 0,
-            borderWidth: 3,
-            data: [510, 480, 510, 510, 560, 550, 520, 496, 500, 700, 500, 400, 700]
-          },
-          {
-            label: "Medicina",
-            borderColor: "#f17e5d7d",
-            backgroundColor: "#f17e5d7d",
-            pointRadius: 0,
-            pointHoverRadius: 0,
-            borderWidth: 3,
-            data: [320, 340, 365, 360, 370, 385, 390, 384, 408, 420, 400, 350, 600]
-          }
+          label: "Alimentación",
+          borderColor: "#6bd0988a",
+          backgroundColor: "#6bd0988a",
+          pointRadius: 0,
+          pointHoverRadius: 0,
+          borderWidth: 3,
+          data: valoresalimentacion
+        },
+        {
+          label: "Medicina",
+          borderColor: "#f17e5d7d",
+          backgroundColor: "#f17e5d7d",
+          pointRadius: 0,
+          pointHoverRadius: 0,
+          borderWidth: 3,
+          data: valoresmedicacion
+        }
         ]
       },
       options: {
@@ -175,19 +189,18 @@ demo = {
     myChart = new Chart(ctx, {
       type: 'pie',
       data: {
-        labels: [1, 2, 3],
+        labels: ['Muertos', 'Vivos/Disponibles', 'Vendidos'],
         datasets: [{
-          label: "Emails",
+          label: "Ganado",
           pointRadius: 0,
           pointHoverRadius: 0,
           backgroundColor: [
-            '#e3e3e3',
+            '#ef8157',
             '#4acccd',
-            '#fcc468',
-            '#ef8157'
+            '#fcc468'
           ],
           borderWidth: 0,
-          data: [342, 480, 530, 120]
+          data: [parseInt(document.getElementById("ganadomuerto").innerHTML), parseInt(document.getElementById("ganadodisponible").innerHTML), parseInt(document.getElementById("ganadovendido").innerHTML)]
         }]
       },
 
@@ -204,7 +217,7 @@ demo = {
         },
 
         tooltips: {
-          enabled: false
+          enabled: true
         },
 
         scales: {
@@ -238,8 +251,22 @@ demo = {
 
     var speedCanvas = document.getElementById("speedChart");
 
+    let compras = [];
+    let ventas = [];
+
+    let compra = document.getElementsByClassName("datoscompra");
+    let venta = document.getElementsByClassName("datosventa");
+
+    for(let i = 0; i < compra.length; i++){
+      compras.push(xd[i].innerHTML);
+    }
+
+    for(let i = 0; i < venta.length; i++){
+      ventas.push(xds[i].innerHTML);
+    }
+
     var dataFirst = {
-      data: [0, 19, 15, 20, 30, 40, 40, 50, 25, 30, 50, 70],
+      data: compras,
       fill: false,
       borderColor: '#fbc658',
       backgroundColor: 'transparent',
@@ -250,7 +277,7 @@ demo = {
     };
 
     var dataSecond = {
-      data: [0, 5, 10, 12, 20, 27, 30, 34, 42, 45, 55, 63],
+      data: ventas,
       fill: false,
       borderColor: '#51CACF',
       backgroundColor: 'transparent',
@@ -261,7 +288,7 @@ demo = {
     };
 
     var speedData = {
-      labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+      labels: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
       datasets: [dataFirst, dataSecond]
     };
 
@@ -280,7 +307,7 @@ demo = {
     });
   },
 
-  initGoogleMaps: function() {
+  initGoogleMaps: function () {
     var myLatlng = new google.maps.LatLng(40.748817, -73.985428);
     var mapOptions = {
       zoom: 13,
@@ -384,7 +411,7 @@ demo = {
     marker.setMap(map);
   },
 
-  showNotification: function(from, align) {
+  showNotification: function (from, align) {
     color = 'primary';
 
     $.notify({

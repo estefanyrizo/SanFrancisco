@@ -21,8 +21,7 @@ San Francisco - Tablero
             <div class="col-7 col-md-8">
               <div class="numbers">
                 <p class="card-category">Capacidad</p>
-                <p class="card-title">{{datos["disponibilidad"]}}
-                <p>
+                <p class="card-title" id="ganadodisponible">{{datos["disponibilidad"]}}<p>
               </div>
             </div>
           </div>
@@ -57,7 +56,7 @@ San Francisco - Tablero
           <hr>
           <div class="stats">
             <i class="fa fa-calendar-o"></i>
-            Ultimo semestre
+            En el ultimo semestre
           </div>
         </div>
       </div>
@@ -74,7 +73,7 @@ San Francisco - Tablero
             <div class="col-7 col-md-8">
               <div class="numbers">
                 <p class="card-category">Mortalidad</p>
-                <p class="card-title" >{{datos["mortalidad"]}} %</p>
+                <p class="card-title">{{datos["mortalidad"]}} %</p>
               </div>
             </div>
           </div>
@@ -82,8 +81,8 @@ San Francisco - Tablero
         <div class="card-footer ">
           <hr>
           <div class="stats">
-            <i class="fa fa-clock-o"></i>
-            En el ultimo año
+            <i class="fa fa-calendar-o"></i>
+            En el ultimo semestre
           </div>
         </div>
       </div>
@@ -100,7 +99,9 @@ San Francisco - Tablero
             <div class="col-7 col-md-8">
               <div class="numbers">
                 <p class="card-category">Ganancias</p>
-                <p class="card-title" style="font-size:large;">{{"C$ {:,.2f}".format(480000)}}
+                <p class="card-title" {% if datos["ventas_totales"] - datos["gastostotales"] < 0 %}
+                  style="color:red; font-size:large;" {%else%} style="font-size:large;" {% endif %}>{{"C$
+                  {:,.2f}".format(datos["ventas_totales"] - datos["gastostotales"])}}
                 <p>
               </div>
             </div>
@@ -109,8 +110,8 @@ San Francisco - Tablero
         <div class="card-footer ">
           <hr>
           <div class="stats">
-            <i class="fa fa-refresh"></i>
-            Ultimo año
+            <i class="fa fa-calendar-o"></i>
+            En el ultimo semestre
           </div>
         </div>
       </div>
@@ -124,6 +125,16 @@ San Francisco - Tablero
         </div>
         <div class="card-body ">
           <canvas id=chartHours width="400" height="100"></canvas>
+          <div hidden>
+            {% for item in datos["alimentacion"] %}
+              <p hidden id="{{item}}" class="datosalimentacion">{{datos["alimentacion"][item]}}</p>
+            {% endfor %}
+          </div>
+          <div hidden>
+            {% for item in datos["medicinas"] %}
+              <p hidden id="{{item}}" class="datosmedicos">{{datos["medicinas"][item]}}</p>
+            {% endfor %}
+          </div>
         </div>
         <div class="card-footer ">
           <hr>
@@ -148,11 +159,13 @@ San Francisco - Tablero
           <div class="legend">
             <i class="fa fa-circle text-primary"></i> Disponible
             <i class="fa fa-circle text-warning"></i> Vendido
+            <p id="ganadovendido" hidden>{{datos["Vendido"]}}</p>
             <i class="fa fa-circle text-danger"></i> Muerto
+            <p id="ganadomuerto" hidden>{{datos["Muerto"]}}</p>
           </div>
           <hr>
           <div class="stats">
-            <i class="fa fa-history"></i> Actualizado ahora
+            <i class="fa fa-history"></i>Actualizado ahora
           </div>
         </div>
       </div>
@@ -160,21 +173,25 @@ San Francisco - Tablero
     <div class="col-md-8">
       <div class="card card-chart">
         <div class="card-header">
-          <h5 class="card-title">NASDAQ: AAPL</h5>
-          <p class="card-category">Line Chart with Points</p>
+          <h5 class="card-title">Compras - Ventas</h5>
         </div>
         <div class="card-body">
-          <canvas id="speedChart" width="400" height="100"></canvas>
+          <canvas id="speedChart" width="400" height="90"></canvas>
         </div>
         <div class="card-footer">
           <div class="chart-legend">
-            <i class="fa fa-circle text-info"></i> Tesla Model S
-            <i class="fa fa-circle text-warning"></i> BMW 5 Series
+            <i class="fa fa-circle text-info"></i> Compras
+            {% for item in datos["totalcompra_venta"]["compras"] %}
+              <p hidden id="{{item}}" class="datoscompra">{{datos["totalcompra_venta"]["compras"][item]}}</p>
+            {% endfor %}
+            <i class="fa fa-circle text-warning"></i> Ventas
+            {% for item in datos["totalcompra_venta"]["ventas"] %}
+              <p hidden id="{{item}}" class="datosventa">{{datos["totalcompra_venta"]["ventas"][item]}}</p>
+            {% endfor %}
           </div>
           <hr />
           <div class="card-stats">
-            <i class="fa fa-check"></i> Data information certified
-          </div>
+            <i class="fa fa-history"></i> Actualizado ahora
         </div>
       </div>
     </div>
