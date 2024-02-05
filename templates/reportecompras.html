@@ -23,33 +23,34 @@
             <p>{{ fecha }}</p>
         </div>
         <div class="col-12 text-center">
-            <h5>Informe general historico de ventas</h5>
+            <h5>Informe general historico de compras</h5>
         </div>
     </div>
 
     <div class="container-fluid mt-5 pb-3">
         <div class="card registroProduccion">
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <th>Fecha</th>
-                <th>Cliente</th>
-                <th>Cantidad</th>
-                <th>Total</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for venta in ventas %}
-            <tr>
-                <td>{{ venta.fecha }}</td>
-                <td>{{ venta.cliente }}</td>
-                <td>{{ venta.cantidad }}</td>
-                <td>C$ {{ "{:,.2f}".format(venta.montototal) }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-        </div></div>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Fecha</th>
+                        <th scope="col">Proveedor</th>
+                        <th scope="col">Cantidad</th>
+                        <th scope="col">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for compra in compras %}
+                    <tr>
+                        <td>{{ compra.fecha }}</td>
+                        <td>{{ compra.proveedor }}</td>
+                        <td>{{ compra.cantidad }}</td>
+                        <td>C$ {{ "{:,.2f}".format(compra.montototal) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 
 </body>
 

@@ -305,13 +305,6 @@ def infonovillo(id):
 
 @app.route("/reporte/ventas", methods=["GET"])
 def reporteventas():
-    """ with open('ReporteGanado.pdf', 'w+b') as f:
-        binary_formatted_response = bytearray(crearpdf(render_template('reportenovillo.html')))
-        f.write(binary_formatted_response)
-        f.close()
-    print('Successfully created docraptor-advanced.pdf!')
-
-    return send_file("ReporteGanado.pdf") """
 
     ventas = db.execute(text("""SELECT venta.id, montototal, cartaventa, cantidad,
 	   venta.fecha, 
@@ -338,6 +331,36 @@ def reporteventas():
             f.close()
 
     return send_file("ReporteVentas.pdf")
+
+
+@app.route("/reporte/compras", methods=["GET"])
+def reportecompras():
+
+    compras = db.execute(text("""SELECT compra.id, montototal, cartacompra, cantidad,
+	   compra.fecha, 
+	   usuario.nombre AS usuario, 
+	   entidadcomercial.nombre AS proveedor, 
+	   STRING_AGG(ganado.nombre, ', ') AS nombres_ganado,
+	   STRING_AGG(ganado.codigochapa, ', ') AS chapas_ganado,
+	   STRING_AGG(raza.nombreraza, ', ') AS razas_ganado,
+	   STRING_AGG(CAST(ganado.tamanio AS VARCHAR), ', ') AS tamanios,
+	   STRING_AGG(CAST(ganado.peso AS VARCHAR), ', ') AS pesos
+    FROM detallecompra
+    INNER JOIN compra ON detallecompra.compraid = compra.id
+    INNER JOIN ganado ON detallecompra.ganadoid = ganado.id
+    INNER JOIN usuario ON compra.usuarioid = usuario.id
+    INNER JOIN raza ON ganado.razaid = raza.id
+    INNER JOIN entidadcomercial ON compra.entidadcomercialid = entidadcomercial.id
+    GROUP BY compra.id, compra.fecha, entidadcomercial.nombre, usuario.nombre;"""))
+    
+    locale.setlocale(locale.LC_ALL,'es_ES.UTF-8')
+
+    with open('ReporteCompras.pdf', 'w+b') as f:
+            binary_formatted_response = bytearray(crearpdf(render_template("reportecompras.html",fecha = date.today().strftime("%d de %B %Y"), compras = compras)))
+            f.write(binary_formatted_response)
+            f.close()
+
+    return send_file("ReporteCompras.pdf")
 
 
 @app.route("/reporte/ganado/<id>", methods=["GET"])
