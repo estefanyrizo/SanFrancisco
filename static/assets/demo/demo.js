@@ -255,14 +255,13 @@ demo = {
     let ventas = [];
 
     let compra = document.getElementsByClassName("datoscompra");
-    let venta = document.getElementsByClassName("datosventa");
-
     for(let i = 0; i < compra.length; i++){
-      compras.push(xd[i].innerHTML);
+      compras.push(compra[i].innerHTML);
     }
 
+    let venta = document.getElementsByClassName("datosventa");
     for(let i = 0; i < venta.length; i++){
-      ventas.push(xds[i].innerHTML);
+      ventas.push(venta[i].innerHTML);
     }
 
     var dataFirst = {

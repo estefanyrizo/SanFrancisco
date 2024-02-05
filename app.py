@@ -453,7 +453,6 @@ def reporteventas():
         INNER JOIN entidadcomercial ON venta.entidadcomercialid = entidadcomercial.id
         GROUP BY venta.id, venta.fecha, entidadcomercial.nombre, usuario.nombre;"""))
     
-    locale.setlocale(locale.LC_ALL,'es_ES.UTF-8')
 
     with open('ReporteVentas.pdf', 'w+b') as f:
             binary_formatted_response = bytearray(crearpdf(render_template("reporteventas.html",fecha = date.today().strftime("%d de %B %Y"), ventas = ventas)))
@@ -484,8 +483,6 @@ def reportecompras():
     INNER JOIN raza ON ganado.razaid = raza.id
     INNER JOIN entidadcomercial ON compra.entidadcomercialid = entidadcomercial.id
     GROUP BY compra.id, compra.fecha, entidadcomercial.nombre, usuario.nombre;"""))
-    
-    locale.setlocale(locale.LC_ALL,'es_ES.UTF-8')
 
     with open('ReporteCompras.pdf', 'w+b') as f:
             binary_formatted_response = bytearray(crearpdf(render_template("reportecompras.html",fecha = date.today().strftime("%d de %B %Y"), compras = compras)))
@@ -536,8 +533,6 @@ def reportenovillo(id):
         ORDER BY fecha"""))
         registrosAlimento = db.execute(text(f"SELECT * FROM detallealimento INNER JOIN alimento ON alimentoid = alimento.id WHERE ganadoid = {id}"))
         
-        #return render_template("reportenovillo.html", novillo = [n for n in novillo], razas = razas, origen = origen, registros = registros, cantEnfermedades = cantEnfermedades, gastos = gastos, totalAlimento = totalAlimento, totalMedicina = totalMedicina, registrosMedicos = [registrosMedicos for registrosMedicos in registrosMedicos], registrosAlimento = registrosAlimento, cantRegistrosP = cantRegistrosP, cantRegistrosM = cantRegistrosM, id=id)
-        locale.setlocale(locale.LC_ALL,'es_ES.UTF-8')
         with open('ReporteGanado.pdf', 'w+b') as f:
             binary_formatted_response = bytearray(crearpdf(render_template("reportenovillo.html", fecha = date.today().strftime("%d de %B %Y"), novillo = [n for n in novillo], razas = razas, origen = origen, registros = registros, cantEnfermedades = cantEnfermedades, gastos = gastos, totalAlimento = totalAlimento, totalMedicina = totalMedicina, registrosMedicos = [registrosMedicos for registrosMedicos in registrosMedicos], registrosAlimento = registrosAlimento, cantRegistrosP = cantRegistrosP, cantRegistrosM = cantRegistrosM, id=id)))
             f.write(binary_formatted_response)
@@ -1086,8 +1081,6 @@ def reportealimentos():
                             on ganado.id = detallealimento.ganadoid
                             order by fecha, alimento.nombre"""))
 
-    locale.setlocale(locale.LC_ALL,'es_ES.UTF-8')
-
     with open('ReporteAlimentacion.pdf', 'w+b') as f:
             binary_formatted_response = bytearray(crearpdf(render_template("reportealimentacion.html",fecha = date.today().strftime("%d de %B %Y"), registros = [reg for reg in registros])))
             f.write(binary_formatted_response)
@@ -1332,9 +1325,6 @@ def pdfmedicos():
                                 INNER JOIN enfermedad e on r.enfermedadid = e.id
                                 INNER JOIN medicina m on r.medicinaid = m.id
                                 ORDER BY fecha"""))
-
-
-    locale.setlocale(locale.LC_ALL,'es_ES.UTF-8')
 
     with open('ReporteMedico.pdf', 'w+b') as f:
             binary_formatted_response = bytearray(crearpdf(render_template("reportemedicos.html",fecha = date.today().strftime("%d de %B %Y"), enfermedades = [e for e in enfermedades], medicinas = [m for m in medicinas], registros = [r for r in registros])))
