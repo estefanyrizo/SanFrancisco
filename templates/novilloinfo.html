@@ -36,7 +36,7 @@ Informaci&oacute;n del novillo
                                 {{cantEnfermedades[0] | default('0', true)}}<br><small>Enfermedad</small>
                             </div>
                             <div class="col-lg-4 mr-auto">
-                                C$ {{gastos}}<br><small>Gastos</small>
+                                C$ {{"{:,.2f}".format(gastos | float)}}<br><small>Gastos</small>
                             </div>
                         </div>
                     </div>
@@ -63,7 +63,7 @@ Informaci&oacute;n del novillo
                                 <div class="col-md-7 col-7">
                                     Medicina
                                     <br />
-                                    <span><small> C$ {{totalMedicina[0] | default('0', true)}}</small></span>
+                                    <span><small> C$ {{"{:,.2f}".format(totalMedicina[0] | float) | default('0', true)}}</small></span>
                                 </div>
                                 <div class="col-md-3 col-3 text-right">
                                     <btn class="btn btn-sm btn-outline-success btn-round btn-icon"
@@ -83,7 +83,7 @@ Informaci&oacute;n del novillo
                                 <div class="col-md-7 col-7">
                                     Alimentación
                                     <br />
-                                    <span><small> C$ {{totalAlimento[0] | default('0', true)}}</small></span>
+                                    <span><small> C$ {{"{:,.2f}".format(totalAlimento[0] | float) | default('0', true)}}</small></span>
                                 </div>
                                 <div class="col-md-3 col-3 text-right">
                                     <btn class="btn btn-sm btn-outline-success btn-round btn-icon"data-bs-toggle="modal" data-bs-target="#alimento"><i
@@ -227,8 +227,8 @@ Informaci&oacute;n del novillo
                                 {% for reg in registros %}
                                 <tr>
                                     <td>{{reg.fecha}}</td>
-                                    <td>{{reg.peso}}</td>
-                                    <td>{{reg.peso}}</td>
+                                    <td>{{"{:,.2f}".format(reg.peso | float)}}</td>
+                                    <td>{{"{:,.2f}".format(reg.tamanio | float)}}</td>
                                     <td>{{reg.comentario|default('Sin comentario', true)}}</td>
                                 </tr>
                                 {% endfor %}

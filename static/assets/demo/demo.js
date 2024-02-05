@@ -111,7 +111,7 @@ demo = {
             pointRadius: 0,
             pointHoverRadius: 0,
             borderWidth: 3,
-            data: [310, 310, 310, 310, 330, 326, 333, 345, 338, 700, 500, 400, 700]
+            data: [510, 480, 510, 510, 560, 550, 520, 496, 500, 700, 500, 400, 700]
           },
           {
             label: "Medicina",

@@ -29,84 +29,86 @@ Alimentación
                 </a>
               </div>
 
-              <div class="teble_responsive"></div>
               <div class="col-12">
-                <table class="table">
-                  <thead class=" text-primary">
-                    <tr>
-                      <th scope="col">Nombre</th>
-                      <th scope="col">Cantidad</th>
-                      <th scope="col">Fecha</th>
-                      <th scope="col">Costo</th>
-                      <th scope="col">Editar</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {% for alimento in alimentos %}
-                    <tr>
-                      <td>{{alimento.nombre}}</td>
-                      <td>{{alimento.cantidadcomprada}} Kg</td>
-                      <td>{{alimento.fechacompra}}</td>
-                      <td>C$ {{alimento.preciocompra}}</td>
-                      <td>
-                        <button class="btn btn-primary editar" data-bs-toggle="modal"
-                          data-bs-target="#modalalimento{{alimento.id}}">
-                          <i class="fa-regular fa-pen-to-square"></i>
-                        </button>
-                      </td>
+                <div class="table-responsive">
+                  <table class="table">
+                    <thead class=" text-primary">
+                      <tr>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Cantidad</th>
+                        <th scope="col">Fecha</th>
+                        <th scope="col">Costo</th>
+                        <th scope="col">Editar</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for alimento in alimentos %}
+                      <tr>
+                        <td>{{alimento.nombre}}</td>
+                        <td>{{alimento.cantidadcomprada}} Kg</td>
+                        <td>{{alimento.fechacompra}}</td>
+                        <td>C$ {{alimento.preciocompra}}</td>
+                        <td>
+                          <button class="btn btn-primary editar" data-bs-toggle="modal"
+                            data-bs-target="#modalalimento{{alimento.id}}">
+                            <i class="fa-regular fa-pen-to-square"></i>
+                          </button>
+                        </td>
 
-                      <!-- Modal -->
-                      <div class="modal fade" id="modalalimento{{alimento.id}}" tabindex="-1" aria-labelledby="exampleModalLabel"
-                        aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered modal-lg">
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <h5 class="modal-title" id="exampleModalLabel">Editar alimento</h5>
-                              <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                              <form action="/alimento/editar/{{alimento.id}}" method="post" class="form-group">
-                                <div class="row">
-                                  <div class="col-xl-6 mb-3">
-                                    <label for="nombre">Nombre</label>
-                                    <input type="text" class="form-control" id="nombre" name="nombre"
-                                      placeholder="Nombre" value="{{alimento.nombre}}" required>
+                        <!-- Modal -->
+                        <div class="modal fade" id="modalalimento{{alimento.id}}" tabindex="-1"
+                          aria-labelledby="exampleModalLabel" aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-centered modal-lg">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Editar alimento</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                  aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body">
+                                <form action="/alimento/editar/{{alimento.id}}" method="post" class="form-group">
+                                  <div class="row">
+                                    <div class="col-xl-6 mb-3">
+                                      <label for="nombre">Nombre</label>
+                                      <input type="text" class="form-control" id="nombre" name="nombre"
+                                        placeholder="Nombre" value="{{alimento.nombre}}" required>
+                                    </div>
+
+                                    <div class="col-xl-6 mb-3">
+                                      <label for="cantidad">Cantidad</label>
+                                      <input type="text" class="form-control" id="cantidad" name="cantidad"
+                                        placeholder="Kg, L, Lb" value="{{alimento.cantidadcomprada}}" required>
+                                    </div>
+
+                                    <div class="col-xl-6 mb-3">
+                                      <label for="precio">Precio</label>
+                                      <input type="text" class="form-control" id="precio" name="precio"
+                                        placeholder="Precio unitario" value="{{alimento.preciocompra}}" required>
+                                    </div>
+
+                                    <div class="col-xl-6 mb-3">
+                                      <label for="fecha">Fecha</label>
+                                      <input type="date" class="form-control" value="{{alimento.fechacompra}}"
+                                        name="fecha" required>
+                                    </div>
                                   </div>
 
-                                  <div class="col-xl-6 mb-3">
-                                    <label for="cantidad">Cantidad</label>
-                                    <input type="text" class="form-control" id="cantidad" name="cantidad"
-                                      placeholder="Kg, L, Lb" value="{{alimento.cantidadcomprada}}" required>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                      data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="submit" class="btn btn-primary">Guardar</button>
                                   </div>
-
-                                  <div class="col-xl-6 mb-3">
-                                    <label for="precio">Precio</label>
-                                    <input type="text" class="form-control" id="precio" name="precio"
-                                      placeholder="Precio unitario" value="{{alimento.preciocompra}}" required>
-                                  </div>
-
-                                  <div class="col-xl-6 mb-3">
-                                    <label for="fecha">Fecha</label>
-                                    <input type="date" class="form-control" value="{{alimento.fechacompra}}" name="fecha" required>
-                                  </div>
-                                </div>
-
-                                <div class="modal-footer">
-                                  <button type="button" class="btn btn-secondary"
-                                    data-bs-dismiss="modal">Cancelar</button>
-                                  <button type="submit" class="btn btn-primary">Guardar</button>
-                                </div>
-                              </form>
+                                </form>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-
-                    </tr>
-                    {% endfor %}
-                  </tbody>
-                </table>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+                </div>
               </div>
             </div>
           </div>
@@ -114,46 +116,46 @@ Alimentación
       </div>
     </div>
   </div>
-</div>
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Agregar alimento</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form action="/alimento" method="post" class="form-group">
-          <div class="row">
-            <div class="col-xl-6 mb-3">
-              <label for="nombre">Nombre</label>
-              <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre" required>
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Agregar alimento</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="/alimento" method="post" class="form-group">
+            <div class="row">
+              <div class="col-xl-6 mb-3">
+                <label for="nombre">Nombre</label>
+                <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre" required>
+              </div>
+
+              <div class="col-xl-6 mb-3">
+                <label for="cantidad">Cantidad</label>
+                <input type="text" class="form-control" id="cantidad" name="cantidad" placeholder="Kg, L, Lb" required>
+              </div>
+
+              <div class="col-xl-6 mb-3">
+                <label for="precio">Precio</label>
+                <input type="text" class="form-control" id="precio" name="precio" placeholder="Precio unitario"
+                  required>
+              </div>
+
+              <div class="col-xl-6 mb-3">
+                <label for="fecha">Fecha</label>
+                <input type="date" class="form-control" id="fecha" name="fecha" required>
+              </div>
             </div>
 
-            <div class="col-xl-6 mb-3">
-              <label for="cantidad">Cantidad</label>
-              <input type="text" class="form-control" id="cantidad" name="cantidad" placeholder="Kg, L, Lb" required>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-primary">Guardar</button>
             </div>
-
-            <div class="col-xl-6 mb-3">
-              <label for="precio">Precio</label>
-              <input type="text" class="form-control" id="precio" name="precio" placeholder="Precio unitario" required>
-            </div>
-
-            <div class="col-xl-6 mb-3">
-              <label for="fecha">Fecha</label>
-              <input type="date" class="form-control" id="fecha" name="fecha" required>
-            </div>
-          </div>
-
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-            <button type="submit" class="btn btn-primary">Guardar</button>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
   </div>
-</div>
-{% endblock%}
+  {% endblock%}

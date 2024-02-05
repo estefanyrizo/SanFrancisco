@@ -11,3 +11,5 @@ python-dotenv
 imagekitio
 flask-paginate
 urllib3==1.26.*
+pdfkit
+docraptor

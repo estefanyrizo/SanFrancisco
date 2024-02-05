@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="col-12 text-center">
+            <img src="https://ik.imagekit.io/JefferssonVMT/favicon.png?updatedAt=1707106690645" alt="logo finca"
+                style="width: 120px;">
+        </div>
+        <div class="col-12 mt-4 text-center">
+            <h5>Finca San Francisco</h5>
+        </div>
+        <div class="col-12 mt-5 text-end">
+            <p>{{ fecha }}</p>
+        </div>
+        <div class="col-12 text-center">
+            <h5>Informe de bovino</h5>
+        </div>
+    </div>
+
+    {%for novillo in novillo%}
+
+    <div class="container-fluid d-flex mt-5 justify-content-between">
+        <div class="col-6" style="height: fit-content;">
+            <div class="container-fluid d-flex">
+                <Strong style="margin-right: 10px;">Codigo de chapa: </Strong>
+                <p class="mb-0">{{novillo.codigochapa}}</p>
+            </div>
+            <div class="container-fluid d-flex">
+                <Strong style="margin-right: 10px;">Nombre: </Strong>
+                <p class="mb-0">{{novillo.nombre}}</p>
+            </div>
+            <div class="container-fluid d-flex">
+                <Strong style="margin-right: 10px;">Raza: </Strong>
+                <p class="mb-0">{{novillo.nombreraza}}</p>
+            </div>
+            <div class="container-fluid d-flex">
+                <Strong style="margin-right: 10px;">Fecha de nacimiento: </Strong>
+                <p class="mb-0">{{novillo.fechanacimiento}}</p>
+            </div>
+            <div class="container-fluid d-flex">
+                <Strong style="margin-right: 10px;">Color: </Strong>
+                <p class="mb-0">{{novillo.color}}</p>
+            </div>
+            <div class="container-fluid d-flex">
+                <Strong style="margin-right: 10px;">Peso: </Strong>
+                <p class="mb-0">{{novillo.peso}} kg</p>
+            </div>
+            <div class="container-fluid d-flex">
+                <Strong style="margin-right: 10px;">Tamaño: </Strong>
+                <p class="mb-0">{{novillo.tamanio}} metros</p>
+            </div>
+            <div class="container-fluid d-flex">
+                <Strong style="margin-right: 10px;">Origen: </Strong>
+                <p class="mb-0">{{novillo.origen}}</p>
+            </div>
+            <div class="container-fluid d-flex">
+                <Strong style="margin-right: 10px;">Observaciones: </Strong>
+                <p class="mb-0">{{novillo.comentario | default('Ninguna', true)}}</p>
+            </div>
+        </div>
+
+        <div class="col-6 d-flex justify-content-end">
+            <img src="{{novillo.foto}}" alt="Foto"
+                style="width: 200px; height: 200px; object-fit: cover; border-radius: 15px;">
+        </div>
+    </div>
+
+    <div class="container-fluid mt-5 pb-3">
+        <div class="card registroProduccion">
+            <div class="card-header">
+                <h5 class="sign pt-2 pb-2 text-center">Control del bovino</h5>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead class=" text-primary">
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Peso</th>
+                            <th>Tamaño</th>
+                            <th>Comentario</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for reg in registros %}
+                        <tr>
+                            <td>{{reg.fecha}}</td>
+                            <td>{{"{:,.2f}".format(reg.peso)}}</td>
+                            <td>{{"{:,.2f}".format(reg.tamanio | float)}}</td>
+                            <td>{{reg.comentario|default('Sin comentario', true)}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="container-fluid text-center mt-5">
+            <h5>Gastos</h5>
+        </div>
+
+        <div class="card registroProduccion mt-5">
+            <div class="card-header">
+                <h5 class="sign pt-2 pb-2 text-center">Alimentación</h5>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    {% if not registrosAlimento %}
+                    <h5 class="text-center">Sin registros</h5>
+                    {% else %}
+
+                    <thead class=" text-primary">
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Alimento</th>
+                            <th>Cantidad</th>
+                            <th>Costo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for reg in registrosAlimento %}
+                        <tr>
+                            <td>{{reg.fecha}}</td>
+                            <td>{{reg.nombre}}</td>
+                            <td>{{"{:,.2f}".format(reg.cantidadsuministrada)}}</td>
+                            <td>C$ {{"{:,.2f}".format(reg.costo)}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    {% endif %}
+                </table>
+            </div>
+        </div>
+
+        <div class="card registroProduccion mt-5">
+            <div class="card-header">
+                <h5 class="sign pt-2 pb-2 text-center">Medicina</h5>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead class=" text-primary">
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Enfermedad</th>
+                            <th>Medicina</th>
+                            <th>Dosis</th>
+                            <th>Costo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        {% for reg in registrosMedicos %}
+                        <tr>
+                            <td>{{reg.fecha}}</td>
+                            <td>{{reg.enfermedad}}</td>
+                            <td>{{reg.medicina}}</td>
+                            <td>{{reg.dosis}}</td>
+                            <td>C$ {{reg.costo}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="container-fluid text-center mt-5">
+            <h5>Registros medicos</h5>
+        </div>
+
+        <div class="card registroProduccion mt-5 mb-5">
+            <div class="card-header">
+                <h5 class="sign pt-2 pb-2 text-center">Seguimiento medico veterinario</h5>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    {% if not registrosMedicos %}
+                    <h5 class="text-center">Sin registros</h5>
+                    {% else %}
+
+                    <thead class=" text-primary">
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Enfermedad</th>
+                            <th>Medicina</th>
+                            <th>Dosis</th>
+                            <th>Diagnostico</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        {% for reg in registrosMedicos %}
+                        <tr>
+                            <td>{{reg.fecha}}</td>
+                            <td>{{reg.enfermedad}}</td>
+                            <td>{{reg.medicina}}</td>
+                            <td>{{reg.dosis}}</td>
+                            <td>{{reg.diagnostico}}</td>
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+                    {% endif %}
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+    {%endfor%}
+</body>
+
+</html>

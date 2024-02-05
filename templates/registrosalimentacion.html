@@ -25,6 +25,7 @@ Registros de alimentación
                             </div>
 
                             <div class="col-12">
+                                <div class="table-responsive">
                                 <table class="table">
                                     <thead class=" text-primary">
                                         <tr>
@@ -40,8 +41,8 @@ Registros de alimentación
                                         <tr>
                                             <td>{{detalle.fecha}}</td>
                                             <td>{{detalle.nombre}}</td>
-                                            <td>{{detalle.cantidad}}</td>
-                                            <td>C$ {{detalle.costo}}</td>
+                                            <td>{{"{:,.2f}".format(detalle.cantidad)}}</td>
+                                            <td>{{"C$ {:,.2f}".format(detalle.costo)}}</td>
                                             
                                             <td>
                                                 <button class="btn btn-danger" 
@@ -51,6 +52,7 @@ Registros de alimentación
                                         {% endfor %}
                                     </tbody>
                                 </table>
+                            </div>
 
                                 {% if not detalles %}
                                 <h4 class="text-center mt-5 mb-5">Aun no hay registros</h4>
@@ -97,12 +99,6 @@ Registros de alimentación
                             <label for="cantidad">Cantidad</label>
                             <input type="text" class="form-control" id="cantidad" name="cantidad"
                                 placeholder="Kg, L, Lb" required>
-                        </div>
-
-                        <div class="col-xl-6 mb-3">
-                            <label for="costo">Costo</label>
-                            <input type="text" class="form-control" id="costo" name="costo"
-                                placeholder="Costo total" required>
                         </div>
 
                     </div>

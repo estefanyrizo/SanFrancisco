@@ -6,11 +6,14 @@ from flask.helpers import flash
 from base64 import b64encode
 from imagekitio import ImageKit
 from imagekitio.models.UploadFileRequestOptions import UploadFileRequestOptions
+import docraptor
 
 ik = ImageKit(private_key='private_pbBN7H3s6r1YGqTsxPQqdelGb38=',
                 public_key='public_rKkJyqI11fEPBRHq/2QD3PyJJwo=',
                 url_endpoint='https://ik.imagekit.io/JefferssonVMT')
 
+doc_api = docraptor.DocApi()
+doc_api.api_client.configuration.username = '23md2lJdruKB9SQuJ2Pj'
 
 def login_required(f):
     """
@@ -97,3 +100,33 @@ def subirArchivo(archivo, nombre, folder):
 
     # print(res.response_metadata.raw)
     return res.url
+
+def crearpdf(hmtlcode):
+
+    """ options = {
+        'page-size': 'Letter',
+        'margin-top': '0.75in',
+        'margin-right': '0.75in',
+        'margin-bottom': '0.75in',
+        'margin-left': '0.75in',
+        'encoding': "UTF-8"
+    }
+    config = pdfkit.configuration()
+
+    pdf = pdfkit.from_string(hmtlcode)
+    return pdf """
+
+    response = doc_api.create_doc({
+        "test": True,                                                   # test documents are free but watermarked
+        "document_content": hmtlcode,    # supply content directly
+        # "document_url": "http://docraptor.com/examples/invoice.html", # or use a url
+        "name": "reporte.pdf",                                 # help you find a document later
+        "document_type": "pdf",                                         # pdf or xls or xlsx
+        # "javascript": True,                                           # enable JavaScript processing
+        # "prince_options": {
+        #   "media": "screen",                                          # use screen styles instead of print styles
+        #   "baseurl": "http://hello.com",                              # pretend URL when using document_content
+        # },
+    })
+
+    return response

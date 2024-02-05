@@ -9,8 +9,8 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from flask import Flask, flash, redirect, render_template, request, session
 from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
-from helpers import admin_required, login_required, subirImagen, validarDouble, validarString, subirArchivo
-from flask import jsonify
+from helpers import admin_required, login_required, subirImagen, validarDouble, validarString, subirArchivo, crearpdf
+from flask import jsonify, send_file
 from sqlalchemy.sql import text
 import helpers
 from flask_paginate import Pagination, get_page_parameter
@@ -167,8 +167,8 @@ def ingresarGanado():
                         VALUES('{nombre}', '{fechaNacimiento}', {peso}, {tamaño}, '{color}', {codigo}, '{foto}', '{comentario}', 1, {raza}, {procedencia}, {isasignado})
                         RETURNING id""")).fetchone()[0]
                 
-                db.execute(text(f"""INSERT INTO registroproduccion(fecha, ganadoid, peso, comentario, usuarioid) 
-                                VALUES('{fechaNacimiento}', {query}, {peso}, '{comentario}', {session["user_id"]})"""))
+                db.execute(text(f"""INSERT INTO registroproduccion(fecha, ganadoid, peso, tamanio, comentario, usuarioid) 
+                                VALUES('{fechaNacimiento}', {query}, {peso}, {tamaño}, '{comentario}', {session["user_id"]})"""))
                 
                 db.commit()
             except:
@@ -182,8 +182,8 @@ def ingresarGanado():
                         VALUES('{nombre}', '{fechaNacimiento}', {peso}, {tamaño}, '{color}', {codigo}, '{foto}', 1, {raza}, {procedencia}, {isasignado})
                         RETURNING id""")).fetchone()[0]
                 
-                db.execute(text(f"""INSERT INTO registroproduccion(fecha, ganadoid, peso, usuarioid) 
-                                VALUES('{fechaNacimiento}', {query}, {peso}, {session["user_id"]})"""))
+                db.execute(text(f"""INSERT INTO registroproduccion(fecha, ganadoid, peso, tamanio, usuarioid) 
+                                VALUES('{fechaNacimiento}', {query}, {peso}, {tamaño}, {session["user_id"]})"""))
                 
                 db.commit()
             except:
@@ -303,14 +303,93 @@ def infonovillo(id):
         return render_template("novilloinfo.html", novillo = [n for n in novillo], razas = razas, origen = origen, registros = registros, cantEnfermedades = cantEnfermedades, gastos = gastos, totalAlimento = totalAlimento, totalMedicina = totalMedicina, registrosMedicos = [registrosMedicos for registrosMedicos in registrosMedicos], registrosAlimento = registrosAlimento, cantRegistrosP = cantRegistrosP, cantRegistrosM = cantRegistrosM, id=id)
 
 
-@app.route("/reporte/ganado/<id>/", methods=["GET"])
-@login_required
-def reportenobillo(id):
-        #requests.session
-        texto = infonovillo(id)
-        print(texto)
+@app.route("/reporte/ventas", methods=["GET"])
+def reporteventas():
+    """ with open('ReporteGanado.pdf', 'w+b') as f:
+        binary_formatted_response = bytearray(crearpdf(render_template('reportenovillo.html')))
+        f.write(binary_formatted_response)
+        f.close()
+    print('Successfully created docraptor-advanced.pdf!')
 
-        return texto
+    return send_file("ReporteGanado.pdf") """
+
+    ventas = db.execute(text("""SELECT venta.id, montototal, cartaventa, cantidad,
+	   venta.fecha, 
+	   usuario.nombre AS usuario, 
+	   entidadcomercial.nombre AS cliente, 
+	   STRING_AGG(ganado.nombre, ', ') AS nombres_ganado,
+	   STRING_AGG(ganado.codigochapa, ', ') AS chapas_ganado,
+	   STRING_AGG(raza.nombreraza, ', ') AS razas_ganado,
+	   STRING_AGG(CAST(ganado.tamanio AS VARCHAR), ', ') AS tamanios,
+	   STRING_AGG(CAST(ganado.peso AS VARCHAR), ', ') AS pesos
+        FROM detalleventa
+        INNER JOIN venta ON detalleventa.ventaid = venta.id
+        INNER JOIN ganado ON detalleventa.ganadoid = ganado.id
+        INNER JOIN usuario ON venta.usuarioid = usuario.id
+        INNER JOIN raza ON ganado.razaid = raza.id
+        INNER JOIN entidadcomercial ON venta.entidadcomercialid = entidadcomercial.id
+        GROUP BY venta.id, venta.fecha, entidadcomercial.nombre, usuario.nombre;"""))
+    
+    locale.setlocale(locale.LC_ALL,'es_ES.UTF-8')
+
+    with open('ReporteVentas.pdf', 'w+b') as f:
+            binary_formatted_response = bytearray(crearpdf(render_template("reporteventas.html",fecha = date.today().strftime("%d de %B %Y"), ventas = ventas)))
+            f.write(binary_formatted_response)
+            f.close()
+
+    return send_file("ReporteVentas.pdf")
+
+
+@app.route("/reporte/ganado/<id>", methods=["GET"])
+@login_required
+def reportenovillo(id):
+        
+        novillo = db.execute(text(f"SELECT * FROM ganado INNER JOIN raza ON ganado.razaid = raza.id inner join origenganado o on o.id = ganado.origenganadoid WHERE ganado.id = {id}"))
+
+        razas = db.execute(text("SELECT * FROM raza ORDER BY nombreraza"))
+        origen = db.execute(text("SELECT * FROM origenganado"))
+        registros = db.execute(text(f"SELECT * FROM registroproduccion WHERE ganadoid = {id}"))
+        cantRegistrosP = db.execute(text(f"SELECT COUNT(id) FROM registroproduccion WHERE ganadoid = {id}")).fetchone()
+        cantEnfermedades = db.execute(text(f"SELECT COUNT(DISTINCT enfermedadid) FROM registromedico WHERE ganadoid = {id}")).fetchone()
+        cantRegistrosM = db.execute(text(f"SELECT COUNT(id) FROM registromedico WHERE ganadoid = {id}")).fetchone()
+        totalAlimento = db.execute(text(f"SELECT SUM(costo) FROM detallealimento WHERE ganadoid = {id}")).fetchone()
+        totalMedicina = db.execute(text(f"""SELECT SUM((CAST(SPLIT_PART(dosis, ' ', 1) AS float)) * (precio / contenido)) FROM registromedico
+        INNER JOIN medicina ON registromedico.medicinaid = medicina.id
+        INNER JOIN detallepresentacion ON detallepresentacion.medicinaid = medicina.id
+        WHERE ganadoid = {id}""")).fetchone()
+        if not totalAlimento[0]:
+            gastos = totalMedicina[0]
+        if not totalMedicina[0]: 
+            gastos = totalAlimento[0]
+        if not totalMedicina[0] or not totalAlimento[0]:
+            gastos = 0
+        else:
+            gastos = totalAlimento[0] + totalMedicina[0]
+        registrosMedicos = db.execute(text(f"""SELECT r.id,
+        e.nombre enfermedad,
+        r.fecha,
+        m.nombre medicina,
+        r.dosis,                                   
+        CAST(SPLIT_PART(r.dosis, ' ',1) AS float) * (precio / contenido) AS costo,
+        r.diagnostico
+        FROM registromedico  r
+        INNER JOIN ganado g ON r.ganadoid = g.id
+        INNER JOIN enfermedad e ON r.enfermedadid = e.id
+        INNER JOIN medicina m ON r.medicinaid = m.id
+        INNER JOIN detallepresentacion dp ON dp.medicinaid = m.id
+        WHERE ganadoid = {id}
+        ORDER BY fecha"""))
+        registrosAlimento = db.execute(text(f"SELECT * FROM detallealimento INNER JOIN alimento ON alimentoid = alimento.id WHERE ganadoid = {id}"))
+        
+        #return render_template("reportenovillo.html", novillo = [n for n in novillo], razas = razas, origen = origen, registros = registros, cantEnfermedades = cantEnfermedades, gastos = gastos, totalAlimento = totalAlimento, totalMedicina = totalMedicina, registrosMedicos = [registrosMedicos for registrosMedicos in registrosMedicos], registrosAlimento = registrosAlimento, cantRegistrosP = cantRegistrosP, cantRegistrosM = cantRegistrosM, id=id)
+        locale.setlocale(locale.LC_ALL,'es_ES.UTF-8')
+        with open('ReporteGanado.pdf', 'w+b') as f:
+            binary_formatted_response = bytearray(crearpdf(render_template("reportenovillo.html", fecha = date.today().strftime("%d de %B %Y"), novillo = [n for n in novillo], razas = razas, origen = origen, registros = registros, cantEnfermedades = cantEnfermedades, gastos = gastos, totalAlimento = totalAlimento, totalMedicina = totalMedicina, registrosMedicos = [registrosMedicos for registrosMedicos in registrosMedicos], registrosAlimento = registrosAlimento, cantRegistrosP = cantRegistrosP, cantRegistrosM = cantRegistrosM, id=id)))
+            f.write(binary_formatted_response)
+            f.close()
+        print('Successfully created docraptor-advanced.pdf!')
+
+        return send_file("ReporteGanado.pdf")
 
 
 @app.route("/infonovillo/<id>/edit", methods=["GET", "POST"])
@@ -777,7 +856,10 @@ def alimento():
         if not nombre or nombre.isspace():
             flash("Debe ingresar un nombre valido", "error")
             return redirect("/alimento")
-        if not cantidad or float(cantidad) < 0:
+        if not cantidad or not cantidad.isdecimal():
+            flash("Debe ingresar una cantidad valida", "error")
+            return redirect("/alimento")
+        if float(cantidad) < 0:
             flash("Debe ingresar una cantidad valida", "error")
             return redirect("/alimento")
         if not precio or float(precio) < 0:
@@ -810,7 +892,10 @@ def editaralimento(id):
     if not nombre or nombre.isspace():
         flash("Debe ingresar un nombre valido", "error")
         return redirect("/alimento")
-    if not cantidad or float(cantidad) < 0:
+    if not cantidad or not cantidad.isdecimal():
+            flash("Debe ingresar una cantidad valida", "error")
+            return redirect("/alimento")
+    if float(cantidad) < 0:
         flash("Debe ingresar una cantidad valida", "error")
         return redirect("/alimento")
     if not precio or float(precio) < 0:
@@ -863,9 +948,8 @@ def registrosalimentacion():
         fecha = request.form.get("fecha")
         alimento = request.form.get("alimento")
         cantidad = request.form.get("cantidad")
-        costo = request.form.get("costo")
 
-        if db.execute(text(f"SELECT * FROM detallealimento WHERE fecha = '{fecha}' AND alimentoid = {int(alimento)}")):
+        if db.execute(text(f"SELECT * FROM detallealimento WHERE fecha = '{fecha}' AND alimentoid = {int(alimento)}")).fetchone():
             flash("Ya existe un registro para este alimento en la misma fecha, debes anular el registro anterior antes de registrar uno nuevo", "error")
             return redirect("/registrosalimentacion")
 
@@ -878,11 +962,11 @@ def registrosalimentacion():
         if not cantidad or cantidad.isspace():
             flash("Debe ingresar una cantidad valida", "error")
             return redirect("/registrosalimentacion")
-        if not costo or costo.isspace():
-            flash("Debe ingresar el costo total del suministro a registrar", "error")
-            return redirect("/registrosalimentacion")
          
         try:
+            preciocompra = db.execute(text(f"select preciocompra from alimento where id in (Select max(id) FROM alimento group by nombre) and id = {int(alimento)}")).fetchone()["preciocompra"]
+            costo = preciocompra * float(cantidad)
+
             for gan in ganado:
                 db.execute(text(f"""INSERT INTO detallealimento(fecha, alimentoid, cantidadsuministrada, costo, ganadoid) 
                                 VALUES('{str(fecha)}', {alimento}, {float(cantidad)/float(ganado.rowcount)}, {float(costo)/float(ganado.rowcount)}, {gan[0]})"""))
@@ -946,7 +1030,10 @@ def medicina():
         if not tipo or int(tipo) > 19 or int(tipo) < 1:
             flash("Debe ingresar un tipo de medicina valido", "error")
             return redirect("/medicina")
-        if not contenido or contenido.isspace() or float(contenido) < 0:
+        if not contenido or contenido.isspace() or not contenido.isdecimal() or float(contenido) < 0:
+            flash("Debe ingresar el contenido de produto", "error")
+            return redirect("/medicina")
+        if float(contenido) < 0:
             flash("Debe ingresar el contenido de produto", "error")
             return redirect("/medicina")
         if not cantidad or int(cantidad) < 1:
@@ -1011,7 +1098,10 @@ def mededit():
         if not tipo or int(tipo) > 19 or int(tipo) < 1:
             flash("Debe ingresar un tipo de medicina valido", "error")
             return redirect("/medicina")
-        if not contenido or contenido.isspace() or float(contenido) < 0:
+        if not contenido or contenido.isspace() or not contenido.isdecimal() or float(contenido) < 0:
+            flash("Debe ingresar el contenido de produto", "error")
+            return redirect("/medicina")
+        if float(contenido) < 0:
             flash("Debe ingresar el contenido de produto", "error")
             return redirect("/medicina")
         if not cantidad or int(cantidad) < 1:
